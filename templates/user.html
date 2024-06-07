@@ -1,0 +1,15 @@
+{% extends "bootstrap/base.html" %}
+
+{% block content %}
+<div class="container">
+    {% block page_content %}
+
+<h1>{% if username %}
+    Hello, {{ username }}!
+{% else %}
+    Hi, Anonymous!
+{% endif %}</h1>
+
+{% endblock  %}
+</div>
+{% endblock content %}

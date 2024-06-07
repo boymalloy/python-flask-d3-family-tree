@@ -1,0 +1,4 @@
+id,name,birthyear,deathyear,birthplace,deathplace,partners,children,mother,father
+AJM1980,Alex John Malloy,1980,,Greenwich,,EAM1982,GVMM2018,ALG1953,JCM1947
+GVMM2018,Genevieve Valerie McIntosh Malloy,2018,,Lewisham,,,,EAM1982,AJM1980
+EAM1982,Erin Amanda McIntosh,1982,,Kirkcaldy,,AJM1980,GVMM2018,,
