@@ -1,6 +1,6 @@
 # So far so good
 def inc(x):
-    return x + 2
+    return x + 1
 
 
 def test_answer():
