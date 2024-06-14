@@ -1,5 +1,7 @@
 from flask import Flask, request, render_template
 from flask_bootstrap import Bootstrap
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 
 app = Flask(__name__)
 
@@ -7,9 +9,6 @@ app = Flask(__name__)
 app = Flask(__name__, static_url_path='/static')
 
 bootstrap = Bootstrap(app)
-
-import pandas as pd
-
 
 def generator():
     # imports 3 people from a csv to a dataframe
@@ -37,6 +36,43 @@ def generator():
 
     return "Squeeeeee"
 
+def test_generator():
+    assert generator() == "Squeeeeee"
+
+def generator2():
+
+    uf = pd.read_csv("static/input/input.csv")
+
+    # build the persons dataframe with data from uf
+    persons = pd.DataFrame()
+    persons.loc[:, 'id'] = uf.loc[:, 'id']
+    persons.loc[:, 'name'] = uf.loc[:, 'name']
+    persons["own_unions"] = ""
+    persons.loc[:, 'birthyear'] = uf.loc[:, 'birthyear']
+    persons.loc[:, 'birthplace'] = uf.loc[:, 'birthplace']
+    
+    #build a blank unions table
+    unions = pd.DataFrame({'id': pd.Series(dtype='str'),
+                    'partners' : pd.Series(dtype='str'),
+                    'children': pd.Series(dtype='str')})
+
+    
+    for index, row in uf.iterrows():
+        
+        partnership = uf.loc[index,'id'] + "," +  str(uf.loc[index,'partners'])
+        reverse = str(uf.loc[index,'partners']) + "," +  uf.loc[index,'id']
+        
+        if unions.isin([partnership,reverse]).any().any():
+            print("nothing")
+        else:
+            row = {'id': "ux", 'partners': partnership, 'children': "child"}
+                
+            # Append the dictionary to the DataFrame
+            unions.loc[len(unions)] = row
+        
+            
+    return unions
+
 
 @app.route('/')
 def index():
@@ -45,3 +81,11 @@ def index():
 @app.route('/treegenerator')
 def treegenerator():
     return render_template('treegenerator.html', generator=generator)
+
+@app.route('/treegenerator2')
+def treegenerator2():
+    return render_template('treegenerator2.html', generator2=generator2)
+
+@app.route('/uniontester')
+def uniontester():
+    return render_template('uniontester.html', build_union=build_union, establish_dataframes=establish_dataframes)
