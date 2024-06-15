@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 from flask_bootstrap import Bootstrap
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import re
 
 app = Flask(__name__)
 
@@ -65,16 +66,46 @@ def generator2():
         if unions.isin([partnership,reverse]).any().any():
             print("nothing")
         else:
-            row = {'id': "ux", 'partners': partnership, 'children': "child"}
+            
+            if unions.empty:
+                NEWunionID = "u1"
+            else:
+                OLDunionID = re.findall(r'\d+|\D+', unions['id'].iloc[-1])
+                NEWunionID = "u" + str(int(OLDunionID[1]) + 1)
+            
+            row = {'id': NEWunionID, 'partners': partnership, 'children': "child"}
                 
             # Append the dictionary to the DataFrame
             unions.loc[len(unions)] = row
         
             
-    return "complete"
+    return unions
 
 def test_generator2():
     assert generator2() == "complete"
+
+def general_test():
+     #build a blank unions table
+    unions = pd.DataFrame({'id': pd.Series(dtype='str'),
+                    'partners' : pd.Series(dtype='str'),
+                    'children': pd.Series(dtype='str')})
+    
+    row = {'id': "u1", 'partners': "mock data", 'children': "child"}
+                
+    # Append the dictionary to the DataFrame
+    unions.loc[len(unions)] = row
+
+    row2 = {'id': "u2", 'partners': "words", 'children': "kids"}
+                
+    # Append the dictionary to the DataFrame
+    unions.loc[len(unions)] = row2
+
+    OLDunionID = re.findall(r'\d+|\D+', unions['id'].iloc[-1])
+
+    NEWunionID = "u" + str(int(OLDunionID[1]) + 1)
+
+    if not unions.empty:
+        return "data ahoy"
 
 @app.route('/')
 def index():
@@ -88,7 +119,7 @@ def treegenerator():
 def treegenerator2():
     return render_template('treegenerator2.html', generator2=generator2)
 
-@app.route('/uniontester')
-def uniontester():
-    return render_template('uniontester.html', build_union=build_union, establish_dataframes=establish_dataframes)
+@app.route('/general_test')
+def peepee():
+    return render_template('general_test.html', general_test=general_test)
 # hello
