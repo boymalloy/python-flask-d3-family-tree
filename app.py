@@ -34,10 +34,10 @@ def generator():
     with open("static/tree/data/test.js", "x",) as file_Obj:
         file_Obj.write(assembled)
 
-    return "Squeeeeee"
+    return "complete"
 
 def test_generator():
-    assert generator() == "Squeeeeee"
+    assert generator() == "complete"
 
 def generator2():
 
@@ -71,8 +71,10 @@ def generator2():
             unions.loc[len(unions)] = row
         
             
-    return unions
+    return "complete"
 
+def test_generator2():
+    assert generator2() == "complete"
 
 @app.route('/')
 def index():
@@ -89,3 +91,4 @@ def treegenerator2():
 @app.route('/uniontester')
 def uniontester():
     return render_template('uniontester.html', build_union=build_union, establish_dataframes=establish_dataframes)
+# hello
