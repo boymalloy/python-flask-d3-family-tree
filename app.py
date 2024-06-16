@@ -58,25 +58,38 @@ def generator2():
                     'children': pd.Series(dtype='str')})
 
     
+    # for every row in the user friendly table
     for index, row in uf.iterrows():
         
+        # get the union
         partnership = uf.loc[index,'id'] + "," +  str(uf.loc[index,'partners'])
+        # ... and the same union in reverse order
         reverse = str(uf.loc[index,'partners']) + "," +  uf.loc[index,'id']
         
+        # if either version of the union is already in the unions table, do nothing
         if unions.isin([partnership,reverse]).any().any():
             print("nothing")
+        # else if the union hasn't been recorded yet...
         else:
-            
-            if unions.empty:
-                NEWunionID = "u1"
+            # if the union isn't there, stop
+            if pd.isna(uf.loc[index,'partners']):
+                print("nothing")
+            # but if it is there....
             else:
-                OLDunionID = re.findall(r'\d+|\D+', unions['id'].iloc[-1])
-                NEWunionID = "u" + str(int(OLDunionID[1]) + 1)
-            
-            row = {'id': NEWunionID, 'partners': partnership, 'children': "child"}
+               # if this is the first union in the dataframe, call it u1
+                if unions.empty:
+                    NEWunionID = "u1"
                 
-            # Append the dictionary to the DataFrame
-            unions.loc[len(unions)] = row
+                else:
+                    # else get the last union number and give this union the next number on
+                    OLDunionID = re.findall(r'\d+|\D+', unions['id'].iloc[-1])
+                    NEWunionID = "u" + str(int(OLDunionID[1]) + 1)
+                
+                # create a dictionary with the data to write to the dataframe
+                row = {'id': NEWunionID, 'partners': partnership, 'children': "child"}
+                    
+                # Append the dictionary to the DataFrame
+                unions.loc[len(unions)] = row
         
             
     return unions
