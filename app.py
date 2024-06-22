@@ -4,6 +4,12 @@ import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import re
 
+# Set pandas display options to prevent truncation
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)
+pd.set_option('display.max_colwidth', None)
+
 app = Flask(__name__)
 
 # creates a path to all the static files for the tree and the csv inputs
@@ -51,6 +57,7 @@ def generator2():
     persons["own_unions"] = ""
     persons.loc[:, 'birthyear'] = uf.loc[:, 'birthyear']
     persons.loc[:, 'birthplace'] = uf.loc[:, 'birthplace']
+    persons.loc[:, 'partners'] = uf.loc[:, 'partners']
     
     #build a blank unions table
     unions = pd.DataFrame({'id': pd.Series(dtype='str'),
@@ -59,12 +66,12 @@ def generator2():
 
     
     # for every row in the user friendly table
-    for index, row in uf.iterrows():
+    for index, row in persons.iterrows():
         
         # get the union
-        partnership = uf.loc[index,'id'] + "," +  str(uf.loc[index,'partners'])
+        partnership = persons.loc[index,'id'] + "," +  str(persons.loc[index,'partners'])
         # ... and the same union in reverse order
-        reverse = str(uf.loc[index,'partners']) + "," +  uf.loc[index,'id']
+        reverse = str(persons.loc[index,'partners']) + "," +  persons.loc[index,'id']
         
         # if either version of the union is already in the unions table, do nothing
         if unions.isin([partnership,reverse]).any().any():
@@ -72,7 +79,7 @@ def generator2():
         # else if the union hasn't been recorded yet...
         else:
             # if the union isn't there, stop
-            if pd.isna(uf.loc[index,'partners']):
+            if pd.isna(persons.loc[index,'partners']):
                 print("nothing")
             # but if it is there....
             else:
@@ -85,14 +92,20 @@ def generator2():
                     OLDunionID = re.findall(r'\d+|\D+', unions['id'].iloc[-1])
                     NEWunionID = "u" + str(int(OLDunionID[1]) + 1)
                 
+                # write the new union id to the person that the current iteration is on
+                persons.loc[index,'own_unions'] = NEWunionID
+
+                # write the union id to the partner's row in the persons table
+                who = str(persons.loc[index,'partners'])
+                persons.loc[persons['id'] == who, 'own_unions'] = NEWunionID
+
                 # create a dictionary with the data to write to the dataframe
                 row = {'id': NEWunionID, 'partners': partnership, 'children': "child"}
                     
                 # Append the dictionary to the DataFrame
                 unions.loc[len(unions)] = row
-        
-            
-    return unions
+                
+    return persons
 
 def test_generator2():
     assert generator2() == "complete"
