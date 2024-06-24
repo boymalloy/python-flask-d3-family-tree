@@ -38,7 +38,7 @@ def generator():
     assembled = start + fragment + end
 
     # writes the json tree to a static file
-    with open("static/tree/data/test.js", "x",) as file_Obj:
+    with open("static/tree/data/test.js", "w",) as file_Obj:
         file_Obj.write(assembled)
 
     return "complete"
