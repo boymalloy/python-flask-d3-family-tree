@@ -17,122 +17,6 @@ app = Flask(__name__, static_url_path='/static')
 
 bootstrap = Bootstrap(app)
 
-def generator():
-    # imports 3 people from a csv to a dataframe
-    data = pd.read_csv("static/input/ids.csv", dtype=str)
-
-    # fixes the union ids in the dataframe
-    data.at[0, 'own_unions'] = ['u1']
-    data.at[1, 'own_unions'] = ['u1']
-
-    # turns the dataframe into the persons fragment of the tree json
-    fragment = data.to_json(orient="index")
-
-    # hard codes the first bit of the tree json
-    start = "data = {\"start\":\"0\",\"persons\":"
-
-    # hard codes the end bit of the tree json, including unions and links
-    end = ",\"unions\": {\"u1\": { \"id\": \"u1\", \"partner\": [\"0\", \"1\"], \"children\": [\"2\"] }, }, \"links\": [[\"0\", \"u1\"], [\"1\", \"u1\"], [\"u1\", \"2\"],]}"
-
-    # combines all of the bits of the tree together
-    assembled = start + fragment + end
-
-    # writes the json tree to a static file
-    with open("static/tree/data/test.js", "w",) as file_Obj:
-        file_Obj.write(assembled)
-
-    return "complete"
-
-def test_generator():
-    assert generator() == "complete"
-
-def generator2():
-
-    uf = pd.read_csv("static/input/input.csv")
-
-    # build the persons dataframe with data from uf
-    persons = pd.DataFrame()
-    persons.loc[:, 'id'] = uf.loc[:, 'id']
-    persons.loc[:, 'name'] = uf.loc[:, 'name']
-    persons["own_unions"] = ""
-    persons.loc[:, 'birthyear'] = uf.loc[:, 'birthyear']
-    persons.loc[:, 'birthplace'] = uf.loc[:, 'birthplace']
-    persons.loc[:, 'partners'] = uf.loc[:, 'partners']
-    
-    #build a blank unions table
-    unions = pd.DataFrame({'id': pd.Series(dtype='str'),
-                    'partners' : pd.Series(dtype='str'),
-                    'children': pd.Series(dtype='str')})
-
-    
-    # for every row in the user friendly table
-    for index, row in persons.iterrows():
-        
-        # get the union
-        partnership = persons.loc[index,'id'] + "," +  str(persons.loc[index,'partners'])
-        # ... and the same union in reverse order
-        reverse = str(persons.loc[index,'partners']) + "," +  persons.loc[index,'id']
-        
-        # if either version of the union is already in the unions table, do nothing
-        if unions.isin([partnership,reverse]).any().any():
-            print("nothing")
-        # else if the union hasn't been recorded yet...
-        else:
-            # if the union isn't there, stop
-            if pd.isna(persons.loc[index,'partners']):
-                print("nothing")
-            # but if it is there....
-            else:
-               # if this is the first union in the dataframe, call it u1
-                if unions.empty:
-                    NEWunionID = "u1"
-                
-                else:
-                    # else get the last union number and give this union the next number on
-                    OLDunionID = re.findall(r'\d+|\D+', unions['id'].iloc[-1])
-                    NEWunionID = "u" + str(int(OLDunionID[1]) + 1)
-                
-                # write the new union id to the person that the current iteration is on
-                persons.loc[index,'own_unions'] = NEWunionID
-
-                # write the union id to the partner's row in the persons table
-                who = str(persons.loc[index,'partners'])
-                persons.loc[persons['id'] == who, 'own_unions'] = NEWunionID
-
-                # create a dictionary with the data to write to the dataframe
-                row = {'id': NEWunionID, 'partners': partnership, 'children': "child"}
-                    
-                # Append the dictionary to the DataFrame
-                unions.loc[len(unions)] = row
-                
-    return persons
-
-def test_generator2():
-    assert generator2() == "complete"
-
-def general_test():
-     #build a blank unions table
-    unions = pd.DataFrame({'id': pd.Series(dtype='str'),
-                    'partners' : pd.Series(dtype='str'),
-                    'children': pd.Series(dtype='str')})
-    
-    row = {'id': "u1", 'partners': "mock data", 'children': "child"}
-                
-    # Append the dictionary to the DataFrame
-    unions.loc[len(unions)] = row
-
-    row2 = {'id': "u2", 'partners': "words", 'children': "kids"}
-                
-    # Append the dictionary to the DataFrame
-    unions.loc[len(unions)] = row2
-
-    OLDunionID = re.findall(r'\d+|\D+', unions['id'].iloc[-1])
-
-    NEWunionID = "u" + str(int(OLDunionID[1]) + 1)
-
-    if not unions.empty:
-        return "data ahoy"
-
 def generator3():
     
     uf = pd.read_csv("static/input/input.csv")
@@ -148,7 +32,7 @@ def generator3():
     
     #build a blank unions table
     unions = pd.DataFrame({'id': pd.Series(dtype='str'),
-                    'partners' : pd.Series(dtype='str'),
+                    'partner' : pd.Series(dtype='str'),
                     'children': pd.Series(dtype='str')})
 
     
@@ -182,38 +66,59 @@ def generator3():
                 # write the new union id to the person that the current iteration is on
                 persons.loc[index,'own_unions'] = NEWunionID
 
-                # write the union id to the partner's row in the persons table
+                # write the union id to the partners row in the persons table
                 who = str(persons.loc[index,'partners'])
                 persons.loc[persons['id'] == who, 'own_unions'] = NEWunionID
 
                 # create a dictionary with the data to write to the dataframe
-                row = {'id': NEWunionID, 'partners': partnership, 'children': "child"}
+                row = {'id': NEWunionID, 'partner': partnership, 'children': "GVMM2018"}
                     
                 # Append the dictionary to the DataFrame
                 unions.loc[len(unions)] = row
-                
+    
+    
+    # Temporary: fixes the partners field in the unions table by hard coding it
+    unions.at[0, 'partner'] = ["AJM1980", "EAM1982"]
+    
+    # Fixes the children field in the union table by putting it into an array (kind of)
+    for index, row in unions.iterrows():
+        unions.at[index, 'children'] = [unions.at[index, 'children']]
+    
+    # Sets the index of the unions table to be the cuustom id but preserves the custom id as it's own field by copying it
+    unions['id_copy'] = unions['id']
+    unions.set_index('id', inplace=True,)
+    unions = unions.rename(columns={'id_copy': 'id'})
+    unions = unions.reindex(columns=['id', 'partner', 'children'])
 
-    # fixes the union ids in the dataframe
-    persons.at[0, 'own_unions'] = ['u1']
-    persons.at[1, 'own_unions'] = ['u1']
+    # Fixes the own_unions field in the persons table by putting it into an array (kind of)
+    for index, row in persons.iterrows():
+        persons.at[index, 'own_unions'] = [persons.at[index, 'own_unions']]
+
+    # Sets the index of the persons table to be the cuustom id 
+    persons.set_index('id', inplace=True)
 
     # turns the dataframe into the persons fragment of the tree json
-    fragment = persons.to_json(orient="index")
+    persons_json = persons.to_json(orient="index")
+
+    # turn the unions df to json
+    unions_json = unions.to_json(orient="index")
 
     # hard codes the first bit of the tree json
-    start = "data = {\"start\":\"0\",\"persons\":"
+    start = "data = {\"start\":\"AJM1980\",\"persons\":"
+
+    bitbetween = ",\"unions\": "
 
     # hard codes the end bit of the tree json, including unions and links
-    end = ",\"unions\": {\"u1\": { \"id\": \"u1\", \"partner\": [\"0\", \"1\"], \"children\": [\"2\"] }, }, \"links\": [[\"0\", \"u1\"], [\"1\", \"u1\"], [\"u1\", \"2\"],]}"
+    end = ", \"links\": [[\"AJM1980\", \"u1\"], [\"EAM1982\", \"u1\"], [\"u1\", \"GVMM2018\"],]}"
 
     # combines all of the bits of the tree together
-    assembled = start + fragment + end
+    assembled = start + persons_json + bitbetween + unions_json + end
 
     # writes the json tree to a static file
     with open("static/tree/data/test.js", "w",) as file_Obj:
         file_Obj.write(assembled)
 
-    return "Try again!"
+    return "Looking good"
 
 @app.route('/')
 def index():
