@@ -32,7 +32,7 @@ def generator3():
     
     #build a blank unions table
     unions = pd.DataFrame({'id': pd.Series(dtype='str'),
-                    'partner' : pd.Series(dtype='str'),
+                    'partner' : pd.Series(dtype='object'),
                     'children': pd.Series(dtype='str')})
 
     
@@ -40,12 +40,13 @@ def generator3():
     for index, row in persons.iterrows():
         
         # get the union
-        partnership = persons.loc[index,'id'] + "," +  str(persons.loc[index,'partners'])
+        partnership = [persons.loc[index, 'id'], str(persons.loc[index, 'partners'])]
+
         # ... and the same union in reverse order
-        reverse = str(persons.loc[index,'partners']) + "," +  persons.loc[index,'id']
+        reverse = [str(persons.loc[index, 'partners']), persons.loc[index, 'id']]
         
         # if either version of the union is already in the unions table, do nothing
-        if unions.isin([partnership,reverse]).any().any():
+        if unions['partner'].apply(lambda x: x == partnership or x == reverse).any():
             print("nothing")
         # else if the union hasn't been recorded yet...
         else:
@@ -77,14 +78,11 @@ def generator3():
                 unions.loc[len(unions)] = row
     
     
-    # Temporary: fixes the partners field in the unions table by hard coding it
-    unions.at[0, 'partner'] = ["AJM1980", "EAM1982"]
-    
     # Fixes the children field in the union table by putting it into an array (kind of)
-    for index, row in unions.iterrows():
-        unions.at[index, 'children'] = [unions.at[index, 'children']]
+    # for index, row in unions.iterrows():
+        # unions.at[index, 'children'] = [unions.at[index, 'children']]
     
-    # Sets the index of the unions table to be the cuustom id but preserves the custom id as it's own field by copying it
+    # Sets the index of the unions table to be the custom id but preserves the custom id as it's own field by copying it
     unions['id_copy'] = unions['id']
     unions.set_index('id', inplace=True,)
     unions = unions.rename(columns={'id_copy': 'id'})
@@ -109,7 +107,7 @@ def generator3():
     bitbetween = ",\"unions\": "
 
     # hard codes the end bit of the tree json, including unions and links
-    end = ", \"links\": [[\"AJM1980\", \"u1\"], [\"EAM1982\", \"u1\"], [\"u1\", \"GVMM2018\"],]}"
+    end = ", \"links\": [[\"AJM1980\", \"u1\"], [\"EAM1982\", \"u1\"], [\"u1\", \"GVMM2018\"],[\"u1\", \"TTMM2012\"],]}"
 
     # combines all of the bits of the tree together
     assembled = start + persons_json + bitbetween + unions_json + end
@@ -118,7 +116,7 @@ def generator3():
     with open("static/tree/data/test.js", "w",) as file_Obj:
         file_Obj.write(assembled)
 
-    return "Looking good"
+    return assembled
 
 @app.route('/')
 def index():
