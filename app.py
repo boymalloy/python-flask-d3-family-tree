@@ -29,11 +29,16 @@ def generator3():
     persons.loc[:, 'birthyear'] = uf.loc[:, 'birthyear']
     persons.loc[:, 'birthplace'] = uf.loc[:, 'birthplace']
     persons.loc[:, 'partners'] = uf.loc[:, 'partners']
+    persons.loc[:, 'children'] = uf.loc[:, 'children'].apply(lambda x: x.split(',') if pd.notna(x) else [])
     
     #build a blank unions table
     unions = pd.DataFrame({'id': pd.Series(dtype='str'),
                     'partner' : pd.Series(dtype='object'),
-                    'children': pd.Series(dtype='str')})
+                    'children': pd.Series(dtype='object')})
+    
+    #build a blank links table
+    links = pd.DataFrame({'from': pd.Series(dtype='str'),
+                    'to': pd.Series(dtype='str')})
 
     
     # for every row in the user friendly table
@@ -71,16 +76,15 @@ def generator3():
                 who = str(persons.loc[index,'partners'])
                 persons.loc[persons['id'] == who, 'own_unions'] = NEWunionID
 
-                # create a dictionary with the data to write to the dataframe
-                row = {'id': NEWunionID, 'partner': partnership, 'children': "GVMM2018"}
-                    
-                # Append the dictionary to the DataFrame
-                unions.loc[len(unions)] = row
+                # Get the children list directly from the persons DataFrame for the current row
+                children_list = row['children']
+
+                # Create the union row with dynamically included children
+                union_row = {'id': NEWunionID, 'partner': partnership, 'children': children_list}
+
+                # Append the new union to the DataFrame using the append method for better handling of DataFrame indices
+                unions = pd.concat([unions, pd.DataFrame([union_row])], ignore_index=True)
     
-    
-    # Fixes the children field in the union table by putting it into an array (kind of)
-    # for index, row in unions.iterrows():
-        # unions.at[index, 'children'] = [unions.at[index, 'children']]
     
     # Sets the index of the unions table to be the custom id but preserves the custom id as it's own field by copying it
     unions['id_copy'] = unions['id']
@@ -92,7 +96,37 @@ def generator3():
     for index, row in persons.iterrows():
         persons.at[index, 'own_unions'] = [persons.at[index, 'own_unions']]
 
-    # Sets the index of the persons table to be the cuustom id 
+    # Links bit
+    # for each row in the unions df
+    for index, row in unions.iterrows():
+        
+        # grab the unionID
+        unionID = unions.loc[index, 'id']
+       
+       # grab both partners
+        partners = unions.loc[index, 'partner']
+        
+        # make a temp variable that mimics a row of the links df and store the first partner agains the union ID
+        row1 = {'from': partners[0], 'to': unionID}
+        
+        # Do the same for the second partner
+        row2 = {'from': partners[1], 'to': unionID}
+        
+        # Append the two new rows to the links table
+        links.loc[len(links)] = row1
+        links.loc[len(links)] = row2
+
+        # grab the list of children from the union and put it in an array
+        kidstemp = unions.loc[index, 'children']
+        # loop through the cildren in the array...
+        for item in kidstemp:
+            # create a new array that mimics a row in the links table, using the unionID as the from and the child's ID as the to
+            rowk = {'from': unionID, 'to': item}
+            # append that mimic row to the links df
+            links.loc[len(links)] = rowk
+
+            
+    # Sets the index of the persons table to be the custom id 
     persons.set_index('id', inplace=True)
 
     # turns the dataframe into the persons fragment of the tree json
@@ -101,16 +135,22 @@ def generator3():
     # turn the unions df to json
     unions_json = unions.to_json(orient="index")
 
+    # turn the links df to json
+    links_json = links.to_json(orient="values")
+
     # hard codes the first bit of the tree json
     start = "data = {\"start\":\"AJM1980\",\"persons\":"
 
     bitbetween = ",\"unions\": "
 
     # hard codes the end bit of the tree json, including unions and links
-    end = ", \"links\": [[\"AJM1980\", \"u1\"], [\"EAM1982\", \"u1\"], [\"u1\", \"GVMM2018\"],[\"u1\", \"TTMM2012\"],]}"
+    links_start = ", \"links\": "
+
+     # tint bit on the end
+    end = "}"
 
     # combines all of the bits of the tree together
-    assembled = start + persons_json + bitbetween + unions_json + end
+    assembled = start + persons_json + bitbetween + unions_json + links_start + links_json + end
 
     # writes the json tree to a static file
     with open("static/tree/data/test.js", "w",) as file_Obj:
