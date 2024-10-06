@@ -19,17 +19,18 @@ bootstrap = Bootstrap(app)
 
 def generator3():
     
-    uf = pd.read_csv("static/input/input.csv")
+    uf = pd.read_csv("static/input/xtended.csv")
 
-    # build the persons dataframe with data from uf
-    persons = pd.DataFrame()
-    persons.loc[:, 'id'] = uf.loc[:, 'id']
-    persons.loc[:, 'name'] = uf.loc[:, 'name']
-    persons["own_unions"] = None
-    persons.loc[:, 'birthyear'] = uf.loc[:, 'birthyear']
-    persons.loc[:, 'birthplace'] = uf.loc[:, 'birthplace']
-    persons.loc[:, 'partners'] = uf.loc[:, 'partners']
-    persons.loc[:, 'children'] = uf.loc[:, 'children'].apply(lambda x: x.split(',') if pd.notna(x) else [])
+    # Build the persons dataframe with data from uf
+    persons = pd.DataFrame({
+        'id': uf['id'].apply(lambda x: x.strip() if isinstance(x, str) else x),  # Remove spaces from 'id'
+        'name': uf['name'],  
+        'own_unions': [[] for _ in range(len(uf))],  # Initialize as empty lists for each row
+        'birthyear': uf['birthyear'],
+        'birthplace': uf['birthplace'],
+        'partners': uf['partners'].apply(lambda z: [p.strip() for p in z.split(',')] if pd.notna(z) else []),  # Strip each partner
+        'children': uf['children'].apply(lambda x: [c.strip() for c in x.split(',')] if pd.notna(x) else [])  # Strip each child
+    })
     
     #build a blank unions table
     unions = pd.DataFrame({'id': pd.Series(dtype='str'),
@@ -44,57 +45,77 @@ def generator3():
     # for every row in the user friendly table
     for index, row in persons.iterrows():
         
-        # get the union
-        partnership = [persons.loc[index, 'id'], str(persons.loc[index, 'partners'])]
+        # get the list of partners
+        boffers = persons.at[index, 'partners']
+        # loop through the list
+        for boffer in boffers:
 
-        # ... and the same union in reverse order
-        reverse = [str(persons.loc[index, 'partners']), persons.loc[index, 'id']]
-        
-        # if either version of the union is already in the unions table, do nothing
-        if unions['partner'].apply(lambda x: x == partnership or x == reverse).any():
-            print("nothing")
-        # else if the union hasn't been recorded yet...
-        else:
-            # if the union isn't there, stop
-            if pd.isna(persons.loc[index,'partners']):
+            # state the union
+            partnership = [persons.loc[index, 'id'], boffer]
+
+            # if the union (in either order) is already in the unions table, do nothing
+            if unions['partner'].apply(lambda x: set(x) == set(partnership)).any():
                 print("nothing")
-            # but if it is there....
+            # but if they are not present, proceed to create the union
             else:
-               # if this is the first union in the dataframe, call it u1
-                if unions.empty:
-                    NEWunionID = "u1"
                 
+                # first set the union id
+                # if there are no unions yet, set the NEWunionID to u1
+                if unions.empty:
+                    NEWunionID = "u1" 
+                # else get the last union number and give this union the next number on
                 else:
-                    # else get the last union number and give this union the next number on
                     OLDunionID = re.findall(r'\d+|\D+', unions['id'].iloc[-1])
                     NEWunionID = "u" + str(int(OLDunionID[1]) + 1)
-                
+                    
                 # write the new union id to the person that the current iteration is on
-                persons.loc[index,'own_unions'] = NEWunionID
+                persons.at[index, 'own_unions'].append(NEWunionID)
+                
+                # append the union id to the partner's row in the persons table
+                # Find the rows where 'id' matches boffer
+                matching_rows = persons.loc[persons['id'] == boffer]
 
-                # write the union id to the partners row in the persons table
-                who = str(persons.loc[index,'partners'])
-                persons.loc[persons['id'] == who, 'own_unions'] = NEWunionID
+                # Check if there are any matching rows
+                if not matching_rows.empty:
+                    # Get the index of the first matching row
+                    boffer_index = matching_rows.index[0]
 
-                # Get the children list directly from the persons DataFrame for the current row
-                children_list = row['children']
+                    # Ensure 'own_unions' is a list before appending
+                    if persons.at[boffer_index, 'own_unions'] is None:
+                        persons.at[boffer_index, 'own_unions'] = []  # Initialize as empty list if None
+                    
+                    # Append the new union ID
+                    persons.at[boffer_index, 'own_unions'].append(NEWunionID)
+                else:
+                    print(f"No matching row found for ID: {boffer}")
+
+                # store the partners in a list to be stored in the unions df
+                partnershipAsList = [persons.loc[index, 'id'], boffer]
+                
+                # get the chidren of each person
+                person1offspring = persons.at[index, 'children']
+                person2offspring = persons.at[boffer_index, 'children']
+                
+                # make a list of all the children common to both
+                offspringtogether = []
+                if person1offspring is not None:
+                    for kid in person1offspring:
+                        if kid in person2offspring:
+                            offspringtogether.append(kid)
+
 
                 # Create the union row with dynamically included children
-                union_row = {'id': NEWunionID, 'partner': partnership, 'children': children_list}
+                union_row = {'id': NEWunionID, 'partner': partnershipAsList, 'children': offspringtogether}
 
-                # Append the new union to the DataFrame using the append method for better handling of DataFrame indices
+                # Append the new union to the DataFrame
                 unions = pd.concat([unions, pd.DataFrame([union_row])], ignore_index=True)
-    
+
     
     # Sets the index of the unions table to be the custom id but preserves the custom id as it's own field by copying it
     unions['id_copy'] = unions['id']
     unions.set_index('id', inplace=True,)
     unions = unions.rename(columns={'id_copy': 'id'})
     unions = unions.reindex(columns=['id', 'partner', 'children'])
-
-    # Fixes the own_unions field in the persons table by putting it into an array (kind of)
-    for index, row in persons.iterrows():
-        persons.at[index, 'own_unions'] = [persons.at[index, 'own_unions']]
 
     # Links bit
     # for each row in the unions df
@@ -139,7 +160,7 @@ def generator3():
     links_json = links.to_json(orient="values")
 
     # hard codes the first bit of the tree json
-    start = "data = {\"start\":\"AJM1980\",\"persons\":"
+    start = "data = {\"start\":\"SS1963\",\"persons\":"
 
     bitbetween = ",\"unions\": "
 

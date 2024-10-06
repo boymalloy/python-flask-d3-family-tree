@@ -1,0 +1,5 @@
+id,name,birthyear,birthplace,partners,children
+SS1963,Scott Summers,1963,"Anchorage, Alaska","MP1983,JG1963",NCCS1986
+MP1983,Madelyne Pryor,1983,Unknown,SS1963,NCCS1986
+NCCS1986,Nathan Christopher Charles Summers,1986,Unknown,,
+JG1963,Jean Grey,1963,"Annandale-on-Hudson, New York",SS1963,

@@ -1,5 +1,6 @@
 id,name,birthyear,birthplace,partners,children
-SS1963,Scott Summers,1963,Place,JG1963,
-JG1963,Jean Grey,1963,Home,SS1963,
-NCCS1986,Nathan Christopher Charles Summers,1986,X-Factor,,
+SS1963,Scott Summers,1963,Anchorage,"MP1983,JG1963","NCCS1986, RS1980 "
+MP1983,Madelyne Pryor,1963,Unknown,SS1963,NCCS1986 
+JG1963,Jean Grey,1963,"Annandale-on-Hudson, New York",SS1963,RS1980
+NCCS1986,Nathan Christopher Charles Summers,1986,Unknown,,
 RS1980,Rachel Summers,1981,Future,,
