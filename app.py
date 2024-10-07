@@ -19,7 +19,7 @@ bootstrap = Bootstrap(app)
 
 def generator3():
     
-    uf = pd.read_csv("static/input/xtended.csv")
+    uf = pd.read_csv("static/input/input.csv")
 
     # Build the persons dataframe with data from uf
     persons = pd.DataFrame({
@@ -147,6 +147,9 @@ def generator3():
             links.loc[len(links)] = rowk
 
             
+    # Store the ID of the first person in the persons table so that it can be used as the starting point in the json file
+    start_id = persons.iloc[0]['id']
+    
     # Sets the index of the persons table to be the custom id 
     persons.set_index('id', inplace=True)
 
@@ -160,7 +163,9 @@ def generator3():
     links_json = links.to_json(orient="values")
 
     # hard codes the first bit of the tree json
-    start = "data = {\"start\":\"SS1963\",\"persons\":"
+    start = "data = {\"start\":\""
+
+    bitafterstartid = "\",\"persons\":"
 
     bitbetween = ",\"unions\": "
 
@@ -171,7 +176,7 @@ def generator3():
     end = "}"
 
     # combines all of the bits of the tree together
-    assembled = start + persons_json + bitbetween + unions_json + links_start + links_json + end
+    assembled = start + start_id + bitafterstartid + persons_json + bitbetween + unions_json + links_start + links_json + end
 
     # writes the json tree to a static file
     with open("static/tree/data/test.js", "w",) as file_Obj:
