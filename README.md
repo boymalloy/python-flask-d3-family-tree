@@ -9,7 +9,7 @@ I built this app to learn:
 * Git and GitHub
 
 Next I want to learn how to:
-* Deploy it AWS
+* Deploy it to AWS
 * Let a user upload a csv (at the moment it only accepts a local csv)
 * Learn about the JavaScript for the D3 data visualisation so that I can add some features to is. 
 
