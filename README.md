@@ -13,6 +13,6 @@ Next I want to learn how to:
 * Let a user upload a csv (at the moment it only accepts a local csv)
 * Learn about the JavaScript for the D3 data visualisation so that I can add some features to is. 
 
-The D3 data visualisation is based on [BenPortner's js_family_tree] (https://github.com/BenPortner/js_family_tree)
+The D3 data visualisation is based on [BenPortner's js_family_tree](https://github.com/BenPortner/js_family_tree)
 
 ## Running locally
