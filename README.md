@@ -1,6 +1,6 @@
 # Family tree visualisation
 
-This is a simple pythin app which takes a csv of family tree data and turns it into a D3 data visualisation 
+This is a simple python app which takes a csv of family tree data and turns it into a D3 data visualisation 
 
 I built this app to learn:
 * Pythin
