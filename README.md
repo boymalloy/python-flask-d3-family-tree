@@ -25,16 +25,30 @@ To install and run this project locally, follow these steps:
 
 2. Navigate into the project directory:
     ```bash
-    cd my-python-project
+    cd flask
     ```
 
-3. (Optional but recommended) Create and activate a virtual environment:
+3. Create and activate a virtual environment:
     ```bash
     python3 -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    source venv/bin/activate
     ```
 
 4. Install the required dependencies:
     ```bash
     pip install -r requirements.txt
     ```
+## Usage
+
+1. Use these commands:
+    ```bash
+    export FLASK_APP=app
+    export FLASK_ENV=development
+    ```
+2. Start the web server:
+    ```bash
+    flask run
+    ```
+3.Got to [http://127.0.0.1:5000/treegenerator3](http://127.0.0.1:5000/treegenerator3)
+
+
