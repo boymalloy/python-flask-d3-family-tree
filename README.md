@@ -15,13 +15,12 @@ Next I want to learn how to:
 
 The D3 data visualisation is based on [BenPortner's js_family_tree](https://github.com/BenPortner/js_family_tree)
 
-## Running locally
 ## Installation
 To install and run this project locally, follow these steps:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/my-python-project.git
+    git clone https://github.com/boymalloy/flask.git
     ```
 
 2. Navigate into the project directory:
