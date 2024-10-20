@@ -49,6 +49,6 @@ To install and run this project locally, follow these steps:
     ```bash
     flask run
     ```
-3.Got to [http://127.0.0.1:5000/treegenerator3](http://127.0.0.1:5000/treegenerator3)
+3. Got to [http://127.0.0.1:5000/treegenerator3](http://127.0.0.1:5000/treegenerator3)
 
 
