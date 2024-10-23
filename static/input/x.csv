@@ -1,6 +1,9 @@
 id,name,birthyear,birthplace,partners,children
-SS1963,Scott Summers,1963,Anchorage,"MP1983,JG1963","NCCS1986, RS1980 "
-MP1983,Madelyne Pryor,1963,Unknown,SS1963,NCCS1986 
-JG1963,Jean Grey,1963,"Annandale-on-Hudson, New York",SS1963,RS1980
+SS1963,Scott Summers,1963,"Anchorage, Alaska","MP1983,JG1963,EF1980","NCCS1986,RS2009,NG1995,RS1980"
+MP1983,Madelyne Pryor,1983,Unknown,SS1963,NCCS1986
 NCCS1986,Nathan Christopher Charles Summers,1986,Unknown,,
-RS1980,Rachel Summers,1981,Future,,
+JG1963,Jean Grey,1963,"Annandale-on-Hudson, New York",SS1963,"NG1995,RS1980 "
+EF1980,Emma Frost,1980,,SS1963,RS2009
+RS2009,Ruby Summers,2009,,,
+NG1995,Nate Grey,1995,,,
+RS1980,Rachel Summers,1980,,,
