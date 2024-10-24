@@ -20,12 +20,12 @@ To install and run this project locally, follow these steps:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/boymalloy/flask.git
+    git clone https://github.com/boymalloy/python-flask-d3-family-tree.git
     ```
 
 2. Navigate into the project directory:
     ```bash
-    cd flask
+    cd python-flask-d3-family-tree
     ```
 
 3. Create and activate a virtual environment:
@@ -61,7 +61,7 @@ The default csv file contains the Summers family tree from X-men comics. To make
 
 ## To make your own family tree
 
-1. Navigate to the input directory: flask/static/input
+1. Navigate to the input directory: python-flask-d3-family-tree/static/input
 
 2. Make a copy of x.csv and give it a name, e.g. mytree.csv
 
@@ -71,7 +71,7 @@ The default csv file contains the Summers family tree from X-men comics. To make
 * Do the same with the childrens ids in the childrens column
 * save the csv in text/csv format
 
-4. Navigate to the templates directory: flask/templates
+4. Navigate to the templates directory: python-flask-d3-family-tree/templates
 
 5. Open treegenerator3.html in a text or code editor
 
@@ -81,7 +81,7 @@ The default csv file contains the Summers family tree from X-men comics. To make
 * Go to the terminal window
 * Use Ctrl+c to stop the server
 
-8. Start the web server again with :
+8. Start the web server again with:
     ```bash
     flask run
     ```
