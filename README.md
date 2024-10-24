@@ -30,15 +30,15 @@ To install and run this project locally, follow these steps:
 
 3. Create and activate a virtual environment:
     ```bash
-    python3 -m venv venv
-    source venv/bin/activate
+    python3 -m venv env
+    source env/bin/activate
     ```
 
 4. Install the required dependencies:
     ```bash
     pip install -r requirements.txt
     ```
-## Usage
+## To run locally
 
 1. Use these commands:
     ```bash
@@ -49,6 +49,44 @@ To install and run this project locally, follow these steps:
     ```bash
     flask run
     ```
-3. Got to [http://127.0.0.1:5000/treegenerator3](http://127.0.0.1:5000/treegenerator3)
+## Display the Summers family tree
 
+The default csv file contains the Summers family tree from X-men comics. To make the app process the csv into a D3/JS family tree, do this...
 
+1. Got to [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+
+2. Click on 'Generate a tree'
+
+3. Click on 'See the tree'
+
+## To make your own family tree
+
+1. Navigate to the input directory: flask/static/input
+
+2. Make a copy of x.csv and give it a name, e.g. mytree.csv
+
+3. In the new file, replace the entries with your own entries. Make sure you:
+* Have a unique id for each person. I usually use their initials and year of birth
+* include all of the persons partners in the partners column using the partners' unique ids separated by a coomma
+* Do the same with the childrens ids in the childrens column
+* save the csv in text/csv format
+
+4. Navigate to the templates directory: flask/templates
+
+5. Open treegenerator3.html in a text or code editor
+
+6. Go to row 8 and replace x.csv with mytree.csv and save the file
+
+7. Stop and start the web server
+* Go to the terminal window
+* Use Ctrl+c to stop the server
+* the run it again with 
+    ```bash
+    flask run
+    ```
+
+8. Got to [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+
+9. Click on 'Generate a tree'
+
+10. Click on 'See the tree'
