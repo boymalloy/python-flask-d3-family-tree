@@ -77,10 +77,11 @@ The default csv file contains the Summers family tree from X-men comics. To make
 
 6. Go to row 8 and replace x.csv with mytree.csv and save the file
 
-7. Stop and start the web server
+7. Stop the web server:
 * Go to the terminal window
 * Use Ctrl+c to stop the server
-* the run it again with 
+
+8. Start the web server again with :
     ```bash
     flask run
     ```
