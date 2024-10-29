@@ -15,7 +15,7 @@ Next I plan to:
 * Deploy it to AWS
 * Learn about the JavaScript for the D3 data visualisation so that I can add some features to it 
 
-The D3 data visualisation is based on [BenPortner's js_family_tree](https://github.com/BenPortner/js_family_tree)
+I didn't make the JavaScript data visualisation. It is taken (with thanks and gratitude) from [BenPortner's js_family_tree](https://github.com/BenPortner/js_family_tree), which in turn is based on [collapsible d3 tree example](https://gist.github.com/d3noob/43a860bc0024792f8803bba8ca0d5ecd) by d3noob.
 
 ## Installation
 To install and run this project locally, follow these steps:
