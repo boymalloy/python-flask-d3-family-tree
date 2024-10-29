@@ -8,10 +8,12 @@ I built this app to learn:
 * Jinja templates
 * Git and GitHub
 
-Next I want to learn how to:
-* Deploy it to AWS
+Next I plan to:
 * Let a user upload a csv (at the moment it only accepts a local csv)
-* Learn about the JavaScript for the D3 data visualisation so that I can add some features to is. 
+* Try doing it in an object oriented way (it's currently done using dataframe, which is more of a data science thing, just coz I knew how to do that already)
+* Make it use a database
+* Deploy it to AWS
+* Learn about the JavaScript for the D3 data visualisation so that I can add some features to it 
 
 The D3 data visualisation is based on [BenPortner's js_family_tree](https://github.com/BenPortner/js_family_tree)
 
