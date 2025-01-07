@@ -20,25 +20,25 @@ I didn't make the JavaScript data visualisation. It is taken (with thanks and gr
 ## Installation
 To install and run this project locally, follow these steps:
 
-1. Clone the repository:
+1. Install the required dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+    
+2. Clone the repository:
     ```bash
     git clone https://github.com/boymalloy/python-flask-d3-family-tree.git
     ```
 
-2. Navigate into the project directory:
+3. Navigate into the project directory:
     ```bash
     cd python-flask-d3-family-tree
     ```
 
-3. Create and activate a virtual environment:
+4. Create and activate a virtual environment:
     ```bash
     python3 -m venv env
     source env/bin/activate
-    ```
-
-4. Install the required dependencies:
-    ```bash
-    pip install -r requirements.txt
     ```
 ## To run locally
 
