@@ -1,9 +1,12 @@
 from flask import Flask, request, render_template
 from flask_bootstrap import Bootstrap
-import numpy as np # linear algebra
-import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import numpy as np
+import pandas as pd
 import re
 import json
+import os
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 
 # Set pandas display options to prevent truncation
 pd.set_option('display.max_rows', None)
@@ -11,12 +14,54 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
 pd.set_option('display.max_colwidth', None)
 
-app = Flask(__name__)
-
-# creates a path to all the static files for the tree and the csv inputs
+# Create the Flask app and configure it
 app = Flask(__name__, static_url_path='/static')
-
 bootstrap = Bootstrap(app)
+
+# Database configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize the SQLAlchemy instance
+db = SQLAlchemy(app)
+
+# Define a Person model
+class Person(db.Model):
+    __tablename__ = 'persons'
+    person_id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(100), nullable=False)
+    last_name = db.Column(db.String(100))
+    birth_date = db.Column(db.Date)
+    death_date = db.Column(db.Date)
+    gender = db.Column(db.Enum('M', 'F', 'X', name='gender_type'), nullable=False)
+    notes = db.Column(db.Text)
+
+# Route: Home page
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+# Route: Tree generator
+@app.route('/treegenerator3')
+def treegenerator3():
+    return render_template('treegenerator3.html', generator3=generator3)
+
+# Route: Database connection test
+@app.route('/test_db')
+def test_db():
+    try:
+        with app.app_context():
+            result = db.session.execute(text('SELECT 1')).fetchone()
+            return f"Database connection successful! Result: {result[0]}"
+    except Exception as e:
+        return f"Database connection failed: {e}", 500
+
+@app.route('/sqltest')
+def sqltestpage():
+    # Query all records from the 'persons' table
+    persons = Person.query.all()
+    return render_template('sqltest.html', persons=persons)
+
 
 def generator3(file_name):
     
@@ -108,14 +153,12 @@ def generator3(file_name):
                         if kid in person2offspring:
                             offspringtogether.append(kid)
 
-
                 # Create the union row with dynamically included children
                 union_row = {'id': NEWunionID, 'partner': partnershipAsList, 'children': offspringtogether}
 
                 # Append the new union to the DataFrame
                 unions = pd.concat([unions, pd.DataFrame([union_row])], ignore_index=True)
 
-    
     # Sets the index of the unions table to be the custom id but preserves the custom id as it's own field by copying it
     unions['id_copy'] = unions['id']
     unions.set_index('id', inplace=True,)
@@ -151,7 +194,6 @@ def generator3(file_name):
             # append that mimic row to the links df
             links.loc[len(links)] = rowk
 
-            
     # Store the ID of the first person in the persons table so that it can be used as the starting point in the json file
     start_id = persons.iloc[0]['id']
     
@@ -194,10 +236,5 @@ expected_json_x = '''data = {"start":"SS1963","persons":{"SS1963":{"name":"Scott
 def test_generator3():
     assert generator3("x.csv") == expected_json_x
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/treegenerator3')
-def treegenerator3():
-    return render_template('treegenerator3.html', generator3=generator3)
+if __name__ == '__main__':
+    app.run(debug=True)
