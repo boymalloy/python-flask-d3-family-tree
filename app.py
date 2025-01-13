@@ -25,17 +25,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Initialize the SQLAlchemy instance
 db = SQLAlchemy(app)
 
-# Define a Person model
-class Person(db.Model):
-    __tablename__ = 'persons'
-    person_id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(100), nullable=False)
-    last_name = db.Column(db.String(100))
-    birth_date = db.Column(db.Date)
-    death_date = db.Column(db.Date)
-    gender = db.Column(db.Enum('M', 'F', 'X', name='gender_type'), nullable=False)
-    notes = db.Column(db.Text)
-
 # Route: Home page
 @app.route('/')
 def index():
@@ -56,11 +45,28 @@ def test_db():
     except Exception as e:
         return f"Database connection failed: {e}", 500
 
-@app.route('/sqltest')
-def sqltestpage():
-    # Query all records from the 'persons' table
-    persons = Person.query.all()
-    return render_template('sqltest.html', persons=persons)
+# Route: Fetch data and pass JSON to the Jinja template
+@app.route('/json')
+def jsontest():
+    try:
+        # Use the app context to access the database session
+        with app.app_context():
+            query = text("SELECT * FROM persons")
+            result = db.session.execute(query)
+
+            # Fetch all rows and get column names
+            rows = result.fetchall()
+            col_names = result.keys()  # Retrieve column names from the result object
+
+            # Convert rows to a list of dictionaries
+            data = [dict(zip(col_names, row)) for row in rows]
+
+            # Render the Jinja template and pass the data
+            return render_template('jsontest.html', data=data)
+
+    except Exception as e:
+        # Handle exceptions and render an error message in the template
+        return render_template('jsontest.html', error=f"Error fetching data: {e}")
 
 
 def generator3(file_name):
