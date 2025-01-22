@@ -68,6 +68,26 @@ def jsontest():
         # Handle exceptions and render an error message in the template
         return render_template('jsontest.html', error=f"Error fetching data: {e}")
 
+@app.route('/panda')
+def pandatest():
+    try:
+        # Use the app context to access the database session
+        with app.app_context():
+            query = text("SELECT * FROM persons")
+            result = db.session.execute(query)
+
+            # Fetch all rows and get column names
+            rows = result.fetchall()
+            col_names = result.keys()  # Retrieve column names from the result object
+
+            data = pd.DataFrame(rows, columns=col_names)
+
+            # Render the Jinja template and pass the data
+            return render_template('pandatest.html', data=data)
+
+    except Exception as e:
+        # Handle exceptions and render an error message in the template
+        return render_template('pandatest.html', error=f"Error fetching data: {e}")
 
 def generator3(file_name):
     
