@@ -110,7 +110,40 @@ def get_children(subject):
 
         return children
 
-@app.route('/panda')
+
+        
+            
+
+    
+def freshstart():
+    return "Hello world"
+
+
+@app.route('/thing')
+def thing():
+    return render_template('run.html', header="Tree from db", payload=freshstart())
+
+@app.route('/panda_original')
+def originalpanda():
+    file_path = "static/input/"
+    file_path_and_name = file_path + str("x.csv")
+    uf = pd.read_csv(file_path_and_name)
+     
+     
+     # Build the persons dataframe with data from uf
+    persons = pd.DataFrame({
+        'id': uf['id'].apply(lambda x: x.strip() if isinstance(x, str) else x),  # Remove spaces from 'id'
+        'name': uf['name'],  
+        'own_unions': [[] for _ in range(len(uf))],  # Initialize as empty lists for each row
+        'birthyear': uf['birthyear'],
+        'birthplace': uf['birthplace'],
+        'partners': uf['partners'].apply(lambda z: [p.strip() for p in z.split(',')] if pd.notna(z) else []),  # Strip each partner
+        'children': uf['children'].apply(lambda x: [c.strip() for c in x.split(',')] if pd.notna(x) else [])  # Strip each child
+    })
+
+    return render_template('pandatest.html', data=persons)
+
+
 def pandatest():
     try:
         # Use the app context to access the database session
@@ -125,7 +158,7 @@ def pandatest():
             # Make a data frame from the fetched rows and column names
             persons = pd.DataFrame(rows, columns=col_names)
             
-            # Add empty columns for partners and children
+            # Add empty columns for partners, children and own unions
             persons["partners"] = None
             persons["children"] = None
 
@@ -179,9 +212,22 @@ def pandatest():
                     
                         new_row = makeUnionRow(person1,boffer)
 
-                        # Append the new union to the DataFrame
+                        # Add the new union to the DataFrame
                         unions = pd.concat([unions, pd.DataFrame([new_row])])
 
+            # HERE
+
+            persons["own_unions"] = [[] for _ in range(len(persons))]
+
+            # # add all the newly minted unions to each partner's own_unions field
+            # loop throough the list of unions
+            for index, row in unions.iterrows():
+                # loop through all the partners in the partners field
+                for item in unions.at[index, 'partner']:
+                    # add the union id from the outer look to each partner's record in the persons table
+                    persons.at[item, 'own_unions'].append(index)
+
+            
             #build a blank links table
             links = pd.DataFrame({'from': pd.Series(dtype='str'),'to': pd.Series(dtype='str')})
 
@@ -202,20 +248,7 @@ def pandatest():
                 for tidler in childrenx:
                     newchildrenlinkrow = {'from': index, 'to': tidler}
                     links.loc[len(links)] = newchildrenlinkrow
-
-            # HERE
-            persons["own_unions"] = None
-
-            # for each person
-            for id, personrow in persons.iterrows():
-                #for each union
-                for index, unionrow in unions.iterrows():
-                    #for each value in the partner field
-                    for partnerZ in unions.at[index,'partner']:
-                        # if the value is the same and the person's id from the outer loop
-                        if partnerZ == id:
-                            # append the value to the list in that person's own_unions field
-                            persons.at[id, 'own_unions'].append(partnerZ)
+             
             
             persons_json = persons.to_json(orient="index")
 
@@ -243,33 +276,15 @@ def pandatest():
             with open("static/tree/data/test.js", "w",) as file_Obj:
                 file_Obj.write(assembled)
 
-            # Render the Jinja template and pass the dataframe
-            return render_template('pandatest.html', data=assembled)
-        
+            return assembled
             
     except Exception as e:
         # Handle exceptions and render an error message in the template
-        return render_template('pandatest.html', error=f"Error fetching data: {e}")
+        return e
 
-@app.route('/panda_original')
-def originalpanda():
-    file_path = "static/input/"
-    file_path_and_name = file_path + str("x.csv")
-    uf = pd.read_csv(file_path_and_name)
-     
-     
-     # Build the persons dataframe with data from uf
-    persons = pd.DataFrame({
-        'id': uf['id'].apply(lambda x: x.strip() if isinstance(x, str) else x),  # Remove spaces from 'id'
-        'name': uf['name'],  
-        'own_unions': [[] for _ in range(len(uf))],  # Initialize as empty lists for each row
-        'birthyear': uf['birthyear'],
-        'birthplace': uf['birthplace'],
-        'partners': uf['partners'].apply(lambda z: [p.strip() for p in z.split(',')] if pd.notna(z) else []),  # Strip each partner
-        'children': uf['children'].apply(lambda x: [c.strip() for c in x.split(',')] if pd.notna(x) else [])  # Strip each child
-    })
-
-    return render_template('pandatest.html', data=persons)
+@app.route('/panda')
+def woowoo():
+    return render_template('run.html', header="Tree from db", payload=pandatest())
 
 def generator3(file_name):
     
