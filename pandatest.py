@@ -12,7 +12,7 @@ def pandatest():
             # Make a data frame from the fetched rows and column names
             persons = pd.DataFrame(rows, columns=col_names)
             
-            # Add empty columns for partners and children
+            # Add empty columns for partners, children and own unions
             persons["partners"] = None
             persons["children"] = None
 
@@ -66,9 +66,22 @@ def pandatest():
                     
                         new_row = makeUnionRow(person1,boffer)
 
-                        # Append the new union to the DataFrame
+                        # Add the new union to the DataFrame
                         unions = pd.concat([unions, pd.DataFrame([new_row])])
 
+            # HERE
+
+            persons["own_unions"] = [[] for _ in range(len(persons))]
+
+            # # add all the newly minted unions to each partner's own_unions field
+            # loop throough the list of unions
+            for index, row in unions.iterrows():
+                # loop through all the partners in the partners field
+                for item in unions.at[index, 'partner']:
+                    # add the union id from the outer look to each partner's record in the persons table
+                    persons.at[item, 'own_unions'].append(index)
+
+            
             #build a blank links table
             links = pd.DataFrame({'from': pd.Series(dtype='str'),'to': pd.Series(dtype='str')})
 
@@ -89,25 +102,7 @@ def pandatest():
                 for tidler in childrenx:
                     newchildrenlinkrow = {'from': index, 'to': tidler}
                     links.loc[len(links)] = newchildrenlinkrow
-
-            # HERE
-            persons["own_unions"] = None
-
-            # for each person
-            for id, personrow in persons.iterrows():
-                #for each union
-                for index, unionrow in unions.iterrows():
-                    #for each value in the partner field
-                    for partnerZ in unions.at[index,'partner']:
-                        # if the value is the same and the person's id from the outer loop
-                        if partnerZ == id:
-                            if not persons.at[id, 'own_unions']:
-                                persons.at[id, 'own_unions'] = partnerZ
-                            
-                            if persons.at[id, 'own_unions']:
-                                # append the value to the list in that person's own_unions field
-                                persons.at[id, 'own_unions'].append(partnerZ)
-                                
+             
             
             persons_json = persons.to_json(orient="index")
 
@@ -136,3 +131,7 @@ def pandatest():
                 file_Obj.write(assembled)
 
             return assembled
+            
+    except Exception as e:
+        # Handle exceptions and render an error message in the template
+        return e
