@@ -23,20 +23,15 @@ db = SQLAlchemy(app)
 def index():
     return render_template('index.html')
 
-# Route: Tree from CSV
-@app.route('/treegenerator3')
-def treegenerator3():
-    return render_template('run.html', header="Tree from csv", payload=generator3("x.csv"))
-
 # Route: Tree from db
 @app.route('/fetch')
 def fetch():
-    return render_template('run.html', header="Tree from db", payload=pandatest())
+    return render_template('run.html', header="Tree from db", payload=fetch_tree())
 
 # get subject's partners from the db
 def get_partners(subject):
     with app.app_context():
-        # Use a parameterized query
+        # selects the id of people listed as in a relationship or union with a given person
         query = text("""
             SELECT person2_id 
             FROM relationships 
@@ -44,7 +39,7 @@ def get_partners(subject):
               AND (relationship = 'spouse' OR relationship = 'union')
         """)
         
-        # Execute the query with the parameter
+        # Execute the query as a parameter
         result = db.session.execute(query, {"subject": subject})
         
          # Fetch all rows
@@ -55,15 +50,15 @@ def get_partners(subject):
 
         return partners
 
-# get subject's partners from the db
+# get subject's children from the db
 def get_children(subject):
     with app.app_context():
-        # Use a parameterized query
+        # selects tthe id of anyone who has the subject listed as a parent
         query = text("""
             SELECT person2_id FROM relationships WHERE person1_id = :subject AND relationship = 'parent'
         """)
         
-        # Execute the query with the parameter
+        # Execute the query as a parameter
         result = db.session.execute(query, {"subject": subject})
         
         # Fetch all rows
@@ -74,7 +69,34 @@ def get_children(subject):
 
         return children
 
-def pandatest():
+# finds from the persons dataframe all the children of two people 
+def get_children_together(person1,person2,persons):
+    # Check it's not the same person twice
+    if person1 == person2:
+        return "same person"
+    
+    # get the chidren of each person
+    person1offspring = persons.at[person1, 'children']
+    person2offspring = persons.at[person2, 'children']
+
+    # make a list of all the children common to both
+    offspringtogether = []
+    if person1offspring is not None:
+        for kid in person1offspring:
+            if kid in person2offspring:
+                        offspringtogether.append(kid)
+
+    return offspringtogether
+
+# adds data to a a row in the unions dataframe - the 2 people in the union and any children
+def make_union_row(person1,person2,persons):
+    partnership = [person1, person2]
+    childrentogether = get_children_together(person1,person2,persons)
+    union_row = {'partner': partnership, 'children': childrentogether}
+    return union_row
+
+# fetches the tree data from the db and builds the json file to be read by the D3 family tree app
+def fetch_tree():
     try:
         # Use the app context to access the database session
         with app.app_context():
@@ -96,7 +118,7 @@ def pandatest():
             # start the index of the df from 1 to match the ids in the db
             persons.index = range(1, len(persons) + 1)
 
-            # Loop through each person in the data frame, gets the id of each of their partners from the db, writes the partners' id to the partners column
+            # Loop through each person in the data frame, gets the id of each of their partners from the db and wrrite the partners' id to the partners column
             for index, row in persons.iterrows():
                 persons.at[index, 'partners'] = get_partners(index)
 
@@ -108,32 +130,14 @@ def pandatest():
             unions = pd.DataFrame({'partner' : pd.Series(dtype='object'),
                             'children': pd.Series(dtype='object')})
             
-            def getChildrenTogether(person1,person2):
-                # get the chidren of each person
-                person1offspring = persons.at[person1, 'children']
-                person2offspring = persons.at[person2, 'children']
-
-                # make a list of all the children common to both
-                offspringtogether = []
-                if person1offspring is not None:
-                    for kid in person1offspring:
-                        if kid in person2offspring:
-                                    offspringtogether.append(kid)
-
-                return offspringtogether
             
-            def makeUnionRow(person1,person2):
-                partnership = [person1, person2]
-                childrentogether = getChildrenTogether(person1,person2)
-                union_row = {'partner': partnership, 'children': childrentogether}
-                return union_row
-            
+            # loop through the people in the persons dataframe and get list of each one's partners
             for index, row in persons.iterrows():
                 person1 = index
-                boffers = persons.at[person1, 'partners']
+                partners = persons.at[person1, 'partners']
 
-                for boffer in boffers:
-                    partnership = [person1, boffer]
+                for partner in partners:
+                    partnership = [person1, partner]
                     
                     # if the union (in either order) is already in the unions table, do nothing
                     if unions['partner'].apply(lambda x: set(x) == set(partnership)).any():
@@ -141,7 +145,7 @@ def pandatest():
                     # but if they are not present, proceed to create the union
                     else:
                     
-                        new_row = makeUnionRow(person1,boffer)
+                        new_row = make_union_row(person1,partner,persons)
 
                         # Add the new union to the DataFrame
                         unions = pd.concat([unions, pd.DataFrame([new_row])])
@@ -155,10 +159,10 @@ def pandatest():
                     persons.at[item, 'own_unions'].append(index)
 
             
-            #build a blank links table
+            #build a blank links dataframe
             links = pd.DataFrame({'from': pd.Series(dtype='str'),'to': pd.Series(dtype='str')})
 
-            # and from person to union for each partner
+            # add the person to the union for each partner
             for index, row in unions.iterrows():
                 partnersx = unions.loc[index, 'partner']
                 unionx = index
@@ -172,8 +176,8 @@ def pandatest():
 
             for index, row in unions.iterrows():
                 childrenx = unions.loc[index, 'children']
-                for tidler in childrenx:
-                    newchildrenlinkrow = {'from': index, 'to': tidler}
+                for child in childrenx:
+                    newchildrenlinkrow = {'from': index, 'to': child}
                     links.loc[len(links)] = newchildrenlinkrow
              
             
@@ -193,7 +197,7 @@ def pandatest():
             # hard codes the end bit of the tree json, including unions and links
             links_start = ", \"links\": "
 
-            # tint bit on the end
+            # bit on the end
             ender = "}"
 
             # combines all of the bits of the tree together
@@ -203,13 +207,11 @@ def pandatest():
             with open("static/tree/data/test.js", "w",) as file_Obj:
                 file_Obj.write(assembled)
 
-            return assembled
+            return "Tree fetched successfully"
             
     except Exception as e:
         # Handle exceptions and render an error message in the template
         return e
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
