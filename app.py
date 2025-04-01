@@ -1,8 +1,8 @@
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 import pandas as pd
-import re
 import os
+import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 
@@ -76,17 +76,17 @@ def get_children_together(person1,person2,persons):
         return "same person"
     
     # get the chidren of each person
-    person1offspring = persons.at[person1, 'children']
-    person2offspring = persons.at[person2, 'children']
+    person1_children = persons.at[person1, 'children']
+    person2_children = persons.at[person2, 'children']
 
     # make a list of all the children common to both
-    offspringtogether = []
-    if person1offspring is not None:
-        for kid in person1offspring:
-            if kid in person2offspring:
-                        offspringtogether.append(kid)
+    shared_children = []
+    if person1_children is not None:
+        for child in person1_children:
+            if child in person2_children:
+                        shared_children.append(child)
 
-    return offspringtogether
+    return shared_children
 
 # adds data to a a row in the unions dataframe - the 2 people in the union and any children
 def make_union_row(person1,person2,persons):
@@ -109,6 +109,10 @@ def fetch_tree():
 
             # Make a data frame from the fetched rows and column names
             persons = pd.DataFrame(rows, columns=col_names)
+            
+            # Convert dates to milliseconds since epoch
+            persons["birth_date"] = pd.to_datetime(persons["birth_date"]).astype("int64") // 10**6
+            persons["death_date"] = pd.to_datetime(persons["death_date"]).astype("int64") // 10**6
             
             # Add empty columns for partners, children and own unions
             persons["partners"] = None
@@ -134,10 +138,10 @@ def fetch_tree():
             # loop through the people in the persons dataframe and get list of each one's partners
             for index, row in persons.iterrows():
                 person1 = index
-                partners = persons.at[person1, 'partners']
+                partner_ids = persons.at[person1, 'partners']
 
-                for partner in partners:
-                    partnership = [person1, partner]
+                for partner_id in partner_ids:
+                    partnership = [person1, partner_id]
                     
                     # if the union (in either order) is already in the unions table, do nothing
                     if unions['partner'].apply(lambda x: set(x) == set(partnership)).any():
@@ -145,13 +149,13 @@ def fetch_tree():
                     # but if they are not present, proceed to create the union
                     else:
                     
-                        new_row = make_union_row(person1,partner,persons)
+                        new_row = make_union_row(person1,partner_id,persons)
 
                         # Add the new union to the DataFrame
                         unions = pd.concat([unions, pd.DataFrame([new_row])])
 
             # add all the newly minted unions to each partner's own_unions field
-            # loop throough the list of unions
+            # loop through the list of unions
             for index, row in unions.iterrows():
                 # loop through all the partners in the partners field
                 for item in unions.at[index, 'partner']:
@@ -169,49 +173,44 @@ def fetch_tree():
                 personx = partnersx[0]
                 persony = partnersx[1]
             
-                newlinkrow1 = {'from': personx, 'to': unionx}
-                newlinkrow2 = {'from': persony, 'to': unionx}
-                links.loc[len(links)] = newlinkrow1
-                links.loc[len(links)] = newlinkrow2
+                link_row_1 = {'from': personx, 'to': unionx}
+                link_row_2 = {'from': persony, 'to': unionx}
+                links.loc[len(links)] = link_row_1
+                links.loc[len(links)] = link_row_2
 
             for index, row in unions.iterrows():
                 childrenx = unions.loc[index, 'children']
                 for child in childrenx:
-                    newchildrenlinkrow = {'from': index, 'to': child}
-                    links.loc[len(links)] = newchildrenlinkrow
+                    link_row_children = {'from': index, 'to': child}
+                    links.loc[len(links)] = link_row_children
              
-            
-            persons_json = persons.to_json(orient="index")
 
-            # turn the unions df to json
-            unions_json = unions.to_json(orient="index")
+            # Convert DataFrames to native Python dicts and list
+            persons_dict = persons.to_dict(orient="index")
+            unions_dict = unions.to_dict(orient="index")
+            links_list = links.values.tolist()  # gives you [[1, 0], [2, 0], ...]
 
-            # turn the links df to json
-            links_json = links.to_json(orient="values")
+            # assemble it into one dict
+            assembled = {
+                "start": "1",
+                "persons": persons_dict,
+                "unions": unions_dict,
+                "links": links_list
+            }
 
-            # hard codes the first bit of the tree json
-            start = "data = {\"start\":\"1\",\"persons\":"
+            # Turn the dict into a json string
+            json_string = "data = " + json.dumps(assembled, indent=2, separators=(",", ":"))
 
-            bitbetween = ",\"unions\": "
-
-            # hard codes the end bit of the tree json, including unions and links
-            links_start = ", \"links\": "
-
-            # bit on the end
-            ender = "}"
-
-            # combines all of the bits of the tree together
-            assembled = start + persons_json + bitbetween + unions_json + links_start + links_json + ender
-            
-            # writes the json tree to a static file
-            with open("static/tree/data/test.js", "w",) as file_Obj:
-                file_Obj.write(assembled)
+            # Write the json string to a file for d3 to read
+            with open("static/tree/data/tree_data.js", "w") as file_Obj:
+                file_Obj.write(json_string)
 
             return "Tree fetched successfully"
             
+    # Catch and return any exceptions
     except Exception as e:
-        # Handle exceptions and render an error message in the template
         return e
 
+# if the script is executed directly, run the app
 if __name__ == '__main__':
     app.run(debug=True)
