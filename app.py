@@ -29,7 +29,7 @@ def fetch():
     return render_template('run.html', header="Tree from db", payload=fetch_tree())
 
 # get subject's partners from the db
-def get_partners(subject):
+def fetch_partners_from_db(subject):
     with app.app_context():
         # selects the id of people listed as in a relationship or union with a given person
         query = text("""
@@ -51,7 +51,7 @@ def get_partners(subject):
         return partners
 
 # get subject's children from the db
-def get_children(subject):
+def fetch_children_from_db(subject):
     with app.app_context():
         # selects tthe id of anyone who has the subject listed as a parent
         query = text("""
@@ -70,7 +70,7 @@ def get_children(subject):
         return children
 
 # finds from the persons dataframe all the children of two people 
-def get_children_together(person1,person2,persons):
+def get_children_together_from_df(person1,person2,persons):
     # Check it's not the same person twice
     if person1 == person2:
         return "same person"
@@ -88,10 +88,18 @@ def get_children_together(person1,person2,persons):
 
     return shared_children
 
+
+# checks the union df for a union (two person ids in any order)
+def check_for_existing_union_in_df(couple,dataframe):
+    for index, row in dataframe.iterrows():
+        if set(couple) == set(row['partner']):
+            return True
+    return False
+
 # adds data to a a row in the unions dataframe - the 2 people in the union and any children
 def make_union_row(person1,person2,persons):
     partnership = [person1, person2]
-    childrentogether = get_children_together(person1,person2,persons)
+    childrentogether = get_children_together_from_df(person1,person2,persons)
     union_row = {'partner': partnership, 'children': childrentogether}
     return union_row
 
@@ -124,11 +132,11 @@ def fetch_tree():
 
             # Loop through each person in the data frame, gets the id of each of their partners from the db and wrrite the partners' id to the partners column
             for index, row in persons.iterrows():
-                persons.at[index, 'partners'] = get_partners(index)
+                persons.at[index, 'partners'] = fetch_partners_from_db(index)
 
             # Loop through each person in the data frame, gets the id of each of their children from the db, writes the childrens' id to the children column
             for index, row in persons.iterrows():
-                persons.at[index, 'children'] = get_children(index)
+                persons.at[index, 'children'] = fetch_children_from_db(index)
 
             # build a blank unions table
             unions = pd.DataFrame({'partner' : pd.Series(dtype='object'),
@@ -140,19 +148,19 @@ def fetch_tree():
                 person1 = index
                 partner_ids = persons.at[person1, 'partners']
 
+                # create a parnership of ids for each instance of the person and one of their partners
                 for partner_id in partner_ids:
                     partnership = [person1, partner_id]
-                    
-                    # if the union (in either order) is already in the unions table, do nothing
-                    if unions['partner'].apply(lambda x: set(x) == set(partnership)).any():
-                        print("nothing")
-                    # but if they are not present, proceed to create the union
-                    else:
-                    
+
+                    # check whether the partnership (listed in either order) is already in the unions dataframe
+                    if check_for_existing_union_in_df(partnership,unions) == False:
+                        
+                        # make a temporary dictionary to hold this union's data
                         new_row = make_union_row(person1,partner_id,persons)
 
                         # Add the new union to the DataFrame
                         unions = pd.concat([unions, pd.DataFrame([new_row])])
+                        
 
             # add all the newly minted unions to each partner's own_unions field
             # loop through the list of unions
