@@ -25,29 +25,25 @@ To install and run this project locally, follow these steps:
     git clone https://github.com/boymalloy/python-flask-d3-family-tree.git
     ```
 
-2. Navigate into the project directory:
-    ```bash
-    cd python-flask-d3-family-tree
-    ```
-
-3. Create and activate a virtual environment:
+2. Create and activate a virtual environment:
     ```bash
     python3 -m venv env
     source env/bin/activate
     ```
 
-4. Install the required dependencies:
+3. Install the required dependencies:
     ```bash
     pip install -r requirements.txt
     ```
 
-5. Configure flask:
+4. Configure flask:
     ```bash
+    cd python-flask-d3-family-tree
     export FLASK_APP=app
     export FLASK_ENV=development
     ```
 
-6. Install PostgreSQL
+5. Install PostgreSQL
     ```bash
     sudo apt update
     sudo apt install postgresql
@@ -55,14 +51,14 @@ To install and run this project locally, follow these steps:
     sudo systemctl enable postgresql 
     ```
 
-7. Create the database
+6. Create the database
    ```bash
     sudo -i -u postgres psql
     CREATE DATABASE family_tree;
     \c family_tree
     ```
 
-8. Create the database tables and populate them with test data
+7. Create the database tables and populate them with test data
     ```bash
     CREATE TABLE person (
     id SERIAL PRIMARY KEY, 
@@ -110,20 +106,20 @@ To install and run this project locally, follow these steps:
     (2, 5, 'parent');
     ```
 
-9. Change the database password and set the environment variable
+8. Change the database password and set the environment variable
     ```bash
         ALTER USER postgres PASSWORD 'change_to_a_password';
     \q
     export DATABASE_URL="postgresql://postgres:change_to_a_password@localhost:5432/family_tree"
     ```
 
-10. Start the web server:
+9. Start the web server:
     ```bash
     flask run
     ```
 
-11. Got to [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+10. Got to [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
 
-12. Click on 'Fetch tree from database'
+11. Click on 'Fetch tree from database'.
 
-13. Click on 'See the tree'
+12. Click on 'See the tree'.
