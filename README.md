@@ -1,6 +1,6 @@
 # Family tree visualisation
 
-This is a simple python app which reads family tree data from a PostgreSQL database and converst it to the correct format for a D3 data visualisation 
+This is a simple python app which reads family tree data from a PostgreSQL database and converts it to the correct format for a D3 data visualisation 
 
 I built this app to learn:
 * Python
