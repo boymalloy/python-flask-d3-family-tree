@@ -1,0 +1,12 @@
+person_1_name,person_1_birth,relationship,person_2_name,person_2_birth
+Scott Summers,1963-01-01,union,Madelyne Pryor,1983-01-01
+Scott Summers,1963-01-01,parent,Nathan Christopher Charles Summers,1986-01-01
+Madelyne Pryor,1983-01-01,parent,Nathan Christopher Charles Summers,1986-01-01
+Scott Summers,1963-01-01,union,Jean Grey,1963-01-01
+Scott Summers,1963-01-01,union,Emma Frost,1980-01-01
+Scott Summers,1963-01-01,parent,Ruby Summers,2009-01-01
+Emma Frost,1980-01-01,parent,Ruby Summers,2009-01-01
+Scott Summers,1963-01-01,parent,Nate Grey,1995-01-01
+Jean Grey,1963-01-01,parent,Nate Grey,1995-01-01
+Scott Summers,1963-01-01,parent,Rachel Summers,1980-01-01
+Jean Grey,1963-01-01,parent,Rachel Summers,1980-01-01
