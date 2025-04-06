@@ -48,10 +48,12 @@ def test_check_for_existing_union_in_df():
     test_union_3 = [1,3]
     
     test_data = pd.DataFrame({'partner': [[1,2],[3,4],[6,7]]})
-
-    print(test_data)
     
     
     assert app.check_for_existing_union_in_df(test_union_1,test_data) == True
     assert app.check_for_existing_union_in_df(test_union_2,test_data) == True
     assert app.check_for_existing_union_in_df(test_union_3,test_data) == False
+
+def test_tree_name_db_check():
+    assert app.tree_name_db_check("Doe Family Tree") == True
+    assert app.tree_name_db_check("Pinkle Family Tree") == False

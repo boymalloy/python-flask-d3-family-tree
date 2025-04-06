@@ -28,6 +28,25 @@ def index():
 def fetch():
     return render_template('run.html', header="Tree from db", payload=fetch_tree())
 
+# Route: Tree from db
+@app.route('/csv')
+def csv():
+    return render_template('run.html', header="Write to db from csv", payload=import_csv())
+
+# Route: Tree from db
+@app.route('/sandbox')
+def sandbox_page():
+    return render_template('run.html', header="Sandbox", payload=sandbox())
+
+def tree_name_db_check(tree_name):
+    with app.app_context():
+        sql = text("SELECT 1 FROM tree WHERE name = :name LIMIT 1")
+        return db.session.execute(sql, {'name': tree_name}).scalar() is not None
+
+def sandbox():
+    return tree_name_db_check("Doe Family Tree")
+
+
 # get subject's partners from the db
 def fetch_partners_from_db(subject):
     with app.app_context():
@@ -53,7 +72,7 @@ def fetch_partners_from_db(subject):
 # get subject's children from the db
 def fetch_children_from_db(subject):
     with app.app_context():
-        # selects tthe id of anyone who has the subject listed as a parent
+        # selects the id of anyone who has the subject listed as a parent
         query = text("""
             SELECT person2_id FROM relationships WHERE person1_id = :subject AND relationship = 'parent'
         """)
@@ -102,6 +121,60 @@ def make_union_row(person1,person2,persons):
     childrentogether = get_children_together_from_df(person1,person2,persons)
     union_row = {'partner': partnership, 'children': childrentogether}
     return union_row
+
+def tree_name_db_check(tree_name):
+    with app.app_context():
+        sql = text("SELECT 1 FROM tree WHERE name = :name LIMIT 1")
+        return db.session.execute(sql, {'name': tree_name}).scalar() is not None
+
+# Import csv files into the trees
+def import_csv():
+    try:
+        # Turn the people csv into a people dataframe
+        people = pd.read_csv("static/input/x_people.csv")
+
+        # start the index of the people dataframe from 1 coz (I think) this is expected later
+        people.index = range(1, len(people) + 1)
+
+        # Add a col for the tree id
+        people["tree_id"] = None
+        
+        # Turn the relationships csv into a relationships dataframe
+        relationships = pd.read_csv("static/input/x_relationships.csv")
+
+        for index, row in people.iterrows():
+            family_tree_name = people.loc[index,'tree_name']
+
+            # if the name of the tree is not already in the db...
+            if tree_name_db_check(family_tree_name) == False:
+                
+                # add the family tree name to the tree table in the db
+                sql = text("INSERT INTO tree (name) VALUES (:name)")
+                db.session.execute(sql, {'name': family_tree_name})
+                db.session.commit()
+
+            # query to select the id of the tree name row
+            query = text("""
+            SELECT id 
+            FROM tree 
+            WHERE name = :family_tree_name 
+            """)
+            
+            # Execute the query as a parameter
+            result = db.session.execute(query, {"family_tree_name": family_tree_name})
+
+            # put the id into a variable
+            family_tree_id = result.scalar()
+
+           # add the family tree id to each person's row in the people df
+            people.loc[index,'tree_id'] = family_tree_id
+    
+        return people
+            
+            
+    # Catch and return any exceptions
+    except Exception as e:
+        return e 
 
 # fetches the tree data from the db and builds the json file to be read by the D3 family tree app
 def fetch_tree():
