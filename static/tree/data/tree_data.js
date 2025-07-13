@@ -7,7 +7,6 @@ data = {
       "birth_date":327196800000,
       "birth_place":"New York",
       "death_date":-9223372036855,
-      "tree_id":1,
       "partners":[
         2
       ],
@@ -26,13 +25,11 @@ data = {
       "birth_date":398649600000,
       "birth_place":"Los Angeles",
       "death_date":-9223372036855,
-      "tree_id":1,
-      "partners":[
-        1
-      ],
+      "partners":[],
       "children":[
         3,
         4,
+        5,
         5
       ],
       "own_unions":[
@@ -45,7 +42,6 @@ data = {
       "birth_date":1263081600000,
       "birth_place":"San Francisco",
       "death_date":-9223372036855,
-      "tree_id":1,
       "partners":[],
       "children":[],
       "own_unions":[]
@@ -56,7 +52,6 @@ data = {
       "birth_date":1331769600000,
       "birth_place":"San Francisco",
       "death_date":-9223372036855,
-      "tree_id":1,
       "partners":[],
       "children":[],
       "own_unions":[]
@@ -67,7 +62,6 @@ data = {
       "birth_date":1403654400000,
       "birth_place":"San Francisco",
       "death_date":-9223372036855,
-      "tree_id":1,
       "partners":[],
       "children":[],
       "own_unions":[]
