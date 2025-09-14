@@ -32,7 +32,7 @@ def fetch():
 # Route: Tree from db
 @app.route('/csv')
 def csv():
-    return render_template('run.html', header="Write to db from csv", payload=import_csv())
+    return render_template('run.html', header="Write to db from csv", payload=import_csv("static/input/test_data_people.csv","static/input/test_data_relationships.csv"))
 
 # Route: Tree from db
 @app.route('/sandbox')
@@ -75,7 +75,7 @@ def fetch_children_from_db(subject):
     with app.app_context():
         # selects the id of anyone who has the subject listed as a parent
         query = text("""
-            SELECT person2_id FROM relationships WHERE person1_id = :subject AND relationship = 'parent'
+            SELECT DISTINCT person2_id FROM relationships WHERE person1_id = :subject AND relationship = 'parent'
         """)
         
         # Execute the query as a parameter
@@ -128,20 +128,21 @@ def tree_name_db_check(tree_name):
         sql = text("SELECT 1 FROM tree WHERE name = :name LIMIT 1")
         return db.session.execute(sql, {'name': tree_name}).scalar() is not None
 
-# Import csv files into the trees
-def import_csv():
+# prepares csvs for import: Makes csvs into dfs and adds tree id to people
+def prep_import(p,r):
     try:
-        # Turn the people csv into a people dataframe
-        people = pd.read_csv("static/input/x_people.csv")
+        
+       # Turn the people csv into a people dataframe
+        people = pd.read_csv(p)
 
         # start the index of the people dataframe from 1 coz (I think) this is expected later
         people.index = range(1, len(people) + 1)
 
         # Add a col for the tree id
         people["tree_id"] = None
-        
+
         # Turn the relationships csv into a relationships dataframe
-        relationships = pd.read_csv("static/input/x_relationships.csv")
+        relationships = pd.read_csv(r)
 
         for index, row in people.iterrows():
             family_tree_name = people.loc[index,'tree_name']
@@ -169,9 +170,20 @@ def import_csv():
 
            # add the family tree id to each person's row in the people df
             people.loc[index,'tree_id'] = family_tree_id
-    
+
         return people
             
+            
+    # Catch and return any exceptions
+    except Exception as e:
+        return e 
+
+# import
+def import_csv(p,r):
+    try:
+        
+        people = prep_import(p,r)
+        return people
             
     # Catch and return any exceptions
     except Exception as e:

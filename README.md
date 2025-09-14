@@ -104,6 +104,23 @@ To install and run this project locally, follow these steps:
     (2, 4, 'parent'),
     (2, 5, 'parent'),
     (2, 5, 'parent');
+
+    -- tree table
+    CREATE TABLE tree (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL
+    );
+
+    -- Insert a default tree 
+    INSERT INTO tree (name) VALUES ('Doe Family Tree');
+
+    -- Add tree_id to the person table
+    ALTER TABLE person
+    ADD COLUMN tree_id INT REFERENCES tree(id) ON DELETE CASCADE;
+
+    -- Assign existing people to the default tree (id = 1)
+    UPDATE person SET tree_id = 1;
+
     ```
 
 8. Change the database password and set the environment variable
@@ -111,6 +128,7 @@ To install and run this project locally, follow these steps:
         ALTER USER postgres PASSWORD 'change_to_a_password';
     \q
     export DATABASE_URL="postgresql://postgres:change_to_a_password@localhost:5432/family_tree"
+    source ~/.bashrc
     ```
 
 9. Start the web server:

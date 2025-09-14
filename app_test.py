@@ -46,7 +46,6 @@ def test_check_for_existing_union_in_df():
     test_union_1 = [1,2]
     test_union_2 = [2,1]
     test_union_3 = [1,3]
-    
     test_data = pd.DataFrame({'partner': [[1,2],[3,4],[6,7]]})
     
     
@@ -57,3 +56,39 @@ def test_check_for_existing_union_in_df():
 def test_tree_name_db_check():
     assert app.tree_name_db_check("Doe Family Tree") == True
     assert app.tree_name_db_check("Pinkle Family Tree") == False
+
+def test_prep_import(tmp_path, monkeypatch):
+    # Create temporary CSV files
+    people_file = tmp_path / "people.csv"
+    relationships_file = tmp_path / "relationships.csv"
+
+    people_data = """name,birth_date,tree_name
+John Doe,1980-05-15,Doe Family Tree
+Jane Doe,1982-07-20,Doe Family Tree
+"""
+    relationships_data = """person1_id,person2_id,relationship
+1,2,spouse
+1,3,parent
+2,3,parent
+"""
+
+    people_file.write_text(people_data)
+    relationships_file.write_text(relationships_data)
+
+    # Mock the DB check so we don't hit a real DB
+    monkeypatch.setattr(app, "tree_name_db_check", lambda name: False)
+    monkeypatch.setattr(app.db.session, "commit", lambda: None)
+
+    class FakeResult:
+        def scalar(self):
+            return 1
+
+    monkeypatch.setattr(app.db.session, "execute", lambda *a, **k: FakeResult())
+
+    # Call prep_import with our temp files
+    result = app.prep_import(str(people_file), str(relationships_file))
+
+    # Assert: result is a DataFrame with expected columns and tree_id filled
+    assert isinstance(result, pd.DataFrame)
+    assert "tree_id" in result.columns
+    assert len(result) == 2  # two people from the CSV
