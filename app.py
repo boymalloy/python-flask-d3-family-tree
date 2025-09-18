@@ -1,4 +1,3 @@
-# hello
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 import pandas as pd
@@ -6,6 +5,9 @@ import os
 import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
+import numpy as np
+from sqlalchemy.types import Date, Integer, String
+from sqlalchemy.exc import IntegrityError
 
 
 # Create the Flask app and configure it
@@ -123,20 +125,12 @@ def make_union_row(person1,person2,persons):
     union_row = {'partner': partnership, 'children': childrentogether}
     return union_row
 
-def tree_name_db_check(tree_name):
-    with app.app_context():
-        sql = text("SELECT 1 FROM tree WHERE name = :name LIMIT 1")
-        return db.session.execute(sql, {'name': tree_name}).scalar() is not None
-
 # prepares csvs for import: Makes csvs into dfs and adds tree id to people
 def prep_import(p,r):
-    try:
+    with app.app_context():
         
        # Turn the people csv into a people dataframe
         people = pd.read_csv(p)
-
-        # start the index of the people dataframe from 1 coz (I think) this is expected later
-        people.index = range(1, len(people) + 1)
 
         # Add a col for the tree id
         people["tree_id"] = None
@@ -168,26 +162,38 @@ def prep_import(p,r):
             # put the id into a variable
             family_tree_id = result.scalar()
 
-           # add the family tree id to each person's row in the people df
+            # add the family tree id to each person's row in the people df
             people.loc[index,'tree_id'] = family_tree_id
 
+        # Remove the tree_name column
+        people = people.drop("tree_name", axis=1)
+        
         return people
-            
-            
-    # Catch and return any exceptions
-    except Exception as e:
-        return e 
+
+def write_people_to_person(prepped_people):
+    with app.app_context():
+        try:
+            prepped_people.to_sql(
+                name="person",
+                con=db.engine,
+                if_exists="append",
+                index=False,
+                method="multi"
+            )
+
+            return len(prepped_people)
+        except IntegrityError:
+            return "Dupes!"
 
 # import
 def import_csv(p,r):
-    try:
+    with app.app_context():
         
-        people = prep_import(p,r)
-        return people
-            
-    # Catch and return any exceptions
-    except Exception as e:
-        return e 
+        prepped_people = prep_import(p,r)
+        
+        output = write_people_to_person(prepped_people)
+        
+        return output
 
 # fetches the tree data from the db and builds the json file to be read by the D3 family tree app
 def fetch_tree():

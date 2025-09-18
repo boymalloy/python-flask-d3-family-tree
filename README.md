@@ -75,53 +75,56 @@ To install and run this project locally, follow these steps:
     ('Child Two', '2012-03-15', 'San Francisco', NULL), 
     ('Child Three', '2014-06-25', 'San Francisco', NULL);
         
+    ALTER TABLE person
+    ADD CONSTRAINT unique_person_per_tree
+    UNIQUE (name, birth_date, tree_id);
+
     CREATE TYPE relationship_type AS ENUM ('parent', 'child', 'spouse', 'union');
 
-    CREATE TABLE Relationships (
-        relationship_id SERIAL PRIMARY KEY,
-        person1_id INT NOT NULL, 
-        person2_id INT NOT NULL,
-        relationship relationship_type NOT NULL,
-        FOREIGN KEY (person1_id) REFERENCES Person(id) ON DELETE CASCADE,
-        FOREIGN KEY (person2_id) REFERENCES Person(id) ON DELETE CASCADE);
+        CREATE TABLE Relationships (
+            relationship_id SERIAL PRIMARY KEY,
+            person1_id INT NOT NULL, 
+            person2_id INT NOT NULL,
+            relationship relationship_type NOT NULL,
+            FOREIGN KEY (person1_id) REFERENCES Person(id) ON DELETE CASCADE,
+            FOREIGN KEY (person2_id) REFERENCES Person(id) ON DELETE CASCADE);
 
-    -- the union
-    INSERT INTO relationships (person1_id, person2_id, relationship)
-    VALUES 
-    (1, 2, 'union');
+        -- the union
+        INSERT INTO relationships (person1_id, person2_id, relationship)
+        VALUES 
+        (1, 2, 'union');
 
-    -- Parent-child relationships for John Doe
-    INSERT INTO relationships (person1_id, person2_id, relationship)
-    VALUES 
-    (1, 3, 'parent'),
-    (1, 4, 'parent'),
-    (1, 5, 'parent');
+        -- Parent-child relationships for John Doe
+        INSERT INTO relationships (person1_id, person2_id, relationship)
+        VALUES 
+        (1, 3, 'parent'),
+        (1, 4, 'parent'),
+        (1, 5, 'parent');
 
-    -- Parent-child relationships for Jane Smith
-    INSERT INTO relationships (person1_id, person2_id, relationship)
-    VALUES 
-    (2, 3, 'parent'),
-    (2, 4, 'parent'),
-    (2, 5, 'parent'),
-    (2, 5, 'parent');
+        -- Parent-child relationships for Jane Smith
+        INSERT INTO relationships (person1_id, person2_id, relationship)
+        VALUES 
+        (2, 3, 'parent'),
+        (2, 4, 'parent'),
+        (2, 5, 'parent'),
+        (2, 5, 'parent');
 
-    -- tree table
-    CREATE TABLE tree (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL
-    );
+        -- tree table
+        CREATE TABLE tree (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(255) NOT NULL
+        );
 
-    -- Insert a default tree 
-    INSERT INTO tree (name) VALUES ('Doe Family Tree');
+        -- Insert a default tree 
+        INSERT INTO tree (name) VALUES ('Doe Family Tree');
 
-    -- Add tree_id to the person table
-    ALTER TABLE person
-    ADD COLUMN tree_id INT REFERENCES tree(id) ON DELETE CASCADE;
+        -- Add tree_id to the person table
+        ALTER TABLE person ADD COLUMN tree_id INT REFERENCES tree(id) ON DELETE CASCADE;
 
-    -- Assign existing people to the default tree (id = 1)
-    UPDATE person SET tree_id = 1;
+        -- Assign existing people to the default tree (id = 1)
+        UPDATE person SET tree_id = 1;
 
-    ```
+        ```
 
 8. Change the database password and set the environment variable
     ```bash

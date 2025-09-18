@@ -92,3 +92,15 @@ Jane Doe,1982-07-20,Doe Family Tree
     assert isinstance(result, pd.DataFrame)
     assert "tree_id" in result.columns
     assert len(result) == 2  # two people from the CSV
+
+def test_write_people_to_person():
+    
+    # csv with data that is already in the db
+    expected = "Dupes!"
+    actual = app.write_people_to_person(pd.read_csv("static/input/test_data_people_unique.csv"))
+    assert expected == actual
+    
+    # csv with unique data, not currently in the db
+    expected = 2
+    actual = app.write_people_to_person(pd.read_csv("static/input/test_data_people_unique.csv"))
+    assert expected == actual
