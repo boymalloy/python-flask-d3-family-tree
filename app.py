@@ -182,7 +182,17 @@ def write_people_to_person(prepped_people):
             )
 
             return len(prepped_people)
-        except IntegrityError:
+        except IntegrityError as e:
+            # Minimal insight without lots of new code:
+            # - log the exact underlying DB error
+            app.logger.exception("Insert failed with IntegrityError")
+
+            # - in debug, surface the real cause so tests show it
+            if app.debug:
+                orig = getattr(e, "orig", e)   # psycopg2 error if present
+                return f"IntegrityError[{type(orig).__name__}]: {orig}"
+
+            # - in non-debug, keep your old behavior ("Dupes!")
             return "Dupes!"
 
 # import
