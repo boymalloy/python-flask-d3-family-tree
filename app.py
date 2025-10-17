@@ -9,6 +9,11 @@ import numpy as np
 from sqlalchemy.types import Date, Integer, String
 from sqlalchemy.exc import IntegrityError
 
+# Show all columns and rows of panda dataframes
+pd.set_option("display.max_columns", None)
+pd.set_option("display.max_rows", None)
+pd.set_option("display.width", None)
+pd.set_option("display.max_colwidth", None)
 
 # Create the Flask app and configure it
 app = Flask(__name__, static_url_path='/static')
@@ -29,26 +34,47 @@ def index():
 # Route: Tree from db
 @app.route('/fetch')
 def fetch():
-    return render_template('run.html', header="Tree from db", payload=fetch_tree())
+    return render_template('run.html', header="Tree from db", payload=fetch_tree(2))
 
-# Route: Tree from db
+# Route: Import from CSV
 @app.route('/csv')
 def csv():
     return render_template('run.html', header="Write to db from csv", payload=import_csv("static/input/test_data_people.csv","static/input/test_data_relationships.csv"))
 
-# Route: Tree from db
+# Route: Sandbox
 @app.route('/sandbox')
 def sandbox_page():
     return render_template('run.html', header="Sandbox", payload=sandbox())
 
+def sandbox():
+    output = "Good day"
+    return output
+
+def fetch_all_trees():
+    with app.app_context():
+        query = text("""
+            SELECT *
+            FROM tree """)
+        
+        # Execute the query as a parameter
+        result = db.session.execute(query)
+        
+         # Return all rows
+        return result.fetchall()
+
+# Route: List of family trees
+@app.route('/trees')
+def trees_page():
+    return render_template('trees.html', header="Choose a tree", trees=fetch_all_trees())
+
+
+# checks to see if a tree of a given name exists in the tree table
 def tree_name_db_check(tree_name):
     with app.app_context():
         sql = text("SELECT 1 FROM tree WHERE name = :name LIMIT 1")
+        
+        # execute the query, use scalar to return the first col of the first row (the tree id). "is not None" turns a number into True and a None (name not found) into False
         return db.session.execute(sql, {'name': tree_name}).scalar() is not None
-
-def sandbox():
-    return tree_name_db_check("Doe Family Tree")
-
 
 # get subject's partners from the db
 def fetch_partners_from_db(subject):
@@ -60,6 +86,7 @@ def fetch_partners_from_db(subject):
             WHERE person1_id = :subject 
               AND (relationship = 'spouse' OR relationship = 'union')
         """)
+        
         
         # Execute the query as a parameter
         result = db.session.execute(query, {"subject": subject})
@@ -126,17 +153,14 @@ def make_union_row(person1,person2,persons):
     return union_row
 
 # prepares csvs for import: Makes csvs into dfs and adds tree id to people
-def prep_import(p,r):
+def prep_people(p):
     with app.app_context():
         
-       # Turn the people csv into a people dataframe
+        # Turn the people csv into a people dataframe
         people = pd.read_csv(p)
 
         # Add a col for the tree id
         people["tree_id"] = None
-
-        # Turn the relationships csv into a relationships dataframe
-        relationships = pd.read_csv(r)
 
         for index, row in people.iterrows():
             family_tree_name = people.loc[index,'tree_name']
@@ -173,6 +197,7 @@ def prep_import(p,r):
 def write_people_to_person(prepped_people):
     with app.app_context():
         try:
+            # write the people from the prepped_people df to the person table using .to_sql
             prepped_people.to_sql(
                 name="person",
                 con=db.engine,
@@ -181,10 +206,10 @@ def write_people_to_person(prepped_people):
                 method="multi"
             )
 
+            # returns the length of the df
+            # TO DO: return something more meaningful, e.g. the number of rows added
             return len(prepped_people)
         except IntegrityError as e:
-            # Minimal insight without lots of new code:
-            # - log the exact underlying DB error
             app.logger.exception("Insert failed with IntegrityError")
 
             # - in debug, surface the real cause so tests show it
@@ -192,26 +217,129 @@ def write_people_to_person(prepped_people):
                 orig = getattr(e, "orig", e)   # psycopg2 error if present
                 return f"IntegrityError[{type(orig).__name__}]: {orig}"
 
-            # - in non-debug, keep your old behavior ("Dupes!")
+            # - in non-debug, return the error msg for the user
+            return "Dupes!"
+        
+def write_relationships_df_to_relationships_db(prepped_relationships):
+    with app.app_context():
+        try:
+            # write the people from the prepped_people df to the person table using .to_sql
+            prepped_relationships.to_sql(
+                name="relationships",
+                con=db.engine,
+                if_exists="append",
+                index=False,
+                method="multi"
+            )
+
+            # returns the length of the df
+            # TO DO: return something more meaningful, e.g. the number of rows added
+            return len(prepped_relationships)
+        except IntegrityError as e:
+            app.logger.exception("Insert failed with IntegrityError")
+
+            # - in debug, surface the real cause so tests show it
+            if app.debug:
+                orig = getattr(e, "orig", e)   # psycopg2 error if present
+                return f"IntegrityError[{type(orig).__name__}]: {orig}"
+
+            # - in non-debug, return the error msg for the user
             return "Dupes!"
 
+
+# Fetch the id of a person using their name and birth
+def fetch_person_id(name,birth_year, birth_month, birth_day):
+    
+    # put the 3 parts of the dob together and put it in the correct data type
+    from datetime import date
+    dob = date(birth_year, birth_month, birth_day)
+    
+    # query
+    with app.app_context():
+        try:
+            query = text("""
+                SELECT id
+                FROM person 
+                WHERE name = :name AND birth_date = :dob
+            """)
+            
+            # Execute the query as a parameter
+            result = db.session.execute(query, {"name": name, "dob": dob})
+            
+            # get the id from the results and return it
+            rows = result.fetchall()
+            row = rows[0]
+            id = row[0]
+            return id
+       
+       # return an error message if no entry in the db is found
+        except IndexError as e:
+            return "Person not found"
+
+# Takes the names and dobs of each row and replaces them with each person's id from the persons table
+def prep_relationships(r):
+    with app.app_context():
+        
+        # Turn the relationships csv into a relationships dataframe
+        relationships = pd.read_csv(r)
+        
+        # make a blank dataframe for the preppared version of the relationships, which will have the names and dobs switched to the ids
+        prepped_relationships = pd.DataFrame({'person1_id' : pd.Series(dtype='int'),
+                            'person2_id': pd.Series(dtype='int'),
+                            'relationship': pd.Series(dtype='string')})
+        
+        # Loop through the imported relationships df, for each row we get the ids from the person table and write them, along with the relationship (e.g. union, parent) to the prepped_relationships df
+        for index, row in relationships.iterrows():
+                
+            # Get person 1's date of birth and break it into it's 3 parts
+            p1dob = relationships['person_1_birth'][index]
+            p1year, p1month, p1day = map(int, p1dob.split('-'))
+
+            # look up the id of person 1 using their name and birth
+            p1id = fetch_person_id(relationships['person_1_name'][index],p1year,p1month,p1day)
+
+            # Get person 2's date of birth and break it into it's 3 parts
+            p2dob = relationships['person_2_birth'][index]
+            p2year, p2month, p2day = map(int, p2dob.split('-'))
+
+            # look up the id of person 2 using their name and birth
+            p2id = fetch_person_id(relationships['person_2_name'][index],p2year,p2month,p2day)
+
+            # get p1 and p2's relationship
+            rel = relationships['relationship'][index]
+
+            # write ids and relationship to the prepped_relationships df
+            new_row = {'person1_id': p1id, 'person2_id': p2id, 'relationship': rel}
+            prepped_relationships = pd.concat([prepped_relationships, pd.DataFrame([new_row])], ignore_index=True)
+
+        return prepped_relationships
+    
 # import
 def import_csv(p,r):
     with app.app_context():
         
-        prepped_people = prep_import(p,r)
+        prepped_people = prep_people(p)
+
+        prepped_relationships = prep_relationships(r)
         
-        output = write_people_to_person(prepped_people)
-        
-        return output
+        people_result = write_people_to_person(prepped_people)
+
+        relationships_result = write_relationships_df_to_relationships_db(prepped_relationships)
+
+        return_msg = "People added: " + str(people_result) + ". Relationships added: " + str(relationships_result)
+
+        return return_msg
 
 # fetches the tree data from the db and builds the json file to be read by the D3 family tree app
-def fetch_tree():
+def fetch_tree(tree):
     try:
         # Use the app context to access the database session
         with app.app_context():
-            query = text("SELECT * FROM person")
-            result = db.session.execute(query)
+            
+            query = text("SELECT * FROM person WHERE tree_id = :tree")
+
+            # Execute the query as a parameter
+            result = db.session.execute(query, {"tree": tree})
 
             # Fetch all rows and get column names
             rows = result.fetchall()
@@ -219,50 +347,47 @@ def fetch_tree():
 
             # Make a data frame from the fetched rows and column names
             persons = pd.DataFrame(rows, columns=col_names)
-            
-            # Convert dates to milliseconds since epoch
-            persons["birth_date"] = pd.to_datetime(persons["birth_date"]).astype("int64") // 10**6
-            persons["death_date"] = pd.to_datetime(persons["death_date"]).astype("int64") // 10**6
+
+            # make sure id is int and use it as the index
+            persons["id"] = persons["id"].astype(int)
+            persons.set_index("id", inplace=True) 
             
             # Add empty columns for partners, children and own unions
             persons["partners"] = None
             persons["children"] = None
             persons["own_unions"] = [[] for _ in range(len(persons))]
+            
+            # Convert dates to milliseconds since epoch
+            persons["birth_date"] = pd.to_datetime(persons["birth_date"]).astype("int64") // 10**6
+            persons["death_date"] = pd.to_datetime(persons["death_date"]).astype("int64") // 10**6
 
-            # start the index of the df from 1 to match the ids in the db
-            persons.index = range(1, len(persons) + 1)
-
-            # Loop through each person in the data frame, gets the id of each of their partners from the db and wrrite the partners' id to the partners column
-            for index, row in persons.iterrows():
-                persons.at[index, 'partners'] = fetch_partners_from_db(index)
-
-            # Loop through each person in the data frame, gets the id of each of their children from the db, writes the childrens' id to the children column
+            # Loop through each person in the data frame, gets the id of each of their children from the db, write the childrens' id to the children column
             for index, row in persons.iterrows():
                 persons.at[index, 'children'] = fetch_children_from_db(index)
-
-            # build a blank unions table
-            unions = pd.DataFrame({'partner' : pd.Series(dtype='object'),
-                            'children': pd.Series(dtype='object')})
             
+            # Loop through the persons df 
+            for pid in persons.index:
+                
+                # Fetch each person's partners and add them to the partners column
+                persons.at[pid, "partners"] = fetch_partners_from_db(pid)
+
+            # a temp list for housing the unions
+            unions_rows = []
             
-            # loop through the people in the persons dataframe and get list of each one's partners
-            for index, row in persons.iterrows():
-                person1 = index
-                partner_ids = persons.at[person1, 'partners']
+            # Loop through persons
+            for pid in persons.index:
+                
+                # when in the loop for a person, loop through each of their partners
+                for partner_id in persons.at[pid, "partners"] or []:
+                    
+                    # build a row for the union
+                    new_row = make_union_row(pid, partner_id, persons)
+                    
+                    # add the union's row to the unions_rows temp list
+                    unions_rows.append(new_row)
 
-                # create a parnership of ids for each instance of the person and one of their partners
-                for partner_id in partner_ids:
-                    partnership = [person1, partner_id]
-
-                    # check whether the partnership (listed in either order) is already in the unions dataframe
-                    if check_for_existing_union_in_df(partnership,unions) == False:
-                        
-                        # make a temporary dictionary to hold this union's data
-                        new_row = make_union_row(person1,partner_id,persons)
-
-                        # Add the new union to the DataFrame
-                        unions = pd.concat([unions, pd.DataFrame([new_row])])
-                        
+            # make the temp list into a df
+            unions = pd.DataFrame(unions_rows, columns=["partner", "children"])
 
             # add all the newly minted unions to each partner's own_unions field
             # loop through the list of unions
@@ -272,7 +397,6 @@ def fetch_tree():
                     # add the union id from the outer look to each partner's record in the persons table
                     persons.at[item, 'own_unions'].append(index)
 
-            
             #build a blank links dataframe
             links = pd.DataFrame({'from': pd.Series(dtype='str'),'to': pd.Series(dtype='str')})
 
@@ -293,16 +417,23 @@ def fetch_tree():
                 for child in childrenx:
                     link_row_children = {'from': index, 'to': child}
                     links.loc[len(links)] = link_row_children
-             
+
+            # Put the id back in
+            persons.index = persons.index.astype(int)     # ensure int
+            persons["id"] = persons.index
+
+            # move it to the front
+            cols = ["id"] + [c for c in persons.columns if c != "id"]
+            persons = persons[cols]
 
             # Convert DataFrames to native Python dicts and list
             persons_dict = persons.to_dict(orient="index")
             unions_dict = unions.to_dict(orient="index")
-            links_list = links.values.tolist()  # gives you [[1, 0], [2, 0], ...]
+            links_list = links.values.tolist()
 
             # assemble it into one dict
             assembled = {
-                "start": "1",
+                "start": "6",
                 "persons": persons_dict,
                 "unions": unions_dict,
                 "links": links_list
@@ -315,7 +446,7 @@ def fetch_tree():
             with open("static/tree/data/tree_data.js", "w") as file_Obj:
                 file_Obj.write(json_string)
 
-            return "Tree fetched successfully"
+            return "It worked"
             
     # Catch and return any exceptions
     except Exception as e:

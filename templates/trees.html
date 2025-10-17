@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    {% block page_content %}
+
+<h1>{{ header}}</h1>
+    <ul>
+      {% for tree in trees %}
+        <li>{{ tree.id }} — {{ tree.name }}</li>
+      {% else %}
+        <li><em>No people found</em></li>
+      {% endfor %}
+    </ul>
+
+
+<p><a href="/static/tree/familytree.html">See the tree</a></p>
+
+{% endblock  %}
+</div>
+{% endblock content %}

@@ -1,71 +1,116 @@
 data = {
-  "start":"1",
+  "start":"6",
   "persons":{
-    "1":{
-      "id":1,
-      "name":"John Doe",
-      "birth_date":327196800000,
-      "birth_place":"New York",
+    "6":{
+      "id":6,
+      "name":"Scott Summers",
+      "birth_date":-220924800000,
+      "birth_place":"Anchorage, Alaska",
       "death_date":-9223372036855,
-      "tree_id":1,
+      "tree_id":2,
       "partners":[
+        7,
+        9,
+        10
+      ],
+      "children":[
+        11,
+        8,
+        13,
+        12
+      ],
+      "own_unions":[
+        0,
+        1,
         2
-      ],
+      ]
+    },
+    "7":{
+      "id":7,
+      "name":"Madelyne Pryor",
+      "birth_date":410227200000,
+      "birth_place":"Unknown",
+      "death_date":-9223372036855,
+      "tree_id":2,
+      "partners":[],
       "children":[
-        3,
-        4,
-        5
+        8
       ],
       "own_unions":[
         0
       ]
     },
-    "2":{
-      "id":2,
-      "name":"Jane Smith",
-      "birth_date":398649600000,
-      "birth_place":"Los Angeles",
+    "8":{
+      "id":8,
+      "name":"Nathan Christopher Charles Summers",
+      "birth_date":504921600000,
+      "birth_place":"Unknown",
       "death_date":-9223372036855,
-      "tree_id":1,
+      "tree_id":2,
+      "partners":[],
+      "children":[],
+      "own_unions":[]
+    },
+    "9":{
+      "id":9,
+      "name":"Jean Grey",
+      "birth_date":-220924800000,
+      "birth_place":"Annandale-on-Hudson, New York",
+      "death_date":-9223372036855,
+      "tree_id":2,
       "partners":[],
       "children":[
-        3,
-        4,
-        5
+        12,
+        13
       ],
       "own_unions":[
-        0
+        1
       ]
     },
-    "3":{
-      "id":3,
-      "name":"Child One",
-      "birth_date":1263081600000,
-      "birth_place":"San Francisco",
+    "10":{
+      "id":10,
+      "name":"Emma Frost",
+      "birth_date":315532800000,
+      "birth_place":"Boston, Massachusetts",
       "death_date":-9223372036855,
-      "tree_id":1,
+      "tree_id":2,
+      "partners":[],
+      "children":[
+        11
+      ],
+      "own_unions":[
+        2
+      ]
+    },
+    "11":{
+      "id":11,
+      "name":"Ruby Summers",
+      "birth_date":1230768000000,
+      "birth_place":"Alternate future timeline",
+      "death_date":-9223372036855,
+      "tree_id":2,
       "partners":[],
       "children":[],
       "own_unions":[]
     },
-    "4":{
-      "id":4,
-      "name":"Child Two",
-      "birth_date":1331769600000,
-      "birth_place":"San Francisco",
+    "12":{
+      "id":12,
+      "name":"Nate Grey",
+      "birth_date":788918400000,
+      "birth_place":"Age of Apocalypse timeline",
       "death_date":-9223372036855,
-      "tree_id":1,
+      "tree_id":2,
       "partners":[],
       "children":[],
       "own_unions":[]
     },
-    "5":{
-      "id":5,
-      "name":"Child Three",
-      "birth_date":1403654400000,
-      "birth_place":"San Francisco",
+    "13":{
+      "id":13,
+      "name":"Rachel Summers",
+      "birth_date":315532800000,
+      "birth_place":"Days of Future Past timeline",
       "death_date":-9223372036855,
-      "tree_id":1,
+      "tree_id":2,
       "partners":[],
       "children":[],
       "own_unions":[]
@@ -74,36 +119,73 @@ data = {
   "unions":{
     "0":{
       "partner":[
-        1,
-        2
+        6,
+        7
       ],
       "children":[
-        3,
-        4,
-        5
+        8
+      ]
+    },
+    "1":{
+      "partner":[
+        6,
+        9
+      ],
+      "children":[
+        13,
+        12
+      ]
+    },
+    "2":{
+      "partner":[
+        6,
+        10
+      ],
+      "children":[
+        11
       ]
     }
   },
   "links":[
     [
-      1,
+      6,
       0
+    ],
+    [
+      7,
+      0
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      9,
+      1
+    ],
+    [
+      6,
+      2
+    ],
+    [
+      10,
+      2
+    ],
+    [
+      0,
+      8
+    ],
+    [
+      1,
+      13
+    ],
+    [
+      1,
+      12
     ],
     [
       2,
-      0
-    ],
-    [
-      0,
-      3
-    ],
-    [
-      0,
-      4
-    ],
-    [
-      0,
-      5
+      11
     ]
   ]
 }

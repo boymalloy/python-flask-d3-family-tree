@@ -1,0 +1,4 @@
+person1_id,person2_id,relationship
+10,20,union
+10,30,parent
+20,30,parent

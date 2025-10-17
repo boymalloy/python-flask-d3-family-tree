@@ -62,18 +62,16 @@ def test_tree_name_db_check(fake_db, monkeypatch):
 # Uses the fixtures to fake an attempt to write to the person table
 # Retrns a fake integrity error to simulate an attempt to import data that is already in the db
 def test_write_people_to_person_dupes(fake_db, to_sql_raises_integrity, force_debug_false):
-    df = pd.read_csv("static/input/test_data_people_existing.csv")
+    df = pd.read_csv("static/input/test_data_people_existing_prepped.csv")
     out = app.write_people_to_person(df)
     assert out == "Dupes!"
 
 # Uses the fixtures to fake an attempt to write to the person table
 # When to_sql succeeds for real it only returns the length f the dataframe that was imported, which is simulated here
 def test_write_people_to_person_unique(fake_db, to_sql_noop):
-    df = pd.read_csv("static/input/test_data_people_unique.csv")
+    df = pd.read_csv("static/input/test_data_people_unique_prepped.csv")
     out = app.write_people_to_person(df)
     assert out == len(df) == 2
-
-# TESTS FOR FETCHING A TREE FROM THE DATABASE
 
 # Using data that we know is in the db, check that a subject's partner is fetched
 def test_fetch_partners_from_db():
@@ -82,11 +80,8 @@ def test_fetch_partners_from_db():
 
 # Using data that we know is in the db, check that a subject's children are fetched
 def test_fetch_children_from_db():
-    assert app.fetch_children_from_db(1) == [3, 4, 5]
+    assert app.fetch_children_from_db(1) == [4, 3, 5]
     assert app.fetch_children_from_db(2) == [3, 4, 5]
-
-def test_fetch_tree():
-    assert app.fetch_tree() == "Tree fetched successfully"
 
 
 # finds from the persons dataframe all the children of two people 
@@ -134,3 +129,17 @@ def test_check_for_existing_union_in_df():
     assert app.check_for_existing_union_in_df(test_union_2,test_data) == True
     assert app.check_for_existing_union_in_df(test_union_3,test_data) == False
 
+# test the fetching of a person's id using the name and dob of someone we know is in the db
+def test_fetch_person_id():
+    assert app.fetch_person_id("John Doe",1980,5,15) == 1
+    assert app.fetch_person_id("Chastity Boonswoggle",1980,5,15) == "Person not found"
+
+# test the prep_relationships function to see whether it returns a dataframe
+def test_prep_relationships():
+    result = app.prep_relationships("static/input/test_data_relationships.csv")
+    assert isinstance(result, pd.DataFrame)
+
+# test the prep_people function to see whether it returns a dataframe
+def test_prep_people():
+    result = app.prep_people("static/input/test_data_people.csv")
+    assert isinstance(result, pd.DataFrame)
