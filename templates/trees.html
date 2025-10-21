@@ -7,14 +7,14 @@
 <h1>{{ header}}</h1>
     <ul>
       {% for tree in trees %}
-        <li>{{ tree.id }} — {{ tree.name }}</li>
+        <li><a href="/fetch?tree_id={{ tree.id }}">{{ tree.name }}</a></li>
       {% else %}
         <li><em>No people found</em></li>
       {% endfor %}
     </ul>
 
 
-<p><a href="/static/tree/familytree.html">See the tree</a></p>
+
 
 {% endblock  %}
 </div>

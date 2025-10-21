@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, session, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 import pandas as pd
 import os
@@ -18,6 +18,7 @@ pd.set_option("display.max_colwidth", None)
 # Create the Flask app and configure it
 app = Flask(__name__, static_url_path='/static')
 bootstrap = Bootstrap(app)
+app.secret_key = "dCQXgn0uryXJIaD6MhREV5XOfzQ7Qu"
 
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
@@ -34,7 +35,8 @@ def index():
 # Route: Tree from db
 @app.route('/fetch')
 def fetch():
-    return render_template('run.html', header="Tree from db", payload=fetch_tree(2))
+    tree_id = request.args.get('tree_id')
+    return render_template('run.html', header="Tree from db", payload=fetch_tree(tree_id))
 
 # Route: Import from CSV
 @app.route('/csv')
@@ -44,10 +46,32 @@ def csv():
 # Route: Sandbox
 @app.route('/sandbox')
 def sandbox_page():
-    return render_template('run.html', header="Sandbox", payload=sandbox())
+    return render_template('run.html', header="Sandbox", payload=fetch_first_person(1))
 
-def sandbox():
-    output = "Good day"
+# fetch the id of the first person in the person table who has a given tree id
+# this is used as the starting point when rendering the json
+def fetch_first_person(given_tree_id):
+    # query
+    with app.app_context():
+        try:
+            query = text("""
+                SELECT id
+                FROM person 
+                WHERE tree_id = :given
+            """)
+            
+            # Execute the query as a parameter
+            result = db.session.execute(query, {"given": given_tree_id})
+            
+            # get the id from the results and return it
+            rows = result.fetchall()
+            row = rows[0]
+            id = row[0]
+            return id
+       
+       # return an error message if no entry in the db is found
+        except IndexError as e:
+            return "Person not found"
     return output
 
 def fetch_all_trees():
@@ -431,9 +455,13 @@ def fetch_tree(tree):
             unions_dict = unions.to_dict(orient="index")
             links_list = links.values.tolist()
 
+            # Select the first person listed in the person table to have the tree id assigned to them and store their id to use as the person from which to start the d3 tree
+            start = fetch_first_person(tree)
+
             # assemble it into one dict
+            # start param uses fetch_first_person(tree) to
             assembled = {
-                "start": "6",
+                "start": start,
                 "persons": persons_dict,
                 "unions": unions_dict,
                 "links": links_list
