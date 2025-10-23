@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, redirect, url_for
+from flask import Flask, render_template, session, request, redirect, url_for, abort
 from flask_bootstrap import Bootstrap
 import pandas as pd
 import os
@@ -8,17 +8,31 @@ from sqlalchemy.sql import text
 import numpy as np
 from sqlalchemy.types import Date, Integer, String
 from sqlalchemy.exc import IntegrityError
+from werkzeug.utils import secure_filename
+from pathlib import Path
+import uuid
+
+# Create the Flask app and configure it
+app = Flask(__name__, static_url_path='/static')
+bootstrap = Bootstrap(app)
+app.secret_key = "dCQXgn0uryXJIaD6MhREV5XOfzQ7Qu"
+
+# ---- Config ----
+BASE_DIR = Path(app.root_path)
+UPLOAD_DIR = BASE_DIR / "static" / "uploads"   # put under /static so you can also link to files
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+ALLOWED_EXTENSIONS = {"csv"}
+app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024  # 20 MB per request; tweak as needed
+
+def allowed_file(filename: str) -> bool:
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Show all columns and rows of panda dataframes
 pd.set_option("display.max_columns", None)
 pd.set_option("display.max_rows", None)
 pd.set_option("display.width", None)
 pd.set_option("display.max_colwidth", None)
-
-# Create the Flask app and configure it
-app = Flask(__name__, static_url_path='/static')
-bootstrap = Bootstrap(app)
-app.secret_key = "dCQXgn0uryXJIaD6MhREV5XOfzQ7Qu"
 
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
@@ -32,11 +46,18 @@ db = SQLAlchemy(app)
 def index():
     return render_template('index.html')
 
-# Route: Tree from db
+# Route: Fetch tree from db
 @app.route('/fetch')
 def fetch():
+    # Pick up the tree_id from the query string
     tree_id = request.args.get('tree_id')
-    return render_template('run.html', header="Tree from db", payload=fetch_tree(tree_id))
+
+    # if there is no tre_id, redirect to the choose a tree page
+    if not tree_id:
+        return redirect(url_for("trees_page"))
+    else:
+        # else if there is a tree_id, fetch that tree
+        return render_template('run.html', header="Tree from db", payload=fetch_tree(tree_id))
 
 # Route: Import from CSV
 @app.route('/csv')
@@ -357,6 +378,7 @@ def import_csv(p,r):
 # fetches the tree data from the db and builds the json file to be read by the D3 family tree app
 def fetch_tree(tree):
     try:
+        
         # Use the app context to access the database session
         with app.app_context():
             
@@ -479,6 +501,94 @@ def fetch_tree(tree):
     # Catch and return any exceptions
     except Exception as e:
         return e
+
+# === START 1 ===
+
+@app.route("/upload", methods=["GET"])
+def upload_form():
+    return render_template("upload.html")
+
+@app.route("/upload", methods=["POST"])
+def handle_upload():
+    # Expect two file inputs named csv1 and csv2
+    f1 = request.files.get("csv1")
+    f2 = request.files.get("csv2")
+
+    if not f1 or not f2 or f1.filename == "" or f2.filename == "":
+        abort(400, "Please choose both CSV files.")
+
+    if not (allowed_file(f1.filename) and allowed_file(f2.filename)):
+        abort(400, "Only .csv files are allowed.")
+
+    # Safe, unique filenames (avoid collisions)
+    def save_file(f):
+        original = secure_filename(f.filename)
+        unique = f"{uuid.uuid4().hex}_{original}"
+        dest = UPLOAD_DIR / unique
+        f.save(dest)
+        return unique  # store just the name in session
+
+    name1 = save_file(f1)
+    name2 = save_file(f2)
+
+    # Persist for the next page; you could also pass via query params
+    session["uploaded_csv1"] = name1
+    session["uploaded_csv2"] = name2
+
+    # Optionally remember permanently for the browser session
+    session.permanent = True
+
+    # Redirect to the processing page
+    return redirect(url_for("process_page"))
+
+# ---- Your processing function (called on page 2) ----
+def process_two_csvs(csv1_path: Path, csv2_path: Path):
+    """
+    Example: read both CSVs and return something useful.
+    Replace this with your real logic.
+    """
+    df1 = pd.read_csv(csv1_path)
+    df2 = pd.read_csv(csv2_path)
+    # Example: just return row counts
+    return {
+        "csv1_rows": len(df1),
+        "csv2_rows": len(df2),
+    }
+
+@app.route("/process")
+def process_page():
+    # Grab filenames from session (set by /upload POST)
+    name1 = session.get("uploaded_csv1")
+    name2 = session.get("uploaded_csv2")
+    if not name1 or not name2:
+        # nothing in session; send user to upload
+        return redirect(url_for("upload_form"))
+
+    # Build filesystem paths and public URLs
+    path1 = UPLOAD_DIR / name1
+    path2 = UPLOAD_DIR / name2
+    if not path1.exists() or not path2.exists():
+        abort(410, "Uploaded files are no longer available.")
+
+    url1 = url_for("static", filename=f"uploads/{name1}")
+    url2 = url_for("static", filename=f"uploads/{name2}")
+
+    # Call your real processing function using filesystem paths
+    result = process_two_csvs(path1, path2)
+
+    return render_template(
+        "process.html",
+        file1_url=url1,
+        file2_url=url2,
+        result=result
+    )
+
+# === END 1 ===
+
+# === START 2 ===
+
+
+# === END 2 ===
 
 # if the script is executed directly, run the app
 if __name__ == '__main__':
