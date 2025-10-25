@@ -1,116 +1,45 @@
 data = {
-  "start":6,
+  "start":115,
   "persons":{
-    "6":{
-      "id":6,
-      "name":"Scott Summers",
-      "birth_date":-220924800000,
-      "birth_place":"Anchorage, Alaska",
-      "death_date":-9223372036855,
-      "tree_id":2,
+    "115":{
+      "id":115,
+      "name":"FatherYXZ",
+      "birth_date":"1980-12-21",
+      "birth_place":"Greenwich",
+      "death_date":null,
+      "tree_id":9,
       "partners":[
-        7,
-        9,
-        10
+        116
       ],
       "children":[
-        11,
-        8,
-        13,
-        12
-      ],
-      "own_unions":[
-        0,
-        1,
-        2
-      ]
-    },
-    "7":{
-      "id":7,
-      "name":"Madelyne Pryor",
-      "birth_date":410227200000,
-      "birth_place":"Unknown",
-      "death_date":-9223372036855,
-      "tree_id":2,
-      "partners":[],
-      "children":[
-        8
+        117
       ],
       "own_unions":[
         0
       ]
     },
-    "8":{
-      "id":8,
-      "name":"Nathan Christopher Charles Summers",
-      "birth_date":504921600000,
-      "birth_place":"Unknown",
-      "death_date":-9223372036855,
-      "tree_id":2,
-      "partners":[],
-      "children":[],
-      "own_unions":[]
-    },
-    "9":{
-      "id":9,
-      "name":"Jean Grey",
-      "birth_date":-220924800000,
-      "birth_place":"Annandale-on-Hudson, New York",
-      "death_date":-9223372036855,
-      "tree_id":2,
+    "116":{
+      "id":116,
+      "name":"MotherYXZ",
+      "birth_date":"1982-03-27",
+      "birth_place":"Kirkcaldy",
+      "death_date":null,
+      "tree_id":9,
       "partners":[],
       "children":[
-        12,
-        13
+        117
       ],
       "own_unions":[
-        1
+        0
       ]
     },
-    "10":{
-      "id":10,
-      "name":"Emma Frost",
-      "birth_date":315532800000,
-      "birth_place":"Boston, Massachusetts",
-      "death_date":-9223372036855,
-      "tree_id":2,
-      "partners":[],
-      "children":[
-        11
-      ],
-      "own_unions":[
-        2
-      ]
-    },
-    "11":{
-      "id":11,
-      "name":"Ruby Summers",
-      "birth_date":1230768000000,
-      "birth_place":"Alternate future timeline",
-      "death_date":-9223372036855,
-      "tree_id":2,
-      "partners":[],
-      "children":[],
-      "own_unions":[]
-    },
-    "12":{
-      "id":12,
-      "name":"Nate Grey",
-      "birth_date":788918400000,
-      "birth_place":"Age of Apocalypse timeline",
-      "death_date":-9223372036855,
-      "tree_id":2,
-      "partners":[],
-      "children":[],
-      "own_unions":[]
-    },
-    "13":{
-      "id":13,
-      "name":"Rachel Summers",
-      "birth_date":315532800000,
-      "birth_place":"Days of Future Past timeline",
-      "death_date":-9223372036855,
-      "tree_id":2,
+    "117":{
+      "id":117,
+      "name":"ChildYXZ",
+      "birth_date":"2018-10-02",
+      "birth_place":"Lewisham",
+      "death_date":null,
+      "tree_id":9,
       "partners":[],
       "children":[],
       "own_unions":[]
@@ -119,73 +48,26 @@ data = {
   "unions":{
     "0":{
       "partner":[
-        6,
-        7
+        115,
+        116
       ],
       "children":[
-        8
-      ]
-    },
-    "1":{
-      "partner":[
-        6,
-        9
-      ],
-      "children":[
-        13,
-        12
-      ]
-    },
-    "2":{
-      "partner":[
-        6,
-        10
-      ],
-      "children":[
-        11
+        117
       ]
     }
   },
   "links":[
     [
-      6,
+      115,
       0
     ],
     [
-      7,
+      116,
       0
-    ],
-    [
-      6,
-      1
-    ],
-    [
-      9,
-      1
-    ],
-    [
-      6,
-      2
-    ],
-    [
-      10,
-      2
     ],
     [
       0,
-      8
-    ],
-    [
-      1,
-      13
-    ],
-    [
-      1,
-      12
-    ],
-    [
-      2,
-      11
+      117
     ]
   ]
 }

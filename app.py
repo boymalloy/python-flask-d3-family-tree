@@ -62,12 +62,12 @@ def fetch():
 # Route: Import from CSV
 @app.route('/csv')
 def csv():
-    return render_template('run.html', header="Write to db from csv", payload=import_csv("static/input/test_data_people.csv","static/input/test_data_relationships.csv"))
+    return render_template('run.html', header="Write to db from csv", payload=import_csv("static/input/grr_people.csv","static/input/grr_relationships.csv"))
 
 # Route: Sandbox
 @app.route('/sandbox')
 def sandbox_page():
-    return render_template('run.html', header="Sandbox", payload=fetch_first_person(1))
+    return render_template('run.html', header="Sandbox", payload=prep_relationships("static/input/grr_relationships.csv"))
 
 # fetch the id of the first person in the person table who has a given tree id
 # this is used as the starting point when rendering the json
@@ -207,7 +207,9 @@ def prep_people(p):
         # Add a col for the tree id
         people["tree_id"] = None
 
+        # for each row in the people df...
         for index, row in people.iterrows():
+            # get the name of the tree in that row
             family_tree_name = people.loc[index,'tree_name']
 
             # if the name of the tree is not already in the db...
@@ -265,11 +267,49 @@ def write_people_to_person(prepped_people):
             # - in non-debug, return the error msg for the user
             return "Dupes!"
         
-def write_relationships_df_to_relationships_db(prepped_relationships):
+# Takes the names and dobs of each row and replaces them with each person's id from the persons table
+def prep_relationships(r):
+    with app.app_context():
+        
+        # Turn the relationships csv into a relationships dataframe
+        relationships = pd.read_csv(r)
+        
+        # make a blank dataframe for the preppared version of the relationships, which will have the names and dobs switched to the ids
+        output = pd.DataFrame({'person1_id' : pd.Series(dtype='int'),
+                            'person2_id': pd.Series(dtype='int'),
+                            'relationship': pd.Series(dtype='string')})
+        
+        # Loop through the imported relationships df, for each row we get the ids from the person table and write them, along with the relationship (e.g. union, parent) to the prepa new df which is then returned
+        for index, row in relationships.iterrows():
+                
+            # Get person 1's date of birth and break it into it's 3 parts
+            p1dob = relationships['person_1_birth'][index]
+            p1year, p1month, p1day = map(int, p1dob.split('-'))
+
+            # look up the id of person 1 using their name and birth
+            p1id = fetch_person_id(relationships['person_1_name'][index],p1year,p1month,p1day)
+
+            # Get person 2's date of birth and break it into it's 3 parts
+            p2dob = relationships['person_2_birth'][index]
+            p2year, p2month, p2day = map(int, p2dob.split('-'))
+
+            # look up the id of person 2 using their name and birth
+            p2id = fetch_person_id(relationships['person_2_name'][index],p2year,p2month,p2day)
+
+            # get p1 and p2's relationship
+            rel = relationships['relationship'][index]
+
+            # write ids and relationship to the output df
+            new_row = {'person1_id': p1id, 'person2_id': p2id, 'relationship': rel}
+            output = pd.concat([output, pd.DataFrame([new_row])], ignore_index=True)
+
+        return output
+    
+def write_relationships_df_to_relationships_db(input):
     with app.app_context():
         try:
-            # write the people from the prepped_people df to the person table using .to_sql
-            prepped_relationships.to_sql(
+            # write the relationships to the relationships table using .to_sql
+            input.to_sql(
                 name="relationships",
                 con=db.engine,
                 if_exists="append",
@@ -279,7 +319,7 @@ def write_relationships_df_to_relationships_db(prepped_relationships):
 
             # returns the length of the df
             # TO DO: return something more meaningful, e.g. the number of rows added
-            return len(prepped_relationships)
+            return len(input)
         except IntegrityError as e:
             app.logger.exception("Insert failed with IntegrityError")
 
@@ -320,44 +360,6 @@ def fetch_person_id(name,birth_year, birth_month, birth_day):
        # return an error message if no entry in the db is found
         except IndexError as e:
             return "Person not found"
-
-# Takes the names and dobs of each row and replaces them with each person's id from the persons table
-def prep_relationships(r):
-    with app.app_context():
-        
-        # Turn the relationships csv into a relationships dataframe
-        relationships = pd.read_csv(r)
-        
-        # make a blank dataframe for the preppared version of the relationships, which will have the names and dobs switched to the ids
-        prepped_relationships = pd.DataFrame({'person1_id' : pd.Series(dtype='int'),
-                            'person2_id': pd.Series(dtype='int'),
-                            'relationship': pd.Series(dtype='string')})
-        
-        # Loop through the imported relationships df, for each row we get the ids from the person table and write them, along with the relationship (e.g. union, parent) to the prepped_relationships df
-        for index, row in relationships.iterrows():
-                
-            # Get person 1's date of birth and break it into it's 3 parts
-            p1dob = relationships['person_1_birth'][index]
-            p1year, p1month, p1day = map(int, p1dob.split('-'))
-
-            # look up the id of person 1 using their name and birth
-            p1id = fetch_person_id(relationships['person_1_name'][index],p1year,p1month,p1day)
-
-            # Get person 2's date of birth and break it into it's 3 parts
-            p2dob = relationships['person_2_birth'][index]
-            p2year, p2month, p2day = map(int, p2dob.split('-'))
-
-            # look up the id of person 2 using their name and birth
-            p2id = fetch_person_id(relationships['person_2_name'][index],p2year,p2month,p2day)
-
-            # get p1 and p2's relationship
-            rel = relationships['relationship'][index]
-
-            # write ids and relationship to the prepped_relationships df
-            new_row = {'person1_id': p1id, 'person2_id': p2id, 'relationship': rel}
-            prepped_relationships = pd.concat([prepped_relationships, pd.DataFrame([new_row])], ignore_index=True)
-
-        return prepped_relationships
     
 # import
 def import_csv(p,r):
@@ -365,9 +367,9 @@ def import_csv(p,r):
         
         prepped_people = prep_people(p)
 
-        prepped_relationships = prep_relationships(r)
-        
         people_result = write_people_to_person(prepped_people)
+
+        prepped_relationships = prep_relationships(r)
 
         relationships_result = write_relationships_df_to_relationships_db(prepped_relationships)
 
@@ -403,9 +405,8 @@ def fetch_tree(tree):
             persons["children"] = None
             persons["own_unions"] = [[] for _ in range(len(persons))]
             
-            # Convert dates to milliseconds since epoch
-            persons["birth_date"] = pd.to_datetime(persons["birth_date"]).astype("int64") // 10**6
-            persons["death_date"] = pd.to_datetime(persons["death_date"]).astype("int64") // 10**6
+            # Convert dates to epoch ms for pandas compatibility 
+            persons["birth_date"] = pd.to_datetime(persons["birth_date"]).astype("int64")
 
             # Loop through each person in the data frame, gets the id of each of their children from the db, write the childrens' id to the children column
             for index, row in persons.iterrows():
@@ -472,6 +473,11 @@ def fetch_tree(tree):
             cols = ["id"] + [c for c in persons.columns if c != "id"]
             persons = persons[cols]
 
+            # Convert dates back from epoch ms to date format
+            persons["birth_date"] = pd.to_datetime(persons["birth_date"], unit="ns", utc=True).dt.date
+            # And then convert it again into a string for compatibility with json
+            persons["birth_date"] = persons["birth_date"].astype(str)
+            
             # Convert DataFrames to native Python dicts and list
             persons_dict = persons.to_dict(orient="index")
             unions_dict = unions.to_dict(orient="index")
@@ -481,7 +487,6 @@ def fetch_tree(tree):
             start = fetch_first_person(tree)
 
             # assemble it into one dict
-            # start param uses fetch_first_person(tree) to
             assembled = {
                 "start": start,
                 "persons": persons_dict,
@@ -574,7 +579,8 @@ def process_page():
     url2 = url_for("static", filename=f"uploads/{name2}")
 
     # Call your real processing function using filesystem paths
-    result = process_two_csvs(path1, path2)
+    result = import_csv(path1, path2)
+    # result = 1
 
     return render_template(
         "process.html",
@@ -583,12 +589,6 @@ def process_page():
         result=result
     )
 
-# === END 1 ===
-
-# === START 2 ===
-
-
-# === END 2 ===
 
 # if the script is executed directly, run the app
 if __name__ == '__main__':

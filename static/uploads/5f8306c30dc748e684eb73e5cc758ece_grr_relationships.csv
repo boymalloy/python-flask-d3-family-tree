@@ -1,0 +1,4 @@
+person_1_name,person_1_birth,relationship,person_2_name,person_2_birth
+Father0,1980-12-21,union,Mother0,1982-03-27
+Father0,1980-12-21,parent,Child0,2018-10-02
+Mother0,1982-03-27,parent,Child0,2018-10-02
