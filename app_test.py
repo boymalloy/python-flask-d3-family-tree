@@ -143,3 +143,8 @@ def test_prep_relationships():
 def test_prep_people():
     result = app.prep_people("static/input/test_data_people.csv")
     assert isinstance(result, pd.DataFrame)
+
+# test the allowable file extensions for the upload form
+def test_allowed_file():
+    assert app.allowed_file("file.csv") == True
+    assert app.allowed_file("file.doc") == False

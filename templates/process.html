@@ -1,14 +1,14 @@
-<!doctype html>
-<html>
-  <head><meta charset="utf-8"><title>Process CSVs</title></head>
-  <body>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    {% block page_content %}
+    
     <h1>Processing Result</h1>
 
-    <p>{{ file1_url }}</p>
-    <p>{{ file2_url }}</p>
-
     <pre>{{ result }}</pre>
+    <!-- <p><a href="/static/tree/familytree.html">See the tree</a></p> -->
 
-   
-  </body>
-</html>
+{% endblock  %}
+</div>
+{% endblock content %}

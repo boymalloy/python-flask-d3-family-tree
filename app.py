@@ -17,14 +17,14 @@ app = Flask(__name__, static_url_path='/static')
 bootstrap = Bootstrap(app)
 app.secret_key = "dCQXgn0uryXJIaD6MhREV5XOfzQ7Qu"
 
-# ---- Config ----
+# Form config
 BASE_DIR = Path(app.root_path)
-UPLOAD_DIR = BASE_DIR / "static" / "uploads"   # put under /static so you can also link to files
+UPLOAD_DIR = BASE_DIR / "static" / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-
 ALLOWED_EXTENSIONS = {"csv"}
-app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024  # 20 MB per request; tweak as needed
+app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024 
 
+# function to find the file extension of a file, and return True if its in the list of allowed extensions
 def allowed_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -58,11 +58,6 @@ def fetch():
     else:
         # else if there is a tree_id, fetch that tree
         return render_template('run.html', header="Tree from db", payload=fetch_tree(tree_id))
-
-# Route: Import from CSV
-@app.route('/csv')
-def csv():
-    return render_template('run.html', header="Write to db from csv", payload=import_csv("static/input/grr_people.csv","static/input/grr_relationships.csv"))
 
 # Route: Sandbox
 @app.route('/sandbox')
@@ -507,85 +502,74 @@ def fetch_tree(tree):
     except Exception as e:
         return e
 
-# === START 1 ===
-
+# Route: CSV upload page
 @app.route("/upload", methods=["GET"])
 def upload_form():
     return render_template("upload.html")
 
 @app.route("/upload", methods=["POST"])
 def handle_upload():
-    # Expect two file inputs named csv1 and csv2
+    # Accept the two csvs
     f1 = request.files.get("csv1")
     f2 = request.files.get("csv2")
 
+    # make empty strings if the csvs aren't there
     if not f1 or not f2 or f1.filename == "" or f2.filename == "":
         abort(400, "Please choose both CSV files.")
 
+    
+    # If either of the files are not a csv, abort and give msg to user
     if not (allowed_file(f1.filename) and allowed_file(f2.filename)):
         abort(400, "Only .csv files are allowed.")
 
-    # Safe, unique filenames (avoid collisions)
+    # Function to add unique characters to the file name and return just the name  
     def save_file(f):
         original = secure_filename(f.filename)
         unique = f"{uuid.uuid4().hex}_{original}"
         dest = UPLOAD_DIR / unique
         f.save(dest)
-        return unique  # store just the name in session
+        return unique  
 
+    # create unique file names and store the names as variables
     name1 = save_file(f1)
     name2 = save_file(f2)
 
-    # Persist for the next page; you could also pass via query params
+    # Move the variables to the session so they can be retrieved on the processing page
     session["uploaded_csv1"] = name1
     session["uploaded_csv2"] = name2
-
-    # Optionally remember permanently for the browser session
-    session.permanent = True
 
     # Redirect to the processing page
     return redirect(url_for("process_page"))
 
-# ---- Your processing function (called on page 2) ----
-def process_two_csvs(csv1_path: Path, csv2_path: Path):
-    """
-    Example: read both CSVs and return something useful.
-    Replace this with your real logic.
-    """
-    df1 = pd.read_csv(csv1_path)
-    df2 = pd.read_csv(csv2_path)
-    # Example: just return row counts
-    return {
-        "csv1_rows": len(df1),
-        "csv2_rows": len(df2),
-    }
-
+# Route: Page to process the csvs
 @app.route("/process")
 def process_page():
-    # Grab filenames from session (set by /upload POST)
+    # Get filenames from session 
     name1 = session.get("uploaded_csv1")
     name2 = session.get("uploaded_csv2")
+    # If the session variables arn't there, go back to the form
     if not name1 or not name2:
-        # nothing in session; send user to upload
         return redirect(url_for("upload_form"))
 
     # Build filesystem paths and public URLs
     path1 = UPLOAD_DIR / name1
     path2 = UPLOAD_DIR / name2
+    
+    # Abort if not found
     if not path1.exists() or not path2.exists():
         abort(410, "Uploaded files are no longer available.")
 
+    # Store the full urls of the files
     url1 = url_for("static", filename=f"uploads/{name1}")
     url2 = url_for("static", filename=f"uploads/{name2}")
 
-    # Call your real processing function using filesystem paths
+    # run the import function to write the contents of the csvs to the database
+    # It outputs a string stating how many row were added to the person and relationships tables
     result = import_csv(path1, path2)
-    # result = 1
 
+    # Render the process page and output the result of the import_csv function on the page
     return render_template(
         "process.html",
-        file1_url=url1,
-        file2_url=url2,
         result=result
     )
 
