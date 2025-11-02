@@ -60,27 +60,44 @@ To install and run this project locally, follow these steps:
 
 7. Create the database tables and populate them with test data
     ```bash
+    
+    -- create tree table
+    CREATE TABLE tree (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL
+    );
+
+    -- Insert a tree 
+    INSERT INTO tree (name) VALUES ('Doe Family Tree');
+    
+    -- Create person table 
     CREATE TABLE person (
     id SERIAL PRIMARY KEY, 
     name VARCHAR(100) NOT NULL, 
     birth_date DATE NOT NULL, 
     birth_place VARCHAR(255),
-    death_date DATE);
+    death_date DATE,
+    tree_id INT,
+    FOREIGN KEY (tree_id) REFERENCES tree(id) ON DELETE CASCADE);
 
-    INSERT INTO person (name, birth_date, birth_place, death_date)
+    -- Insert people
+    INSERT INTO person (name, birth_date, birth_place, death_date, tree_id)
     VALUES 
-    ('John Doe', '1980-05-15', 'New York', NULL),
-    ('Jane Smith', '1982-08-20', 'Los Angeles', NULL),
-    ('Child One', '2010-01-10', 'San Francisco', NULL), 
-    ('Child Two', '2012-03-15', 'San Francisco', NULL), 
-    ('Child Three', '2014-06-25', 'San Francisco', NULL);
+    ('John Doe', '1980-05-15', 'New York', NULL, 1),
+    ('Jane Smith', '1982-08-20', 'Los Angeles', NULL, 1),
+    ('Child One', '2010-01-10', 'San Francisco', NULL, 1), 
+    ('Child Two', '2012-03-15', 'San Francisco', NULL, 1), 
+    ('Child Three', '2014-06-25', 'San Francisco', NULL, 1);
         
+    -- Add a constraint to the person table - only unique combos of name and birth_date allowed
     ALTER TABLE person
     ADD CONSTRAINT unique_person_per_tree
     UNIQUE (name, birth_date, tree_id);
 
-    CREATE TYPE relationship_type AS ENUM ('parent', 'child', 'spouse', 'union');
+    -- Create a relationship type with several possible answers
+    CREATE TYPE relationship_type AS ENUM ('parent', 'child', 'union');
 
+    --- Create relationships table
     CREATE TABLE Relationships (
     relationship_id SERIAL PRIMARY KEY,
     person1_id INT NOT NULL, 
@@ -89,6 +106,7 @@ To install and run this project locally, follow these steps:
     FOREIGN KEY (person1_id) REFERENCES Person(id) ON DELETE CASCADE,
     FOREIGN KEY (person2_id) REFERENCES Person(id) ON DELETE CASCADE);
 
+    -- Make relationships unique
     CREATE UNIQUE INDEX unique_pair_relationship
     ON relationships (
     LEAST(person1_id, person2_id),
@@ -96,39 +114,16 @@ To install and run this project locally, follow these steps:
     relationship
     );
 
-    -- the union
+    -- Insert the relationships
     INSERT INTO relationships (person1_id, person2_id, relationship)
     VALUES 
-    (1, 2, 'union');
-
-    -- Parent-child relationships for John Doe
-    INSERT INTO relationships (person1_id, person2_id, relationship)
-    VALUES 
+    (1, 2, 'union'),
     (1, 3, 'parent'),
     (1, 4, 'parent'),
-    (1, 5, 'parent');
-
-    -- Parent-child relationships for Jane Smith
-    INSERT INTO relationships (person1_id, person2_id, relationship)
-    VALUES 
+    (1, 5, 'parent'),
     (2, 3, 'parent'),
     (2, 4, 'parent'),
     (2, 5, 'parent');
-
-    -- tree table
-    CREATE TABLE tree (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL
-    );
-
-    -- Insert a default tree 
-    INSERT INTO tree (name) VALUES ('Doe Family Tree');
-
-    -- Add tree_id to the person table
-    ALTER TABLE person ADD COLUMN tree_id INT REFERENCES tree(id) ON DELETE CASCADE;
-
-    -- Assign existing people to the default tree (id = 1)
-    UPDATE person SET tree_id = 1;
 
     ```
 

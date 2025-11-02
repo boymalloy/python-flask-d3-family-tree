@@ -80,8 +80,8 @@ def test_fetch_partners_from_db():
 
 # Using data that we know is in the db, check that a subject's children are fetched
 def test_fetch_children_from_db():
-    assert app.fetch_children_from_db(1) == [4, 3, 5]
-    assert app.fetch_children_from_db(2) == [3, 4, 5]
+    assert set(app.fetch_children_from_db(1)) == {3, 4, 5}
+    assert set(app.fetch_children_from_db(2)) == {3, 4, 5}
 
 
 # finds from the persons dataframe all the children of two people 
@@ -148,3 +148,11 @@ def test_prep_people():
 def test_allowed_file():
     assert app.allowed_file("file.csv") == True
     assert app.allowed_file("file.doc") == False
+
+# when building the tree you need to start from a particular person. This funtion searches for the first person listed with a given tree id and uses that as the start of the tree
+
+def test_fetch_first_person():
+    # Searches for a known person in a known tree
+    assert app.fetch_first_person(1) == 1
+    # searches for a tree id that doesn't exist
+    assert app.fetch_first_person(1000000000000) == "Person not found"
