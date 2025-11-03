@@ -11,13 +11,18 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from pathlib import Path
 import uuid
+from dotenv import load_dotenv
 
-# Create the Flask app and configure it
+
+# Create the Flask app
 app = Flask(__name__, static_url_path='/static')
-bootstrap = Bootstrap(app)
-app.secret_key = "dCQXgn0uryXJIaD6MhREV5XOfzQ7Qu"
+
+# Load env files
+load_dotenv(".venv")
+load_dotenv(".flaskenv")
 
 # Form config
+app.secret_key = "dCQXgn0uryXJIaD6MhREV5XOfzQ7Qu"
 BASE_DIR = Path(app.root_path)
 UPLOAD_DIR = BASE_DIR / "static" / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
@@ -35,10 +40,11 @@ pd.set_option("display.width", None)
 pd.set_option("display.max_colwidth", None)
 
 # Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///:memory:")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Initialize the SQLAlchemy instance
+# Build extensions
+bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 
 # Route: Home page
@@ -233,8 +239,11 @@ def prep_people(p):
 
         # Remove the tree_name column
         people = people.drop("tree_name", axis=1)
+
+        # Get the tree id to pass through to the page for reference
+        imported_tree_id = people["tree_id"].iloc[-1]
         
-        return people
+        return people, imported_tree_id
 
 def write_people_to_person(prepped_people):
     with app.app_context():
@@ -248,9 +257,7 @@ def write_people_to_person(prepped_people):
                 method="multi"
             )
 
-            # returns the length of the df
-            # TO DO: return something more meaningful, e.g. the number of rows added
-            return len(prepped_people)
+            return True
         except IntegrityError as e:
             app.logger.exception("Insert failed with IntegrityError")
 
@@ -312,9 +319,8 @@ def write_relationships_df_to_relationships_db(input):
                 method="multi"
             )
 
-            # returns the length of the df
-            # TO DO: return something more meaningful, e.g. the number of rows added
-            return len(input)
+            return True
+        
         except IntegrityError as e:
             app.logger.exception("Insert failed with IntegrityError")
 
@@ -360,7 +366,7 @@ def fetch_person_id(name,birth_year, birth_month, birth_day):
 def import_csv(p,r):
     with app.app_context():
         
-        prepped_people = prep_people(p)
+        prepped_people, tree_id = prep_people(p)
 
         people_result = write_people_to_person(prepped_people)
 
@@ -368,9 +374,9 @@ def import_csv(p,r):
 
         relationships_result = write_relationships_df_to_relationships_db(prepped_relationships)
 
-        return_msg = "People added: " + str(people_result) + ". Relationships added: " + str(relationships_result)
+        return_msg = "Tree ID: " + str(tree_id) + ". People added: " + str(people_result) + ". Relationships added: " + str(relationships_result)
 
-        return return_msg
+        return return_msg, tree_id
 
 # fetches the tree data from the db and builds the json file to be read by the D3 family tree app
 def fetch_tree(tree):
@@ -509,7 +515,7 @@ def fetch_tree(tree):
             with open("static/tree/data/tree_data.js", "w") as file_Obj:
                 file_Obj.write(json_string)
 
-            return "It worked"
+            return "Tree fetched successfully"
             
     # Catch and return any exceptions
     except Exception as e:
@@ -578,12 +584,13 @@ def process_page():
 
     # run the import function to write the contents of the csvs to the database
     # It outputs a string stating how many row were added to the person and relationships tables
-    result = import_csv(path1, path2)
+    result, tree_id = import_csv(path1, path2)
 
     # Render the process page and output the result of the import_csv function on the page
     return render_template(
         "process.html",
-        result=result
+        result=result,
+        tree_id=tree_id
     )
 
 

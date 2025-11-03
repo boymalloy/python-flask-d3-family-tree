@@ -9,13 +9,7 @@ I built this app to learn:
 * Git and GitHub
 * PostgreSQL
 
-Next I plan to:
-* Write new data to the database from a csv or a form
-* Try doing it in an object oriented way (it's currently done using panda dataframes)
-* Deploy it somewhere
-* Learn about the JavaScript for the D3 data visualisation so that I can add some features to it 
-
-I didn't make the JavaScript data visualisation. It is taken (with thanks and gratitude) from [BenPortner's js_family_tree](https://github.com/BenPortner/js_family_tree), which in turn is based on [collapsible d3 tree example](https://gist.github.com/d3noob/43a860bc0024792f8803bba8ca0d5ecd) by d3noob.
+I didn't make the D3 JavaScript data visualisation. It is taken (with thanks and gratitude) from [BenPortner's js_family_tree](https://github.com/BenPortner/js_family_tree), which in turn is based on [collapsible d3 tree example](https://gist.github.com/d3noob/43a860bc0024792f8803bba8ca0d5ecd) by d3noob.
 
 ## To install and run
 To install and run this project locally, follow these steps:
@@ -127,30 +121,23 @@ To install and run this project locally, follow these steps:
 
     ```
 
-8. Change the database password and set the environment variable
-    ```bash
-        ALTER USER postgres PASSWORD 'change_to_a_password';
-    \q
-    export DATABASE_URL="postgresql://postgres:change_to_a_password@localhost:5432/family_tree"
-    source ~/.bashrc
-    ```
-9. Put your app setup and database url into a flaskenv file so that you don't have to type it every time you go into the virtual env and run flask:
+8. Put your app setup and database url into a flaskenv file so that you don't have to type it every time you go into the virtual env and run flask:
 Create a file called .flaskenv in your project directory and add these lines
     ```bash
     export FLASK_APP=app
     export FLASK_DEBUG=1
     export DATABASE_URL="postgresql://postgres:change_to_a_password@localhost:5432/family_tree"
     ```
-10. Exclude your venv files from GitHub (so that you don't commit your password to the repo)
+9. Exclude your venv files from GitHub (so that you don't commit your password to the repo)
 Create a file called .gitignore in your project directory and add these lines
     ```bash
     .flaskenv
     .venv/
     ```
 
-11. Start the web server:
+110 Start the web server:
     ```bash
     flask run
     ```
 
-12. Go to [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+11. Go to [http://127.0.0.1:5000/](http://127.0.0.1:5000/)

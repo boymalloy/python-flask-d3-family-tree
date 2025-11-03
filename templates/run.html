@@ -4,9 +4,25 @@
 <div class="container">
     {% block page_content %}
 
-<h1>{{ header}}</h1>
-<pre>{{ payload }}</pre>
-<p><a href="/static/tree/familytree.html">See the tree</a></p>
+    <h1>{{ header}}</h1>
+    <pre>{{ payload }}</pre>
+    
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="/static/tree/js/d3-dag.js"></script>
+    <script src="/static/tree/data/tree_data.js"></script>
+    <script src="/static/tree/js/familytree.js"></script>
+    <script>
+        // insert svg object to hold the family tree
+        const svg = d3.select("body").append("svg")
+            .attr("width", document.body.offsetWidth)
+            .attr("height", document.documentElement.clientHeight);
+
+        // make family tree object
+        let FT = new FamilyTree(data, svg);
+
+        // draw family tree
+        FT.draw();
+    </script>
 
 {% endblock  %}
 </div>

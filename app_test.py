@@ -67,11 +67,23 @@ def test_write_people_to_person_dupes(fake_db, to_sql_raises_integrity, force_de
     assert out == "Dupes!"
 
 # Uses the fixtures to fake an attempt to write to the person table
-# When to_sql succeeds for real it only returns the length f the dataframe that was imported, which is simulated here
 def test_write_people_to_person_unique(fake_db, to_sql_noop):
     df = pd.read_csv("static/input/test_data_people_unique_prepped.csv")
     out = app.write_people_to_person(df)
-    assert out == len(df) == 2
+    assert out == True
+
+# Uses the fixtures to fake an attempt to write to the relationships table
+# Retrns a fake integrity error to simulate an attempt to import data that is already in the db
+def test_write_relationships_df_to_relationships_db_dupes(fake_db, to_sql_raises_integrity, force_debug_false):
+    df = pd.read_csv("static/input/test_data_relationships_existing_prepped.csv")
+    out = app.write_relationships_df_to_relationships_db(df)
+    assert out == "Dupes!"
+
+# Uses the fixtures to fake an attempt to write to the relationships table
+def test_write_relationships_df_to_relationships_db_unique(fake_db, to_sql_noop):
+    df = pd.read_csv("static/input/test_data_relationships_unique_prepped.csv")
+    out = app.write_relationships_df_to_relationships_db(df)
+    assert out == True
 
 # Using data that we know is in the db, check that a subject's partner is fetched
 def test_fetch_partners_from_db():
@@ -141,8 +153,9 @@ def test_prep_relationships():
 
 # test the prep_people function to see whether it returns a dataframe
 def test_prep_people():
-    result = app.prep_people("static/input/test_data_people.csv")
+    result, tree_id = app.prep_people("static/input/test_data_people.csv")
     assert isinstance(result, pd.DataFrame)
+    assert isinstance(tree_id, int)
 
 # test the allowable file extensions for the upload form
 def test_allowed_file():

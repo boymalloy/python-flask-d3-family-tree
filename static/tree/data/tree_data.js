@@ -1,71 +1,45 @@
 data = {
-  "start":1,
+  "start":16,
   "persons":{
-    "1":{
-      "id":1,
-      "name":"John Doe",
+    "16":{
+      "id":16,
+      "name":"FatherCCA",
       "birthyear":"1980",
-      "birth_place":"New York",
+      "birth_place":"Greenwich",
       "deathyear":"Living",
-      "tree_id":1,
+      "tree_id":6,
       "partners":[
-        2
+        17
       ],
       "children":[
-        5,
-        4,
-        3
+        18
       ],
       "own_unions":[
         0
       ]
     },
-    "2":{
-      "id":2,
-      "name":"Jane Smith",
+    "17":{
+      "id":17,
+      "name":"MotherCCA",
       "birthyear":"1982",
-      "birth_place":"Los Angeles",
+      "birth_place":"Kirkcaldy",
       "deathyear":"Living",
-      "tree_id":1,
+      "tree_id":6,
       "partners":[],
       "children":[
-        3,
-        5,
-        4
+        18
       ],
       "own_unions":[
         0
       ]
     },
-    "3":{
-      "id":3,
-      "name":"Child One",
-      "birthyear":"2010",
-      "birth_place":"San Francisco",
+    "18":{
+      "id":18,
+      "name":"ChildCCA",
+      "birthyear":"2018",
+      "birth_place":"Lewisham",
       "deathyear":"Living",
-      "tree_id":1,
-      "partners":[],
-      "children":[],
-      "own_unions":[]
-    },
-    "4":{
-      "id":4,
-      "name":"Child Two",
-      "birthyear":"2012",
-      "birth_place":"San Francisco",
-      "deathyear":"Living",
-      "tree_id":1,
-      "partners":[],
-      "children":[],
-      "own_unions":[]
-    },
-    "5":{
-      "id":5,
-      "name":"Child Three",
-      "birthyear":"2014",
-      "birth_place":"San Francisco",
-      "deathyear":"Living",
-      "tree_id":1,
+      "tree_id":6,
       "partners":[],
       "children":[],
       "own_unions":[]
@@ -74,36 +48,26 @@ data = {
   "unions":{
     "0":{
       "partner":[
-        1,
-        2
+        16,
+        17
       ],
       "children":[
-        5,
-        4,
-        3
+        18
       ]
     }
   },
   "links":[
     [
-      1,
+      16,
       0
     ],
     [
-      2,
+      17,
       0
     ],
     [
       0,
-      5
-    ],
-    [
-      0,
-      4
-    ],
-    [
-      0,
-      3
+      18
     ]
   ]
 }
