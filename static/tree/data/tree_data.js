@@ -4,9 +4,9 @@ data = {
     "1":{
       "id":1,
       "name":"John Doe",
-      "birth_date":"1980-05-15",
+      "birthyear":"1980",
       "birth_place":"New York",
-      "death_date":null,
+      "deathyear":"Living",
       "tree_id":1,
       "partners":[
         2
@@ -23,9 +23,9 @@ data = {
     "2":{
       "id":2,
       "name":"Jane Smith",
-      "birth_date":"1982-08-20",
+      "birthyear":"1982",
       "birth_place":"Los Angeles",
-      "death_date":null,
+      "deathyear":"Living",
       "tree_id":1,
       "partners":[],
       "children":[
@@ -40,9 +40,9 @@ data = {
     "3":{
       "id":3,
       "name":"Child One",
-      "birth_date":"2010-01-10",
+      "birthyear":"2010",
       "birth_place":"San Francisco",
-      "death_date":null,
+      "deathyear":"Living",
       "tree_id":1,
       "partners":[],
       "children":[],
@@ -51,9 +51,9 @@ data = {
     "4":{
       "id":4,
       "name":"Child Two",
-      "birth_date":"2012-03-15",
+      "birthyear":"2012",
       "birth_place":"San Francisco",
-      "death_date":null,
+      "deathyear":"Living",
       "tree_id":1,
       "partners":[],
       "children":[],
@@ -62,9 +62,9 @@ data = {
     "5":{
       "id":5,
       "name":"Child Three",
-      "birth_date":"2014-06-25",
+      "birthyear":"2014",
       "birth_place":"San Francisco",
-      "death_date":null,
+      "deathyear":"Living",
       "tree_id":1,
       "partners":[],
       "children":[],

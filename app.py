@@ -402,6 +402,7 @@ def fetch_tree(tree):
             
             # Convert dates to epoch ms for pandas compatibility 
             persons["birth_date"] = pd.to_datetime(persons["birth_date"]).astype("int64")
+            persons["death_date"] = pd.to_datetime(persons["death_date"]).astype("int64")
 
             # Loop through each person in the data frame, gets the id of each of their children from the db, write the childrens' id to the children column
             for index, row in persons.iterrows():
@@ -470,8 +471,20 @@ def fetch_tree(tree):
 
             # Convert dates back from epoch ms to date format
             persons["birth_date"] = pd.to_datetime(persons["birth_date"], unit="ns", utc=True).dt.date
+            persons["death_date"] = pd.to_datetime(persons["death_date"], unit="ns", utc=True).dt.date
             # And then convert it again into a string for compatibility with json
             persons["birth_date"] = persons["birth_date"].astype(str)
+            persons["death_date"] = persons["death_date"].astype(str)
+            
+            # change the names of the date columns to the names expected by D3
+            persons = persons.rename(columns={'birth_date': 'birthyear'})
+            persons = persons.rename(columns={'death_date': 'deathyear'})
+
+            # Replace the date with just the year (makes more sense in the D3 tree)
+            persons["birthyear"] = persons["birthyear"].str.extract(r"^(\d{4})")
+
+            # Change any deathyears recorded as "NaT" to "Living"
+            persons["deathyear"] = persons["deathyear"].replace({"NaT": "Living"})
             
             # Convert DataFrames to native Python dicts and list
             persons_dict = persons.to_dict(orient="index")

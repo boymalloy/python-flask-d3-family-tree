@@ -27,8 +27,8 @@ To install and run this project locally, follow these steps:
 
 2. Create and activate a virtual environment:
     ```bash
-    python3 -m venv env
-    source env/bin/activate
+    python3 -m venv .venv
+    source .venv/bin/activate
     ```
 
 3. Install the required dependencies:
@@ -40,7 +40,7 @@ To install and run this project locally, follow these steps:
     ```bash
     cd python-flask-d3-family-tree
     export FLASK_APP=app
-    export FLASK_ENV=development
+    export FLASK_DEBUG=1
     ```
 
 5. Install PostgreSQL
@@ -134,14 +134,23 @@ To install and run this project locally, follow these steps:
     export DATABASE_URL="postgresql://postgres:change_to_a_password@localhost:5432/family_tree"
     source ~/.bashrc
     ```
+9. Put your app setup and database url into a flaskenv file so that you don't have to type it every time you go into the virtual env and run flask:
+Create a file called .flaskenv in your project directory and add these lines
+    ```bash
+    export FLASK_APP=app
+    export FLASK_DEBUG=1
+    export DATABASE_URL="postgresql://postgres:change_to_a_password@localhost:5432/family_tree"
+    ```
+10. Exclude your venv files from GitHub (so that you don't commit your password to the repo)
+Create a file called .gitignore in your project directory and add these lines
+    ```bash
+    .flaskenv
+    .venv/
+    ```
 
-9. Start the web server:
+11. Start the web server:
     ```bash
     flask run
     ```
 
-10. Got to [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
-
-11. Click on 'Fetch tree from database'.
-
-12. Click on 'See the tree'.
+12. Go to [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
