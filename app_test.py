@@ -43,21 +43,21 @@ def to_sql_raises_integrity(monkeypatch):
 
 # Tests tree_name_db_check without touching the real database.
 # Uses fake_db fixture (which patches commit/execute globally),
-# then monkeypatches execute again to simulate True/False results.
+# then monkeypatches execute again to simulate True/False results
 def test_tree_name_db_check(fake_db, monkeypatch):
     # Simulate a matching tree found in DB ---
     class FakeResultTrue:
         def scalar(self): return 1
 
     monkeypatch.setattr(app.db.session, "execute", lambda *a, **k: FakeResultTrue())
-    assert app.tree_name_db_check("Doe Family Tree") is True
+    assert app.tree_name_db_check("Doe") is True
 
     # Simulate no matching tree found in DB ---
     class FakeResultFalse:
         def scalar(self): return None  
 
     monkeypatch.setattr(app.db.session, "execute", lambda *a, **k: FakeResultFalse())
-    assert app.tree_name_db_check("Pinkle Family Tree") is False
+    assert app.tree_name_db_check("afasdfjadflkjaslkfjakjdf") is False
 
 # Uses the fixtures to fake an attempt to write to the person table
 # Retrns a fake integrity error to simulate an attempt to import data that is already in the db
@@ -152,7 +152,7 @@ def test_prep_relationships():
     assert isinstance(result, pd.DataFrame)
 
 # test the prep_people function to see whether it returns a dataframe
-def test_prep_people():
+def test_prep_people(fake_db):
     result, tree_id = app.prep_people("static/input/test_data_people.csv")
     assert isinstance(result, pd.DataFrame)
     assert isinstance(tree_id, int)
@@ -163,9 +163,15 @@ def test_allowed_file():
     assert app.allowed_file("file.doc") == False
 
 # when building the tree you need to start from a particular person. This funtion searches for the first person listed with a given tree id and uses that as the start of the tree
-
 def test_fetch_first_person():
     # Searches for a known person in a known tree
     assert app.fetch_first_person(1) == 1
     # searches for a tree id that doesn't exist
     assert app.fetch_first_person(1000000000000) == "Person not found"
+
+def test_write_tree_duplicate():
+    assert app.write_tree("Doe") == "duplicate"
+
+def test_write_tree_successful(fake_db):
+    result = app.write_tree("afkjlakflkdsafj")
+    assert isinstance(result, int)

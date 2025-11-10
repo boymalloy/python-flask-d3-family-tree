@@ -7,7 +7,7 @@
 <h1>{{ header}}</h1>
     <ul>
       {% for tree in trees %}
-        <li><a href="/fetch?tree_id={{ tree.id }}">{{ tree.name }}</a></li>
+        <li><a href="/fetch?tree_id={{ tree.id }}">{{ tree.name }} family tree</a></li>
       {% else %}
         <li><em>No people found</em></li>
       {% endfor %}

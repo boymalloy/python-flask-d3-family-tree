@@ -65,15 +65,50 @@ def fetch():
         # else if there is a tree_id, fetch that tree
         return render_template('run.html', header="Tree from db", payload=fetch_tree(tree_id))
 
-# Route: Sandbox
-@app.route('/sandbox')
-def sandbox_page():
-    return render_template('run.html', header="Sandbox", payload=prep_relationships("static/input/grr_relationships.csv"))
+# Create a new family tree by adding it to the tree table and return the id of the new tree
+def write_tree(new_tree_name):
+     with app.app_context():
+        try:
+            # Insert a new tree record using the desired name from the form submission
+            sql = text("INSERT INTO tree (name) VALUES (:name)")
+            db.session.execute(sql, {'name': new_tree_name})
+            db.session.commit()
+
+            # Look up the record that has just been created ...
+            sql2 = text("SELECT id FROM tree WHERE name = :name LIMIT 1")
+                
+            # ... by selecting the id of the tree with that name and return the id
+            return db.session.execute(sql2, {'name': new_tree_name}).scalar()
+        
+        # If the sql insert returns an ingerity error (meaning a tree with the desired name already exists), return a string "duplicate"
+        except IntegrityError as e:
+            app.logger.exception("Insert failed with IntegrityError")
+            return "duplicate"
+
+# Page to create a tree
+@app.route("/make_tree", methods=["GET", "POST"])
+def make_tree_page():
+    # if the page is called with the POST method (the form has been submitted)
+    if request.method == "POST":
+        # Get the desired tree name from the form
+        desired_tree_name = request.form["desired_tree_name"]
+        
+        # Write a new tree to the tree table using the desired name
+        new_tree_id = write_tree(desired_tree_name)
+
+        # if the write_tree function returns "duplicate, render the error page with an explanation"
+        if new_tree_id == "duplicate":
+            return render_template("make_tree_error.html", error="Tree already exists")
+        else:
+            # otherwise proceed
+            return render_template("make_tree_process.html", desired_tree_name=desired_tree_name, new_tree_id=new_tree_id)
+    # if the page is called without the POST method (the form hasn't been submitted), show the form
+    return render_template("make_tree.html")
 
 # fetch the id of the first person in the person table who has a given tree id
 # this is used as the starting point when rendering the json
 def fetch_first_person(given_tree_id):
-    # query
+    
     with app.app_context():
         try:
             query = text("""
@@ -91,7 +126,7 @@ def fetch_first_person(given_tree_id):
             id = row[0]
             return id
        
-       # return an error message if no entry in the db is found
+        # return an error message if no entry in the db is found
         except IndexError as e:
             return "Person not found"
     return output

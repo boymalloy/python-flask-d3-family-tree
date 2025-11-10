@@ -61,8 +61,13 @@ To install and run this project locally, follow these steps:
         name VARCHAR(255) NOT NULL
     );
 
+     -- Add a constraint to the tree table unique names only
+    ALTER TABLE tree
+    ADD CONSTRAINT unique_name
+    UNIQUE (name);
+
     -- Insert a tree 
-    INSERT INTO tree (name) VALUES ('Doe Family Tree');
+    INSERT INTO tree (name) VALUES ('Doe');
     
     -- Create person table 
     CREATE TABLE person (
@@ -135,7 +140,7 @@ Create a file called .gitignore in your project directory and add these lines
     .venv/
     ```
 
-110 Start the web server:
+10. Start the web server:
     ```bash
     flask run
     ```
