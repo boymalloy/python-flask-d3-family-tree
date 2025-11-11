@@ -169,9 +169,41 @@ def test_fetch_first_person():
     # searches for a tree id that doesn't exist
     assert app.fetch_first_person(1000000000000) == "Person not found"
 
+# Test for creating a new tree. Uses duplicate name and receives an error.
 def test_write_tree_duplicate():
     assert app.write_tree("Doe") == "duplicate"
 
+# Test of creating a new tree. Uses monkeypatch's fake db to return a successful result without writing to the db
 def test_write_tree_successful(fake_db):
     result = app.write_tree("afkjlakflkdsafj")
     assert isinstance(result, int)
+
+# Tests for fetching the name of a tree - working and not found
+def test_fetch_tree_name():
+    assert app.fetch_tree_name(1) == "Doe"
+    assert app.fetch_tree_name(10000000000000000000) == "Tree not found"
+
+# Test assemble a date with valid inputs
+def test_assemble_date_valid():
+    from datetime import date
+    result =  app.assemble_date(2025, 11, 11)
+    assert isinstance(result, date)
+
+ # Test assemble a date with various rubbish inputs
+def test_assemble_date_invalid():
+    from datetime import date
+    assert app.assemble_date(2025, 11, 31) == "Invalid date"
+    assert app.assemble_date("text", 11, 11) == "Invalid date"
+
+# Test assemble a date with blank inputs
+def test_assemble_date_blank():
+    assert app.assemble_date("","","") == None
+
+# Test for adding a person
+def test_write_person(fake_db):
+    result = app.write_person(1, "Uncle Drosselmier", app.assemble_date(2021,10,10), "Greenwich", app.assemble_date("","",""))
+    assert isinstance(result, int)
+
+# Test for adding a person with duplicate data
+def test_write_person():
+    assert app.write_person(1, "John Doe", app.assemble_date(1980,5,15), "New text", app.assemble_date("","","")) == "duplicate"

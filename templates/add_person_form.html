@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    {% block page_content %}
+    <h1>Add a person</h1>
+
+    <p>You are adding a person to the {{tree_name}} family tree</p>
+
+    <form action="/add_person" method="post" enctype="multipart/form-data">
+        <div>
+            <div>
+                <label>Name:</label>
+                <input type="text" name="name" required />
+            </div>
+            <div>
+                <label>Birth year:</label>
+                <input type="text" name="birth_year" required />
+            </div>
+            <div>
+                <label>Birth month:</label>
+                <input type="text" name="birth_month" required />
+            </div>
+            <div>
+                <label>Birth day:</label>
+                <input type="text" name="birth_day" required />
+            </div>
+            <div>
+                <label>Birth place:</label>
+                <input type="text" name="birth_place" />
+            </div>
+            <div>
+                <label>Death year:</label>
+                <input type="text" name="death_year" />
+            </div>
+            <div>
+                <label>Death month:</label>
+                <input type="text" name="death_month" />
+            </div>
+            <div>
+                <label>Death day:</label>
+                <input type="text" name="death_day" />
+            </div>
+            <div>
+                <input type="hidden" name="tree_id" value="{{tree_id}}" />
+                <button type="submit">Add</button>
+            </div>
+        </div>
+    </form>
+
+{% endblock  %}
+</div>
+{% endblock content %}

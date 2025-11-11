@@ -80,7 +80,7 @@ def write_tree(new_tree_name):
             # ... by selecting the id of the tree with that name and return the id
             return db.session.execute(sql2, {'name': new_tree_name}).scalar()
         
-        # If the sql insert returns an ingerity error (meaning a tree with the desired name already exists), return a string "duplicate"
+        # If the sql insert returns an integrity error (meaning a tree with the desired name already exists), return a string "duplicate"
         except IntegrityError as e:
             app.logger.exception("Insert failed with IntegrityError")
             return "duplicate"
@@ -104,6 +104,103 @@ def make_tree_page():
             return render_template("make_tree_process.html", desired_tree_name=desired_tree_name, new_tree_id=new_tree_id)
     # if the page is called without the POST method (the form hasn't been submitted), show the form
     return render_template("make_tree.html")
+
+
+# Fetch the name of a tree using the tree id
+def fetch_tree_name(tree_id):
+    try:
+        # Use the app context to access the database session
+        with app.app_context():
+            
+            query = text("SELECT name FROM tree WHERE id = :tree_id")
+
+            # Execute the query as a parameter
+            result = db.session.execute(query, {"tree_id": tree_id})
+            
+            # get the name from the results and return it
+            rows = result.fetchall()
+            row = rows[0]
+            return row[0]
+    
+    # return an error message if no entry in the db is found
+    except IndexError as e:
+        return "Tree not found"
+
+# assemble a date
+def assemble_date(birth_year, birth_month, birth_day):
+    if birth_year == "":
+        return None
+    
+    try:
+        # put the 3 parts of the dob together and put it in the correct data type
+        from datetime import date
+        return date(int(birth_year), int(birth_month), int(birth_day))
+    # Catch and return any exceptions
+    except Exception as e:
+        return "Invalid date"
+
+# Add a person to the person table
+def write_person(tree_id, name, birth_date, birth_place, death_date):
+    with app.app_context():
+        try:
+            sql = text("""
+                INSERT INTO person (name, tree_id, birth_date, birth_place, death_date)
+                VALUES (:name, :tree_id, :birth_date, :birth_place, :death_date)
+                RETURNING id
+            """)
+            result = db.session.execute(sql, {
+                "name": name,
+                "tree_id": tree_id,
+                "birth_date": birth_date,
+                "birth_place": birth_place,
+                "death_date": death_date
+            })
+            new_id = result.scalar()
+            db.session.commit()
+            return new_id
+        except IntegrityError:
+            db.session.rollback()
+            return "duplicate"
+        except Exception:
+            db.session.rollback()
+            raise
+
+# Page to add a person
+@app.route("/add_person", methods=["GET", "POST"])
+def add_person_page():
+    if request.method == "POST":
+            received_tree_id = request.form["tree_id"]
+            name = request.form["name"]
+            birth_year = request.form["birth_year"]
+            birth_month = request.form["birth_month"]
+            birth_day = request.form["birth_day"]
+            birth_place = request.form["birth_place"]
+            death_year = request.form["death_year"]
+            death_month = request.form["death_month"]
+            death_day = request.form["death_day"]
+
+            birth_date = assemble_date(birth_year, birth_month, birth_day)
+            death_date = assemble_date(death_year, death_month, death_day)
+
+            result = write_person(received_tree_id, name, birth_date, birth_place, death_date)
+
+            return render_template('add_person_process.html', tree_id=received_tree_id, name=name, birth_date=birth_date, birth_place=birth_place, death_date=death_date, result=result)
+    
+    # Pick up the tree_id from the query string
+    tree_id = request.args.get('tree_id')
+
+    # if there is no tree_id...
+    if not tree_id:
+        # Redirect to choose a tree
+        return render_template('add_person_tree_selector.html', trees=fetch_all_trees())
+    # Else a tree id has been provided so show the add person form
+    else:
+        # Get the name of the tree
+        tree_name = fetch_tree_name(tree_id)
+        
+        # Return the form
+        return render_template('add_person_form.html', tree_id=tree_id, tree_name=tree_name)
+
 
 # fetch the id of the first person in the person table who has a given tree id
 # this is used as the starting point when rendering the json

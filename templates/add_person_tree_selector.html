@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    {% block page_content %}
+
+<h1>Add a person</h1>
+    
+    <p>Choose which tree to add a person to</p>
+    <ul>
+      {% for tree in trees %}
+        <li><a href="/add_person?tree_id={{ tree.id }}">{{ tree.name }} family tree</a></li>
+      {% else %}
+        <li><em>No people found</em></li>
+      {% endfor %}
+    </ul>
+
+
+
+
+{% endblock  %}
+</div>
+{% endblock content %}
