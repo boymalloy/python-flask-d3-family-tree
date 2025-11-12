@@ -12,9 +12,10 @@ data = {
         2
       ],
       "children":[
-        4,
+        6,
         3,
-        5
+        5,
+        4
       ],
       "own_unions":[
         0
@@ -29,9 +30,10 @@ data = {
       "tree_id":1,
       "partners":[],
       "children":[
+        6,
+        3,
         5,
-        4,
-        3
+        4
       ],
       "own_unions":[
         0
@@ -72,29 +74,39 @@ data = {
     },
     "6":{
       "id":6,
-      "name":"Extra child",
-      "birthyear":"2025",
-      "birth_place":"",
-      "deathyear":"2125-12-12",
-      "tree_id":1,
-      "partners":[],
-      "children":[],
-      "own_unions":[]
-    },
-    "8":{
-      "id":8,
-      "name":"Extra child2",
+      "name":"Baby Doe",
       "birthyear":"2025",
       "birth_place":"",
       "deathyear":"Living",
       "tree_id":1,
       "partners":[],
-      "children":[],
-      "own_unions":[]
+      "children":[
+        8
+      ],
+      "own_unions":[
+        1
+      ]
     },
-    "9":{
-      "id":9,
-      "name":"Extra child3",
+    "7":{
+      "id":7,
+      "name":"Companion Doe",
+      "birthyear":"2025",
+      "birth_place":"",
+      "deathyear":"Living",
+      "tree_id":1,
+      "partners":[
+        6
+      ],
+      "children":[
+        8
+      ],
+      "own_unions":[
+        1
+      ]
+    },
+    "8":{
+      "id":8,
+      "name":"Wee Doe",
       "birthyear":"2025",
       "birth_place":"",
       "deathyear":"Living",
@@ -111,9 +123,19 @@ data = {
         2
       ],
       "children":[
-        4,
+        6,
         3,
-        5
+        5,
+        4
+      ]
+    },
+    "1":{
+      "partner":[
+        7,
+        6
+      ],
+      "children":[
+        8
       ]
     }
   },
@@ -127,8 +149,16 @@ data = {
       0
     ],
     [
+      7,
+      1
+    ],
+    [
+      6,
+      1
+    ],
+    [
       0,
-      4
+      6
     ],
     [
       0,
@@ -137,6 +167,14 @@ data = {
     [
       0,
       5
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      1,
+      8
     ]
   ]
 }

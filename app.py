@@ -12,7 +12,7 @@ from werkzeug.utils import secure_filename
 from pathlib import Path
 import uuid
 from dotenv import load_dotenv
-
+from datetime import date
 
 # Create the Flask app
 app = Flask(__name__, static_url_path='/static')
@@ -126,20 +126,22 @@ def fetch_tree_name(tree_id):
     except IndexError as e:
         return "Tree not found"
 
-# assemble a date
+# assemble a date from 3 inputs
 def assemble_date(birth_year, birth_month, birth_day):
+    
+    # if nothing has been input, return None
     if birth_year == "":
         return None
     
     try:
         # put the 3 parts of the dob together and put it in the correct data type
-        from datetime import date
         return date(int(birth_year), int(birth_month), int(birth_day))
+    
     # Catch and return any exceptions
     except Exception as e:
         return "Invalid date"
 
-# Add a person to the person table
+# Function to add a person to the person table
 def write_person(tree_id, name, birth_date, birth_place, death_date):
     with app.app_context():
         try:
@@ -165,10 +167,37 @@ def write_person(tree_id, name, birth_date, birth_place, death_date):
             db.session.rollback()
             raise
 
+def set_relationship(subject,other_person,type):
+    with app.app_context():
+        try:
+            sql = text("""
+                INSERT INTO relationships (person1_id, person2_id, relationship)
+                VALUES (:p1, :p2, :rel)
+                RETURNING relationship_id
+            """)
+            result = db.session.execute(sql, {
+                "p1": subject,
+                    "p2": other_person,
+                    "rel": type
+            })
+            new_id = result.scalar()
+            db.session.commit()
+            return new_id
+    
+        except IntegrityError:
+            db.session.rollback()
+            return "duplicate"
+        
+        except Exception:
+            db.session.rollback()
+            raise
+
 # Page to add a person
 @app.route("/add_person", methods=["GET", "POST"])
 def add_person_page():
+    # If the form has been submitted
     if request.method == "POST":
+            # Pick up all the variables from the form
             received_tree_id = request.form["tree_id"]
             name = request.form["name"]
             birth_year = request.form["birth_year"]
@@ -178,14 +207,55 @@ def add_person_page():
             death_year = request.form["death_year"]
             death_month = request.form["death_month"]
             death_day = request.form["death_day"]
+            mother = request.form["mother"]
+            father = request.form["father"]
+            partner1 = request.form["partner1"]
+            child1 = request.form["child1"]
 
+            # Assemble the dates
             birth_date = assemble_date(birth_year, birth_month, birth_day)
             death_date = assemble_date(death_year, death_month, death_day)
 
+            # Write it all to the person table and return the person id
             result = write_person(received_tree_id, name, birth_date, birth_place, death_date)
 
-            return render_template('add_person_process.html', tree_id=received_tree_id, name=name, birth_date=birth_date, birth_place=birth_place, death_date=death_date, result=result)
+            # if an integer is returned...
+            if isinstance(result, int):
+                
+                # If supplied, set the first parent
+                if mother:
+                    mother_rel_id = set_relationship(mother,result,"parent")
+                else:
+                    mother_rel_id = None
+
+                # If supplied, set the second parent
+                if father:
+                    father_rel_id = set_relationship(father,result,"parent")
+                else:
+                    father_rel_id = None
+
+                # If supplied, set the first union
+                if partner1:
+                    union1_rel_id = set_relationship(result,partner1,"union")
+                else:
+                    union1_rel_id = None
+
+                # If supplied, set the first child
+                if child1:
+                    child1_rel_id = set_relationship(result,child1,"parent")
+                else:
+                    child1_rel_id = None
+                
+                selected_tree_name = fetch_tree_name(received_tree_id)
+                
+                return render_template('add_person_process.html', tree_name=selected_tree_name, name=name, result=result, mother=mother, father=father, partner1=partner1, child1=child1, mother_rel_id=mother_rel_id, father_rel_id=father_rel_id, union1_rel_id=union1_rel_id, child1_rel_id=child1_rel_id)
+            
+            # if, instead of an integer we get the duplicate msg, display that
+            if result == "duplicate":
+                return render_template('generic.html', header="Processing Result", payload="Person not added. A person with the same name and date of birth is already in the database.")
     
+    # But if the form hasn't been submitted yet...
+
     # Pick up the tree_id from the query string
     tree_id = request.args.get('tree_id')
 
@@ -193,13 +263,13 @@ def add_person_page():
     if not tree_id:
         # Redirect to choose a tree
         return render_template('add_person_tree_selector.html', trees=fetch_all_trees())
-    # Else a tree id has been provided so show the add person form
+    # else a tree id has been provided so show the add person form
     else:
         # Get the name of the tree
         tree_name = fetch_tree_name(tree_id)
         
         # Return the form
-        return render_template('add_person_form.html', tree_id=tree_id, tree_name=tree_name)
+        return render_template('add_person_form.html', tree_id=tree_id, tree_name=tree_name, people=fetch_all_people())
 
 
 # fetch the id of the first person in the person table who has a given tree id
@@ -239,6 +309,18 @@ def fetch_all_trees():
         
          # Return all rows
         return result.fetchall()
+
+def fetch_all_people():
+    with app.app_context():
+        select = text("""
+            SELECT *
+            FROM person """)
+        
+        # Execute the query as a parameter
+        output = db.session.execute(select)
+        
+         # Return all rows
+        return output.fetchall()
 
 # Route: List of family trees
 @app.route('/trees')

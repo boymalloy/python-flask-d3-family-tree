@@ -41,6 +41,42 @@
                 <label>Death day:</label>
                 <input type="text" name="death_day" />
             </div>
+            <div class="mb-3">
+                <label for="mother" class="form-label">Mother</label>
+                <select class="form-select" id="mother" name="mother">
+                    <option selected value="">-- Please choose --</option>
+                    {% for p in people %}
+                         <option value="{{ p.id }}">{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="father" class="form-label">Father</label>
+                <select class="form-select" id="father" name="father">
+                    <option selected value="">-- Please choose --</option>
+                    {% for p in people %}
+                         <option value="{{ p.id }}">{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="partner1" class="form-label">Partner</label>
+                <select class="form-select" id="partner1" name="partner1">
+                    <option selected value="">-- Please choose --</option>
+                    {% for p in people %}
+                         <option value="{{ p.id }}">{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="child1" class="form-label">Child</label>
+                <select class="form-select" id="child1" name="child1">
+                    <option selected value="">-- Please choose --</option>
+                    {% for p in people %}
+                         <option value="{{ p.id }}">{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <div>
                 <input type="hidden" name="tree_id" value="{{tree_id}}" />
                 <button type="submit">Add</button>

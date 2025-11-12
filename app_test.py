@@ -191,7 +191,6 @@ def test_assemble_date_valid():
 
  # Test assemble a date with various rubbish inputs
 def test_assemble_date_invalid():
-    from datetime import date
     assert app.assemble_date(2025, 11, 31) == "Invalid date"
     assert app.assemble_date("text", 11, 11) == "Invalid date"
 
@@ -207,3 +206,12 @@ def test_write_person(fake_db):
 # Test for adding a person with duplicate data
 def test_write_person():
     assert app.write_person(1, "John Doe", app.assemble_date(1980,5,15), "New text", app.assemble_date("","","")) == "duplicate"
+
+# Test for setting a relationship
+def test_set_relationship_successful(fake_db):
+    result =  app.set_relationship(1,2,"union")
+    assert isinstance(result, int)
+
+# Test for setting a relationship with dulicate data
+def test_set_relationship_duplicate():
+    assert app.set_relationship(1,2,"union") == "duplicate"

@@ -8,11 +8,11 @@
     
     <p>Choose which tree to add a person to</p>
     <ul>
-      {% for tree in trees %}
-        <li><a href="/add_person?tree_id={{ tree.id }}">{{ tree.name }} family tree</a></li>
-      {% else %}
-        <li><em>No people found</em></li>
-      {% endfor %}
+        {% for tree in trees %}
+          <li><a href="/add_person?tree_id={{ tree.id }}">{{ tree.name }} family tree</a></li>
+        {% else %}
+          <li><em>No people found</em></li>
+        {% endfor %}
     </ul>
 
 
