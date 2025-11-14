@@ -1,116 +1,45 @@
 data = {
-  "start":1,
+  "start":87,
   "persons":{
-    "1":{
-      "id":1,
-      "name":"John Doe",
+    "87":{
+      "id":87,
+      "name":"FatherCCA",
       "birthyear":"1980",
-      "birth_place":"New York",
+      "birth_place":"Greenwich",
       "deathyear":"Living",
-      "tree_id":1,
+      "tree_id":78,
       "partners":[
-        2
+        88
       ],
       "children":[
-        6,
-        3,
-        5,
-        4
+        89
       ],
       "own_unions":[
         0
       ]
     },
-    "2":{
-      "id":2,
-      "name":"Jane Smith",
+    "88":{
+      "id":88,
+      "name":"MotherCCA",
       "birthyear":"1982",
-      "birth_place":"Los Angeles",
+      "birth_place":"Kirkcaldy",
       "deathyear":"Living",
-      "tree_id":1,
+      "tree_id":78,
       "partners":[],
       "children":[
-        6,
-        3,
-        5,
-        4
+        89
       ],
       "own_unions":[
         0
       ]
     },
-    "3":{
-      "id":3,
-      "name":"Child One",
-      "birthyear":"2010",
-      "birth_place":"San Francisco",
+    "89":{
+      "id":89,
+      "name":"ChildCCA",
+      "birthyear":"2018",
+      "birth_place":"Lewisham",
       "deathyear":"Living",
-      "tree_id":1,
-      "partners":[],
-      "children":[],
-      "own_unions":[]
-    },
-    "4":{
-      "id":4,
-      "name":"Child Two",
-      "birthyear":"2012",
-      "birth_place":"San Francisco",
-      "deathyear":"Living",
-      "tree_id":1,
-      "partners":[],
-      "children":[],
-      "own_unions":[]
-    },
-    "5":{
-      "id":5,
-      "name":"Child Three",
-      "birthyear":"2014",
-      "birth_place":"San Francisco",
-      "deathyear":"Living",
-      "tree_id":1,
-      "partners":[],
-      "children":[],
-      "own_unions":[]
-    },
-    "6":{
-      "id":6,
-      "name":"Baby Doe",
-      "birthyear":"2025",
-      "birth_place":"",
-      "deathyear":"Living",
-      "tree_id":1,
-      "partners":[],
-      "children":[
-        8
-      ],
-      "own_unions":[
-        1
-      ]
-    },
-    "7":{
-      "id":7,
-      "name":"Companion Doe",
-      "birthyear":"2025",
-      "birth_place":"",
-      "deathyear":"Living",
-      "tree_id":1,
-      "partners":[
-        6
-      ],
-      "children":[
-        8
-      ],
-      "own_unions":[
-        1
-      ]
-    },
-    "8":{
-      "id":8,
-      "name":"Wee Doe",
-      "birthyear":"2025",
-      "birth_place":"",
-      "deathyear":"Living",
-      "tree_id":1,
+      "tree_id":78,
       "partners":[],
       "children":[],
       "own_unions":[]
@@ -119,62 +48,26 @@ data = {
   "unions":{
     "0":{
       "partner":[
-        1,
-        2
+        87,
+        88
       ],
       "children":[
-        6,
-        3,
-        5,
-        4
-      ]
-    },
-    "1":{
-      "partner":[
-        7,
-        6
-      ],
-      "children":[
-        8
+        89
       ]
     }
   },
   "links":[
     [
-      1,
+      87,
       0
     ],
     [
-      2,
+      88,
       0
     ],
     [
-      7,
-      1
-    ],
-    [
-      6,
-      1
-    ],
-    [
       0,
-      6
-    ],
-    [
-      0,
-      3
-    ],
-    [
-      0,
-      5
-    ],
-    [
-      0,
-      4
-    ],
-    [
-      1,
-      8
+      89
     ]
   ]
 }

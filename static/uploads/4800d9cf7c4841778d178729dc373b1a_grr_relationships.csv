@@ -1,0 +1,4 @@
+person_1_name,person_1_birth,relationship,person_2_name,person_2_birth
+FatherCCA,1980-12-21,union,MotherCCA,1982-03-27
+FatherCCA,1980-12-21,parent,ChildCCA,2018-10-02
+MotherCCA,1982-03-27,parent,ChildCCA,2018-10-02
