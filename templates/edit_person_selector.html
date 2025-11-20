@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    {% block page_content %}
+
+<h1>Edit a person</h1>
+    
+    <p>Choose which person to edit</p>
+    <ul>
+        {% for p in people %}
+          <li><a href="/edit_person?person_id={{ p.id }}">{{ p.name }}, DoB: {{ p.birth_date }}</a></li>
+        {% else %}
+          <li><em>No people found</em></li>
+        {% endfor %}
+    </ul>
+
+
+
+{% endblock  %}
+</div>
+{% endblock content %}

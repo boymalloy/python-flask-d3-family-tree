@@ -13,6 +13,13 @@ UPLOAD_DIR = BASE_DIR / "static" / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024 
 
+import pandas as pd
+# Show all columns and rows of panda dataframes
+pd.set_option("display.max_columns", None)
+pd.set_option("display.max_rows", None)
+pd.set_option("display.width", None)
+pd.set_option("display.max_colwidth", None)
+
 # Route: Home page
 @app.route('/')
 def index():
@@ -67,8 +74,8 @@ def add_person_page():
             death_year = request.form["death_year"]
             death_month = request.form["death_month"]
             death_day = request.form["death_day"]
-            mother = request.form["mother"]
-            father = request.form["father"]
+            parent1 = request.form["parent1"]
+            parent2 = request.form["parent2"]
             partner1 = request.form["partner1"]
             child1 = request.form["child1"]
 
@@ -83,32 +90,32 @@ def add_person_page():
             if isinstance(result, int):
                 
                 # If supplied, set the first parent
-                if mother:
-                    mother_rel_id = set_relationship(mother,result,"parent")
+                if parent1:
+                    parent1_rel_id = writers.set_relationship(parent1,result,"parent")
                 else:
-                    mother_rel_id = None
+                    parent1_rel_id = None
 
                 # If supplied, set the second parent
-                if father:
-                    father_rel_id = set_relationship(father,result,"parent")
+                if parent2:
+                    parent2_rel_id = writers.set_relationship(parent2,result,"parent")
                 else:
-                    father_rel_id = None
+                    parent2_rel_id = None
 
                 # If supplied, set the first union
                 if partner1:
-                    union1_rel_id = set_relationship(result,partner1,"union")
+                    union1_rel_id = writers.set_relationship(result,partner1,"union")
                 else:
                     union1_rel_id = None
 
                 # If supplied, set the first child
                 if child1:
-                    child1_rel_id = set_relationship(result,child1,"parent")
+                    child1_rel_id = writers.set_relationship(result,child1,"parent")
                 else:
                     child1_rel_id = None
                 
                 selected_tree_name = fetchers.fetch_tree_name(received_tree_id)
                 
-                return render_template('add_person_process.html', tree_name=selected_tree_name, name=name, result=result, mother=mother, father=father, partner1=partner1, child1=child1, mother_rel_id=mother_rel_id, father_rel_id=father_rel_id, union1_rel_id=union1_rel_id, child1_rel_id=child1_rel_id)
+                return render_template('add_person_process.html', tree_name=selected_tree_name, name=name, result=result, parent1=parent1, parent2=parent2, partner1=partner1, child1=child1, parent1_rel_id=parent1_rel_id, parent2_rel_id=parent2_rel_id, union1_rel_id=union1_rel_id, child1_rel_id=child1_rel_id)
             
             # if, instead of an integer we get the duplicate msg, display that
             if result == "duplicate":
@@ -130,6 +137,41 @@ def add_person_page():
         
         # Return the form
         return render_template('add_person_form.html', tree_id=tree_id, tree_name=tree_name, people=fetchers.fetch_all_people())
+    
+# Page to add a person
+@app.route("/edit_person")
+def edit_person_page():
+    
+    # Pick up the person_id from the query string
+    person_id = request.args.get('person_id')
+    
+    # if there is no person_id...
+    if not person_id:
+        # Redirect to choose a person
+        return render_template('edit_person_selector.html', people=fetchers.fetch_all_people())
+    
+    person = fetchers.fetch_person(person_id)
+
+    relationships = fetchers.fetch_relationships_df(person_id)
+
+    partners = fetchers.fetch_partners(person_id)
+
+    birth_date = utilities.disassemble_date(person.birth_date)
+
+    death_date = utilities.disassemble_date(person.death_date)
+
+    return render_template('edit_person_form.html', person=person, birth_date=birth_date, death_date=death_date, relationships=relationships, partners=partners)
+
+@app.route('/sandbox')
+def sandbox():
+
+    partners = fetchers.fetch_partners(1)
+
+    partner1 = partners[0]
+
+    output = partner1["partner_id"]
+
+    return render_template('sandbox.html', header="Sandbox", payload=output)
     
 # Route: List of family trees
 @app.route('/trees')

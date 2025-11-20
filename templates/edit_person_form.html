@@ -3,43 +3,41 @@
 {% block content %}
 <div class="container">
     {% block page_content %}
-    <h1>Add a person</h1>
-
-    <p>You are adding a person to the {{tree_name}} family tree</p>
+    <h1>Edit a person</h1>
 
     <form action="/add_person" method="post" enctype="multipart/form-data">
         <div>
             <div>
                 <label>Name:</label>
-                <input type="text" name="name" required />
+                <input type="text" name="name" value="{{person.name}}"/>
             </div>
             <div>
                 <label>Birth year:</label>
-                <input type="text" name="birth_year" required />
+                <input type="text" name="birth_year" value="{{birth_date.year}}" required />
             </div>
             <div>
                 <label>Birth month:</label>
-                <input type="text" name="birth_month" required />
+                <input type="text" name="birth_month" value="{{birth_date.month}}" required >
             </div>
             <div>
                 <label>Birth day:</label>
-                <input type="text" name="birth_day" required />
+                <input type="text" name="birth_day"  value="{{birth_date.month}}" required />
             </div>
             <div>
                 <label>Birth place:</label>
-                <input type="text" name="birth_place" />
+                <input type="text" name="birth_place" value="{{person.birth_place}}" required />
             </div>
             <div>
                 <label>Death year:</label>
-                <input type="text" name="death_year" />
+                <input type="text" name="death_year"  value="{{death_date.year}}" />
             </div>
             <div>
                 <label>Death month:</label>
-                <input type="text" name="death_month" />
+                <input type="text" name="death_month" value="{{death_date.month}}" />
             </div>
             <div>
                 <label>Death day:</label>
-                <input type="text" name="death_day" />
+                <input type="text" name="death_day" value="{{death_date.day}}" />
             </div>
             <div class="mb-3">
                 <label for="parent1" class="form-label">Parent 1</label>
@@ -60,8 +58,8 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label for="partner1" class="form-label">Partner 1</label>
-                <select class="form-select" id="partner1" name="partner1">
+                <label for="union1" class="form-label">Union 1</label>
+                <select class="form-select" id="union1" name="union1">
                     <option selected value="">-- Please choose --</option>
                     {% for p in people %}
                          <option value="{{ p.id }}">{{ p.name }}</option>
@@ -79,10 +77,21 @@
             </div>
             <div>
                 <input type="hidden" name="tree_id" value="{{tree_id}}" />
-                <button type="submit">Add</button>
+                <button type="submit">Go</button>
             </div>
         </div>
     </form>
+    <div>
+        <p><br /><strong>Partners</strong></p>
+
+        <ul>
+            {% for partner in partners %}
+            <li>{{partner.partner_name}} <a href="/remove_relationship?{{partner.relationship_id}}">Remove</a></li>
+            {% else %}
+            <li><em>No people found</em></li>
+            {% endfor %}
+        </ul>
+    </div>
 
 {% endblock  %}
 </div>

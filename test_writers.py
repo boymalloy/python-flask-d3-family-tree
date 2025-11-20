@@ -40,6 +40,8 @@ def to_sql_raises_integrity(monkeypatch):
         raise IntegrityError("dupe", params=None, orig=Exception("duplicate key"))
     monkeypatch.setattr(pd.DataFrame, "to_sql", fake_to_sql, raising=True)
 
+
+
 # Test for creating a new tree. Uses duplicate name and receives an error.
 def test_write_tree_duplicate():
     with app.app_context():
