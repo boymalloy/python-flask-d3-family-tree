@@ -99,7 +99,7 @@ def fetch_relationships_df(person_id):
     # Use the app context to access the database session
     with app.app_context():
         
-        query = text("SELECT * FROM relationships WHERE person1_id = :person_id")
+        query = text("SELECT * FROM relationships WHERE person1_id = :person_id OR person2_id = :person_id")
 
         # Execute the query as a parameter
         result = db.session.execute(query, {"person_id": person_id})
@@ -118,6 +118,10 @@ def fetch_relationships_df(person_id):
         return pd.DataFrame(rows, columns=col_names)
 
 def fetch_partners(subject):
+    
+    # Make sure subject is an int
+    subject = int(subject)
+
     # Make a df of the person's relatioships
     relationships = fetch_relationships_df(subject)
 
@@ -130,14 +134,31 @@ def fetch_partners(subject):
         for index, row in relationships.iterrows():
             # If the relationship is a union
             if row["relationship"]== "union":
-                    # fetch the partner's details from the person table
-                    partner_details = fetch_person_details_df(row["person2_id"])
+
+                # if the subject is partner 1
+                if row["person1_id"] == subject:
                     
+                    # fetch partner2's details from the person table
+                    partner_details = fetch_person_details_df(row["person2_id"])
+                
                     # put the pertinent info into a dict
                     new_row = {'relationship_id': row["relationship_id"], 'partner_id': partner_details.loc[0, "id"], 'partner_name': partner_details.loc[0, "name"]}
 
                     # add the dict to the partners df
                     partners.append(new_row)
+    
+                # if the subject is partner 2
+                if subject == row["person2_id"]:
+                    
+                    # fetch partner1's details from the person table
+                    partner_details = fetch_person_details_df(row["person1_id"])
+                
+                    # put the pertinent info into a dict
+                    new_row = {'relationship_id': row["relationship_id"], 'partner_id': partner_details.loc[0, "id"], 'partner_name': partner_details.loc[0, "name"]}
+
+                    # add the dict to the partners df
+                    partners.append(new_row)
+        
         return partners
     
     if relationships == "No relationships found":

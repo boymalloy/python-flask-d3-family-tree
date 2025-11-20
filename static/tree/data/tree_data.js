@@ -1,73 +1,191 @@
 data = {
-  "start":139,
+  "start":12,
   "persons":{
-    "139":{
-      "id":139,
-      "name":"Gomez",
+    "12":{
+      "id":12,
+      "name":"Emma Frost",
       "birthyear":"1980",
-      "birth_place":"Greenwich",
+      "birth_place":"Boston, Massachusetts",
       "deathyear":"Living",
-      "tree_id":124,
-      "partners":[
-        140
-      ],
-      "children":[
-        141
-      ],
-      "own_unions":[
-        0
-      ]
-    },
-    "140":{
-      "id":140,
-      "name":"Morticia",
-      "birthyear":"1982",
-      "birth_place":"Kirkcaldy",
-      "deathyear":"Living",
-      "tree_id":124,
+      "tree_id":2,
       "partners":[],
       "children":[
-        141
+        13
+      ],
+      "own_unions":[
+        2
+      ]
+    },
+    "11":{
+      "id":11,
+      "name":"Jean Grey",
+      "birthyear":"1963",
+      "birth_place":"Annandale-on-Hudson, New York",
+      "deathyear":"Living",
+      "tree_id":2,
+      "partners":[],
+      "children":[
+        14,
+        15
+      ],
+      "own_unions":[
+        1
+      ]
+    },
+    "9":{
+      "id":9,
+      "name":"Madelyne Pryor",
+      "birthyear":"1983",
+      "birth_place":"Unknown",
+      "deathyear":"Living",
+      "tree_id":2,
+      "partners":[],
+      "children":[
+        10
       ],
       "own_unions":[
         0
       ]
     },
-    "141":{
-      "id":141,
-      "name":"Wednesday",
-      "birthyear":"2018",
-      "birth_place":"Lewisham",
+    "14":{
+      "id":14,
+      "name":"Nate Grey",
+      "birthyear":"1995",
+      "birth_place":"Age of Apocalypse timeline",
       "deathyear":"Living",
-      "tree_id":124,
+      "tree_id":2,
       "partners":[],
       "children":[],
       "own_unions":[]
+    },
+    "10":{
+      "id":10,
+      "name":"Nathan Christopher Charles Summers",
+      "birthyear":"1986",
+      "birth_place":"Unknown",
+      "deathyear":"Living",
+      "tree_id":2,
+      "partners":[],
+      "children":[],
+      "own_unions":[]
+    },
+    "15":{
+      "id":15,
+      "name":"Rachel Summers",
+      "birthyear":"1980",
+      "birth_place":"Days of Future Past timeline",
+      "deathyear":"Living",
+      "tree_id":2,
+      "partners":[],
+      "children":[],
+      "own_unions":[]
+    },
+    "13":{
+      "id":13,
+      "name":"Ruby Summers",
+      "birthyear":"2009",
+      "birth_place":"Alternate future timeline",
+      "deathyear":"Living",
+      "tree_id":2,
+      "partners":[],
+      "children":[],
+      "own_unions":[]
+    },
+    "8":{
+      "id":8,
+      "name":"Scott Summers",
+      "birthyear":"1963",
+      "birth_place":"Anchorage, Alaska",
+      "deathyear":"Living",
+      "tree_id":2,
+      "partners":[
+        9,
+        11,
+        12
+      ],
+      "children":[
+        10,
+        13,
+        14,
+        15
+      ],
+      "own_unions":[
+        0,
+        1,
+        2
+      ]
     }
   },
   "unions":{
     "0":{
       "partner":[
-        139,
-        140
+        8,
+        9
       ],
       "children":[
-        141
+        10
+      ]
+    },
+    "1":{
+      "partner":[
+        8,
+        11
+      ],
+      "children":[
+        14,
+        15
+      ]
+    },
+    "2":{
+      "partner":[
+        8,
+        12
+      ],
+      "children":[
+        13
       ]
     }
   },
   "links":[
     [
-      139,
+      8,
       0
     ],
     [
-      140,
+      9,
       0
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      11,
+      1
+    ],
+    [
+      8,
+      2
+    ],
+    [
+      12,
+      2
     ],
     [
       0,
-      141
+      10
+    ],
+    [
+      1,
+      14
+    ],
+    [
+      1,
+      15
+    ],
+    [
+      2,
+      13
     ]
   ]
 }

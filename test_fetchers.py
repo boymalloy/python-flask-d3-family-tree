@@ -34,3 +34,9 @@ def test_fetch_partners_successful():
     partners = fetchers.fetch_partners(1)
     partner1 = partners[0]
     assert partner1["partner_id"] == 2
+
+def test_fetch_partners_not_self():
+    self = 1
+    partners = fetchers.fetch_partners(self)
+    partner1 = partners[0]
+    assert partner1["partner_id"] != self
