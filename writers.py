@@ -51,6 +51,38 @@ def write_person(tree_id, name, birth_date, birth_place, death_date):
         db.session.rollback()
         raise
 
+def edit_person(person_id, name, birth_date, birth_place, death_date):
+    try:
+        sql = text("""
+            UPDATE person
+            SET 
+            name = :name,
+            birth_date = :birth_date,
+            birth_place = :birth_place,
+            death_date = :death_date
+        WHERE id = :person_id
+        RETURNING id, name, birth_date, birth_place, death_date;
+        """)
+        result = db.session.execute(sql, {
+            "person_id": person_id,
+            "name": name,
+            "birth_date": birth_date,
+            "birth_place": birth_place,
+            "death_date": death_date,
+        })
+
+        db.session.commit()
+        row = result.fetchone()
+        
+        if row:
+            return 1
+        else:
+            return 0
+
+    # return an error message if no entry in the db is found
+    except IndexError as e:
+        return "Person not found"
+
 def set_relationship(subject,other_person,type):
     try:
         sql = text("""
@@ -74,3 +106,39 @@ def set_relationship(subject,other_person,type):
     except Exception:
         db.session.rollback()
         raise
+
+def remove_relationship(rel_id):
+    try:
+        sql = text("""
+            DELETE FROM relationships WHERE relationship_id = :rel_id RETURNING *;
+        """)
+        result = db.session.execute(sql, {"rel_id": rel_id})
+        deleted_row = result.fetchone()
+        db.session.commit()
+
+        if deleted_row is None:
+            return "Remove failed. Relationship not found"
+        else:
+            return "Relationship removed successfully"
+
+    # return an error message if no entry in the db is found
+    except IndexError as e:
+        return "Relationship not found"
+    
+def remove_parents(subject):
+    try:
+        sql = text("""
+            DELETE FROM relationships WHERE person2_id = :subject and relationship = :relationship RETURNING *;
+        """)
+        result = db.session.execute(sql, {"subject": subject, "relationship": "parent"})
+        deleted_row = result.fetchone()
+        db.session.commit()
+
+        if deleted_row is None:
+            return "Remove failed. Relationship not found"
+        else:
+            return "Relationships removed successfully"
+
+    # return an error message if no entry in the db is found
+    except IndexError as e:
+        return "Person not found"

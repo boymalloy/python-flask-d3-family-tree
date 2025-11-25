@@ -135,10 +135,10 @@ def fetch_partners(subject):
             # If the relationship is a union
             if row["relationship"]== "union":
 
-                # if the subject is partner 1
+                # if the subject is person 1
                 if row["person1_id"] == subject:
                     
-                    # fetch partner2's details from the person table
+                    # fetch person2's details from the person table
                     partner_details = fetch_person_details_df(row["person2_id"])
                 
                     # put the pertinent info into a dict
@@ -163,3 +163,76 @@ def fetch_partners(subject):
     
     if relationships == "No relationships found":
         return "No partners found"
+    
+def fetch_children(subject):
+    
+    # Make sure subject is an int
+    subject = int(subject)
+
+    # Make a df of the person's relatioships
+    relationships = fetch_relationships_df(subject)
+
+    if isinstance(relationships, pd.DataFrame):
+
+        # Make an empty children list
+        children = []
+                
+        # loop through the df of the person's relationships
+        for index, row in relationships.iterrows():
+            # If the relationship is a union
+            if row["relationship"]== "parent":
+
+                # if the subject is person 1
+                if row["person1_id"] == subject:
+                    
+                    # fetch person 2's details from the person table
+                    child_details = fetch_person_details_df(row["person2_id"])
+                
+                    # put the pertinent info into a dict
+                    new_row = {'relationship_id': row["relationship_id"], 'child_id': child_details.loc[0, "id"], 'child_name': child_details.loc[0, "name"]}
+
+                    # add the dict to the children df
+                    children.append(new_row)
+        
+        return children
+    
+    if relationships == "No relationships found":
+        return "No children found"
+    
+def fetch_parents(subject):
+    
+    # Make sure subject is an int
+    subject = int(subject)
+
+    # Make a df of the person's relatioships
+    relationships = fetch_relationships_df(subject)
+
+    if isinstance(relationships, pd.DataFrame):
+
+        # Make an empty children list
+        parents = []
+                
+        # loop through the df of the person's relationships
+        for index, row in relationships.iterrows():
+            # If the relationship is a union
+            if row["relationship"]== "parent":
+
+                # if the subject is person 2
+                if row["person2_id"] == subject:
+                    
+                    # fetch person 1's details from the person table
+                    parent_details = fetch_person_details_df(row["person1_id"])
+                
+                    # put the pertinent info into a dict
+                    new_row = {'relationship_id': row["relationship_id"], 'parent_id': parent_details.loc[0, "id"], 'parent_name': parent_details.loc[0, "name"]}
+
+                    # add the dict to the children df
+                    parents.append(new_row)
+        
+        if parents == []:
+            parents = "No parents set"
+        return parents
+    
+    if relationships == "No relationships found":
+        return "No parents found"
+    

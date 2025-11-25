@@ -89,13 +89,13 @@ def add_person_page():
             # if an integer is returned...
             if isinstance(result, int):
                 
-                # If supplied, set the first parent
+                # If parent1 was supplied, set the relationship id
                 if parent1:
                     parent1_rel_id = writers.set_relationship(parent1,result,"parent")
                 else:
                     parent1_rel_id = None
 
-                # If supplied, set the second parent
+                # If If parent2 was supplied, set the relationship id
                 if parent2:
                     parent2_rel_id = writers.set_relationship(parent2,result,"parent")
                 else:
@@ -139,9 +139,54 @@ def add_person_page():
         return render_template('add_person_form.html', tree_id=tree_id, tree_name=tree_name, people=fetchers.fetch_all_people())
     
 # Page to add a person
-@app.route("/edit_person")
+@app.route("/edit_person", methods=["GET", "POST"])
 def edit_person_page():
     
+    # If the form has been submitted
+    if request.method == "POST":
+            
+        # Pick up all the variables from the form
+        name = request.form["name"]
+        person_id = request.form["person_id"]
+        birth_year = request.form["birth_year"]
+        birth_month = request.form["birth_month"]
+        birth_day = request.form["birth_day"]
+        birth_place = request.form["birth_place"]
+        death_year = request.form["death_year"]
+        death_month = request.form["death_month"]
+        death_day = request.form["death_day"]
+        form_parent1 = request.form["parent1"]
+        form_parent2 = request.form["parent2"]
+
+        # Assemble the dates
+        birth_date = utilities.assemble_date(birth_year, birth_month, birth_day)
+        death_date = utilities.assemble_date(death_year, death_month, death_day)
+
+        # update the person's entry in the person table using the onfo submitted through the form
+        result = writers.edit_person(person_id, name, birth_date, birth_place, death_date)
+
+        if result == 0:
+            msg = "Failed to update"
+        if result == 1:
+            msg = "Details updated."
+
+            # delete all of the subject's parents regardless of what's in the form
+            parent_deletion = writers.remove_parents(person_id)
+
+            # if the parent form fields were not blank, write the parents to the relationship table
+            if form_parent1 != "blank":
+                parent1_write_result = writers.set_relationship(form_parent1,person_id,"parent")
+            else:
+                parent1_write_result = "No parent provided"
+
+            if form_parent2 != "blank":
+                parent2_write_result = writers.set_relationship(form_parent2,person_id,"parent")
+            else:
+                parent2_write_result = "No parent provided"
+
+        return render_template('edit_person_result.html', header="Edit a person", payload=msg, parent_deletion=parent_deletion, form_parent1=form_parent1, form_parent2=form_parent2, parent1_write_result=parent1_write_result, parent2_write_result=parent2_write_result, return_id=person_id)
+
+    # From here on, the form hasn't been submitted...      
     # Pick up the person_id from the query string
     person_id = request.args.get('person_id')
     
@@ -156,20 +201,30 @@ def edit_person_page():
 
     partners = fetchers.fetch_partners(person_id)
 
+    children = fetchers.fetch_children(person_id)
+
+    parents = fetchers.fetch_parents(person_id)
+
     birth_date = utilities.disassemble_date(person.birth_date)
 
     death_date = utilities.disassemble_date(person.death_date)
 
-    return render_template('edit_person_form.html', person=person, birth_date=birth_date, death_date=death_date, relationships=relationships, partners=partners)
+    return render_template('edit_person_form.html', people=fetchers.fetch_all_people(), person=person, birth_date=birth_date, death_date=death_date, relationships=relationships, partners=partners, children=children, parents=parents)
+
+# Remove relationship page
+@app.route("/remove_relationship")
+def remove_relationship_page():
+
+    # Pick up the person_id from the query string
+    rel_id = request.args.get('rel_id')
+    return_id = request.args.get('return_id')
+
+    return render_template('remove_relationship.html', operation=writers.remove_relationship(rel_id), return_id=return_id)
 
 @app.route('/sandbox')
 def sandbox():
 
-    partners = fetchers.fetch_partners(1)
-
-    partner1 = partners[0]
-
-    output = partner1["partner_id"]
+    output = writers.remove_parents(22)
 
     return render_template('sandbox.html', header="Sandbox", payload=output)
     

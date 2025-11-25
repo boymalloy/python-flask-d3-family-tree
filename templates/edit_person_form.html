@@ -4,12 +4,31 @@
 <div class="container">
     {% block page_content %}
     <h1>Edit a person</h1>
+    
 
-    <form action="/add_person" method="post" enctype="multipart/form-data">
+    <form action="/edit_person" method="post" enctype="multipart/form-data">
         <div>
             <div>
                 <label>Name:</label>
                 <input type="text" name="name" value="{{person.name}}"/>
+            </div>
+            <div class="mb-3">
+                <label for="parent1" class="form-label">Parent 1</label>
+                <select class="form-select" id="parent1" name="parent1">
+                    <option value="blank">-- None --</option>
+                    {% for p in people %}
+                         <option {% if parents != "No parents set" %}{% if p.id == parents[0].parent_id %}selected {% endif %}{% endif %}value="{{ p.id }}">{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="parent2" class="form-label">Parent 2</label>
+                <select class="form-select" id="parent2" name="parent2">
+                    <option value="blank">-- None --</option>
+                    {% for p in people %}
+                         <option {% if parents != "No parents set" %}{% if p.id == parents[1].parent_id %}selected {% endif %}{% endif %}value="{{ p.id }}">{{ p.name }}</option>
+                    {% endfor %}
+                </select>
             </div>
             <div>
                 <label>Birth year:</label>
@@ -25,7 +44,7 @@
             </div>
             <div>
                 <label>Birth place:</label>
-                <input type="text" name="birth_place" value="{{person.birth_place}}" required />
+                <input type="text" name="birth_place" value="{{person.birth_place}}" />
             </div>
             <div>
                 <label>Death year:</label>
@@ -39,44 +58,8 @@
                 <label>Death day:</label>
                 <input type="text" name="death_day" value="{{death_date.day}}" />
             </div>
-            <div class="mb-3">
-                <label for="parent1" class="form-label">Parent 1</label>
-                <select class="form-select" id="parent1" name="parent1">
-                    <option selected value="">-- Please choose --</option>
-                    {% for p in people %}
-                         <option value="{{ p.id }}">{{ p.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="parent2" class="form-label">Parent 2</label>
-                <select class="form-select" id="parent2" name="parent2">
-                    <option selected value="">-- Please choose --</option>
-                    {% for p in people %}
-                         <option value="{{ p.id }}">{{ p.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="union1" class="form-label">Union 1</label>
-                <select class="form-select" id="union1" name="union1">
-                    <option selected value="">-- Please choose --</option>
-                    {% for p in people %}
-                         <option value="{{ p.id }}">{{ p.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="child1" class="form-label">Child</label>
-                <select class="form-select" id="child1" name="child1">
-                    <option selected value="">-- Please choose --</option>
-                    {% for p in people %}
-                         <option value="{{ p.id }}">{{ p.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
             <div>
-                <input type="hidden" name="tree_id" value="{{tree_id}}" />
+                <input type="hidden" name="person_id" value="{{person.id}}" />
                 <button type="submit">Go</button>
             </div>
         </div>
@@ -86,12 +69,25 @@
 
         <ul>
             {% for partner in partners %}
-            <li>{{partner.partner_name}} <a href="/remove_relationship?{{partner.relationship_id}}">Remove</a></li>
+            <li>{{partner.partner_name}} <a href="/remove_relationship?rel_id={{partner.relationship_id}}&return_id={{person.id}}">Remove</a></li>
             {% else %}
-            <li><em>No people found</em></li>
+            <li><em>No partners found</em></li>
             {% endfor %}
         </ul>
     </div>
+    <div>
+        <p><br /><strong>Children</strong></p>
+
+        <ul>
+            {% for child in children %}
+            <li>{{child.child_name}} <a href="/remove_relationship?rel_id={{child.relationship_id}}&return_id={{person.id}}">Remove</a></li>
+            {% else %}
+            <li><em>No children found</em></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+   
 
 {% endblock  %}
 </div>

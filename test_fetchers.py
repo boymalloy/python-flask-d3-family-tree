@@ -40,3 +40,21 @@ def test_fetch_partners_not_self():
     partners = fetchers.fetch_partners(self)
     partner1 = partners[0]
     assert partner1["partner_id"] != self
+
+def test_fetch_children_no_rels():
+    children = fetchers.fetch_children(100000000000000000)
+    assert children == "No children found"
+
+def test_fetch_children_successful():
+    children = fetchers.fetch_children(1)
+    child1 = children[0]
+    assert child1["child_id"] == 3
+
+def test_fetch_parents_no_rels():
+    parents = fetchers.fetch_parents(100000000000000000)
+    assert parents == "No parents found"
+
+def test_fetch_parents_successful():
+    parents = fetchers.fetch_parents(3)
+    parent1 = parents[0]
+    assert parent1["parent_id"] == 1 or 2

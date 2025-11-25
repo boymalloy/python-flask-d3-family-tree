@@ -13,6 +13,25 @@
                 <label>Name:</label>
                 <input type="text" name="name" required />
             </div>
+            <div class="mb-3">
+                <label for="parent1" class="form-label">Parent 1</label>
+                <select class="form-select" id="parent1" name="parent1">
+                    <option selected value="">-- Please choose --</option>
+                    {% for p in people %}
+                         <option value="{{ p.id }}">{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="parent2" class="form-label">Parent 2</label>
+                <select class="form-select" id="parent2" name="parent2">
+                    <option selected value="">-- Please choose --</option>
+                    {% for p in people %}
+                         <option value="{{ p.id }}">{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+           
             <div>
                 <label>Birth year:</label>
                 <input type="text" name="birth_year" required />
@@ -41,25 +60,7 @@
                 <label>Death day:</label>
                 <input type="text" name="death_day" />
             </div>
-            <div class="mb-3">
-                <label for="parent1" class="form-label">Parent 1</label>
-                <select class="form-select" id="parent1" name="parent1">
-                    <option selected value="">-- Please choose --</option>
-                    {% for p in people %}
-                         <option value="{{ p.id }}">{{ p.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="parent2" class="form-label">Parent 2</label>
-                <select class="form-select" id="parent2" name="parent2">
-                    <option selected value="">-- Please choose --</option>
-                    {% for p in people %}
-                         <option value="{{ p.id }}">{{ p.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="mb-3">
+             <div class="mb-3">
                 <label for="partner1" class="form-label">Partner 1</label>
                 <select class="form-select" id="partner1" name="partner1">
                     <option selected value="">-- Please choose --</option>
