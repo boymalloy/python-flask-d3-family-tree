@@ -14,6 +14,8 @@ from sqlalchemy.exc import IntegrityError
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 
+import fetchers
+
 # finds from the persons dataframe all the children of two people 
 def get_children_together_from_df(person1,person2,persons):
     # Check it's not the same person twice
@@ -119,6 +121,13 @@ def fetch_tree(tree):
 
         # make the temp list into a df
         unions = pd.DataFrame(unions_rows, columns=["partner", "children"])
+
+        # increase the starting union ID to something higher than the highest person id
+        people_check = fetchers.fetch_all_people_in_tree(tree)
+
+        max_person_id = max(row.id for row in people_check)
+
+        unions.index = unions.index + max_person_id + 1
 
         # add all the newly minted unions to each partner's own_unions field
         # loop through the list of unions

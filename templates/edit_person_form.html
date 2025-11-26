@@ -6,7 +6,7 @@
     <h1>Edit a person</h1>
     
 
-    <form action="/edit_person" method="post" enctype="multipart/form-data">
+    <form name="edit person" action="/edit_person" method="post" enctype="multipart/form-data">
         <div>
             <div>
                 <label>Name:</label>
@@ -26,7 +26,7 @@
                 <select class="form-select" id="parent2" name="parent2">
                     <option value="blank">-- None --</option>
                     {% for p in people %}
-                         <option {% if parents != "No parents set" %}{% if p.id == parents[1].parent_id %}selected {% endif %}{% endif %}value="{{ p.id }}">{{ p.name }}</option>
+                         <option {% if parents != "No parents set" %}{% if parents[1] %}{% if p.id == parents[1].parent_id %}selected {% endif %}{% endif %}{% endif %}value="{{ p.id }}">{{ p.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -75,6 +75,21 @@
             {% endfor %}
         </ul>
     </div>
+    <form name="add partner" action="/add_rel" method="post" enctype="multipart/form-data">
+        <div>
+            <label>Add another partner:</label>
+            <select class="form-select" id="new_partner" name="new_partner" required>
+                <option selected value="">-- Please choose --</option>
+                {% for p in people %}
+                        <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="hidden" name="person_id" value="{{person.id}}" />
+            <input type="hidden" name="new_partner" value="blank" />
+            <button type="submit">Go</button>
+        </div>
+    </form>
+    
     <div>
         <p><br /><strong>Children</strong></p>
 
@@ -86,7 +101,20 @@
             {% endfor %}
         </ul>
     </div>
-
+    <form name="add child" action="/add_rel" method="post" enctype="multipart/form-data">
+        <div>
+            <label>Add another child:</label>
+            <select class="form-select" id="new_child" name="new_child" required>
+                <option selected value="">-- Please choose --</option>
+                {% for p in people %}
+                        <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="hidden" name="person_id" value="{{person.id}}" />
+            <input type="hidden" name="new_partner" value="blank" />
+            <button type="submit">Go</button>
+        </div>
+    </form>
    
 
 {% endblock  %}

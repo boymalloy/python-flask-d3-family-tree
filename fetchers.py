@@ -33,6 +33,18 @@ def fetch_all_people():
          # Return all rows
         return output.fetchall()
     
+def fetch_all_people_in_tree(tree_id):
+    with app.app_context():
+        select = text("""
+            SELECT *
+            FROM person WHERE tree_id = :tree_id """)
+        
+        # Execute the query as a parameter
+        output = db.session.execute(select, {"tree_id": tree_id})
+        
+         # Return all rows
+        return output.fetchall()
+    
 def fetch_person(person_id):
     try:
         with app.app_context():

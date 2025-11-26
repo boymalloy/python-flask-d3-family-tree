@@ -5,13 +5,10 @@
     {% block page_content %}
 
     <h1>{{ header}}</h1>
-    <pre>{{ people }}</pre>
-    <p>Max row ID: {{max_person_id}}</p>
-    {% for p in people %}
-        <p>{{ p.id }}</p>
-    {% endfor %}
+    <p>{{ payload }}</p>
+    <p><a href="edit_person?person_id={{return_id}}">Return to edit person page</a></p>
     
-   
+
 
 {% endblock  %}
 </div>

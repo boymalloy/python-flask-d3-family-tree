@@ -221,12 +221,32 @@ def remove_relationship_page():
 
     return render_template('remove_relationship.html', operation=writers.remove_relationship(rel_id), return_id=return_id)
 
+@app.route("/add_rel", methods=["POST"])
+def add_rel_page():
+
+    person_id = request.form["person_id"]
+    
+    if request.form["new_partner"] != "blank":
+        new_partner = request.form["new_partner"]
+        new_partner_result = writers.set_relationship(person_id,new_partner,"union")
+        if isinstance(new_partner_result, int):
+            return render_template('add_rel.html', header="Processing Result", payload="Partner added", return_id=person_id)
+
+    
+    if request.form["new_child"] != "blank":
+        new_child = request.form["new_child"]
+        new_child_result = writers.set_relationship(person_id,new_child,"parent")
+        if isinstance(new_child_result, int):
+            return render_template('add_rel.html', header="Processing Result", payload="Child added", return_id=person_id)
+
 @app.route('/sandbox')
 def sandbox():
 
-    output = writers.remove_parents(22)
+    people = fetchers.fetch_all_people_in_tree(1)
 
-    return render_template('sandbox.html', header="Sandbox", payload=output)
+    max_person_id = max(row.id for row in people)
+
+    return render_template('sandbox.html', header="Sandbox", people=people, max_person_id=max_person_id)
     
 # Route: List of family trees
 @app.route('/trees')

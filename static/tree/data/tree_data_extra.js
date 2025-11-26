@@ -9,18 +9,15 @@ data = {
       "deathyear":"Living",
       "tree_id":1,
       "partners":[
-        2,
-        20
+        2
       ],
       "children":[
-        21,
-        3,
         5,
-        4
+        4,
+        3
       ],
       "own_unions":[
-        22,
-        23
+        0
       ]
     },
     "2":{
@@ -30,14 +27,18 @@ data = {
       "birth_place":"Los Angeles",
       "deathyear":"Living",
       "tree_id":1,
-      "partners":[],
+      "partners":[
+        6
+      ],
       "children":[
         3,
+        5,
         4,
-        5
+        7
       ],
       "own_unions":[
-        22
+        0,
+        1
       ]
     },
     "3":{
@@ -48,12 +49,8 @@ data = {
       "deathyear":"Living",
       "tree_id":1,
       "partners":[],
-      "children":[
-        19
-      ],
-      "own_unions":[
-        24
-      ]
+      "children":[],
+      "own_unions":[]
     },
     "4":{
       "id":4,
@@ -77,36 +74,8 @@ data = {
       "children":[],
       "own_unions":[]
     },
-    "18":{
-      "id":18,
-      "name":"In law 1",
-      "birthyear":"2025",
-      "birth_place":"",
-      "deathyear":"Living",
-      "tree_id":1,
-      "partners":[
-        3
-      ],
-      "children":[
-        19
-      ],
-      "own_unions":[
-        24
-      ]
-    },
-    "19":{
-      "id":19,
-      "name":"Grand child 1",
-      "birthyear":"2025",
-      "birth_place":"",
-      "deathyear":"Living",
-      "tree_id":1,
-      "partners":[],
-      "children":[],
-      "own_unions":[]
-    },
-    "20":{
-      "id":20,
+    "6":{
+      "id":6,
       "name":"New partner",
       "birthyear":"2025",
       "birth_place":"",
@@ -114,16 +83,16 @@ data = {
       "tree_id":1,
       "partners":[],
       "children":[
-        21
+        7
       ],
       "own_unions":[
-        23
+        1
       ]
     },
-    "21":{
-      "id":21,
-      "name":"New child",
-      "birthyear":"2025",
+    "7":{
+      "id":7,
+      "name":"Child X",
+      "birthyear":"2009",
       "birth_place":"",
       "deathyear":"Living",
       "tree_id":1,
@@ -133,80 +102,59 @@ data = {
     }
   },
   "unions":{
-    "22":{
+    "0":{
       "partner":[
         1,
         2
       ],
       "children":[
-        3,
         5,
-        4
-      ]
-    },
-    "23":{
-      "partner":[
-        1,
-        20
-      ],
-      "children":[
-        21
-      ]
-    },
-    "24":{
-      "partner":[
-        18,
+        4,
         3
+      ]
+    },
+    "1":{
+      "partner":[
+        2,
+        6
       ],
       "children":[
-        19
+        7
       ]
     }
   },
   "links":[
     [
       1,
-      22
+      0
     ],
     [
       2,
-      22
+      0
     ],
     [
-      1,
-      23
+      2,
+      1
     ],
     [
-      20,
-      23
+      6,
+      1
     ],
     [
-      18,
-      24
-    ],
-    [
-      3,
-      24
-    ],
-    [
-      22,
-      3
-    ],
-    [
-      22,
+      0,
       5
     ],
     [
-      22,
+      0,
       4
     ],
     [
-      23,
-      21
+      0,
+      3
     ],
     [
-      24,
-      19
+      1,
+      7
     ]
   ]
 }
