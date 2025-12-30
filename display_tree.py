@@ -147,15 +147,15 @@ def fetch_tree(tree):
             personx = partnersx[0]
             persony = partnersx[1]
         
-            link_row_1 = {'from': personx, 'to': unionx}
-            link_row_2 = {'from': persony, 'to': unionx}
+            link_row_1 = {'from': str(personx), 'to': str(unionx)}
+            link_row_2 = {'from': str(persony), 'to': str(unionx)}
             links.loc[len(links)] = link_row_1
             links.loc[len(links)] = link_row_2
 
         for index, row in unions.iterrows():
             childrenx = unions.loc[index, 'children']
             for child in childrenx:
-                link_row_children = {'from': index, 'to': child}
+                link_row_children = {'from': str(index), 'to': str(child)}
                 links.loc[len(links)] = link_row_children
 
         # Put the id back in

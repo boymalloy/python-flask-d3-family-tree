@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="container" class="container">
+    {% block page_content %}
+
+    <h1>{{ header}}</h1>
+    <p><a href="fetch?tree_id={{tree_id}}">Horizontal</a> | Vertical</p>
+
+    <div id="tree"></div>
+    <style>
+  #tree {
+  width: 100%;
+  height: 600px;
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  }
+</style>
+
+    
+    <script src="/static/tree/data/tree_data.js"></script> 
+    <script src="/static/vertical-tree/dist/js_family_tree.umd.js"></script>
+    <script>
+        const container = document.getElementById("tree");
+        const opts = {
+        showAll: false,
+        orientation: 'vertical',
+        nodeSize: (node) => [150, 50]
+        };
+        const familytree = new FT.FamilyTree(data, container, opts);
+    </script>
+
+
+
+
+{% endblock  %}
+</div>
+{% endblock content %}

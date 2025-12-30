@@ -25,6 +25,18 @@ pd.set_option("display.max_colwidth", None)
 def index():
     return render_template('index.html')
 
+@app.route('/vertical')
+def vertical_page():
+    # Pick up the tree_id from the query string
+    tree_id = request.args.get('tree_id')
+
+    # if there is no tree_id, redirect to the choose a tree page
+    if not tree_id:
+        return redirect(url_for("trees_page"))
+    else:
+        # else if there is a tree_id, fetch that tree
+        return render_template('vertical.html', header="Tree from db", payload=display_tree.fetch_tree(tree_id), tree_id=tree_id)
+
 # Route: Fetch tree from db
 @app.route('/fetch')
 def fetch():
@@ -36,7 +48,7 @@ def fetch():
         return redirect(url_for("trees_page"))
     else:
         # else if there is a tree_id, fetch that tree
-        return render_template('run.html', header="Tree from db", payload=display_tree.fetch_tree(tree_id))
+        return render_template('run.html', header="Tree from db", payload=display_tree.fetch_tree(tree_id), tree_id=tree_id)
 
 # Page to create a tree
 @app.route("/make_tree", methods=["GET", "POST"])
