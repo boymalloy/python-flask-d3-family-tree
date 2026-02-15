@@ -1,191 +1,127 @@
 data = {
-  "start":11,
+  "start":1,
   "persons":{
-    "11":{
-      "id":11,
-      "name":"Emma Frost",
+    "1":{
+      "id":1,
+      "name":"John Doe",
       "birthyear":"1980",
-      "birth_place":"Boston, Massachusetts",
+      "birth_place":"New York",
       "deathyear":"Living",
-      "tree_id":3,
-      "partners":[],
-      "children":[
-        12
+      "tree_id":1,
+      "partners":[
+        2
       ],
-      "own_unions":[
-        17
-      ]
-    },
-    "10":{
-      "id":10,
-      "name":"Jean Grey",
-      "birthyear":"1963",
-      "birth_place":"Annandale-on-Hudson, New York",
-      "deathyear":"Living",
-      "tree_id":3,
-      "partners":[],
       "children":[
-        13,
-        14
+        15,
+        5,
+        4,
+        3
       ],
       "own_unions":[
         16
       ]
     },
-    "8":{
-      "id":8,
-      "name":"Madelyne Pryor",
-      "birthyear":"1983",
-      "birth_place":"Unknown",
+    "2":{
+      "id":2,
+      "name":"Jane Smith",
+      "birthyear":"1982",
+      "birth_place":"Los Angeles",
       "deathyear":"Living",
-      "tree_id":3,
+      "tree_id":1,
       "partners":[],
       "children":[
-        9
-      ],
-      "own_unions":[
-        15
-      ]
-    },
-    "13":{
-      "id":13,
-      "name":"Nate Grey",
-      "birthyear":"1995",
-      "birth_place":"Age of Apocalypse timeline",
-      "deathyear":"Living",
-      "tree_id":3,
-      "partners":[],
-      "children":[],
-      "own_unions":[]
-    },
-    "9":{
-      "id":9,
-      "name":"Nathan Christopher Charles Summers",
-      "birthyear":"1986",
-      "birth_place":"Unknown",
-      "deathyear":"Living",
-      "tree_id":3,
-      "partners":[],
-      "children":[],
-      "own_unions":[]
-    },
-    "14":{
-      "id":14,
-      "name":"Rachel Summers",
-      "birthyear":"1980",
-      "birth_place":"Days of Future Past timeline",
-      "deathyear":"Living",
-      "tree_id":3,
-      "partners":[],
-      "children":[],
-      "own_unions":[]
-    },
-    "12":{
-      "id":12,
-      "name":"Ruby Summers",
-      "birthyear":"2009",
-      "birth_place":"Alternate future timeline",
-      "deathyear":"Living",
-      "tree_id":3,
-      "partners":[],
-      "children":[],
-      "own_unions":[]
-    },
-    "7":{
-      "id":7,
-      "name":"Scott Summers",
-      "birthyear":"1963",
-      "birth_place":"Anchorage, Alaska",
-      "deathyear":"Living",
-      "tree_id":3,
-      "partners":[
-        8,
-        10,
-        11
-      ],
-      "children":[
-        9,
-        12,
-        13,
-        14
-      ],
-      "own_unions":[
         15,
-        16,
-        17
+        3,
+        5,
+        4
+      ],
+      "own_unions":[
+        16
       ]
+    },
+    "3":{
+      "id":3,
+      "name":"Child One",
+      "birthyear":"2010",
+      "birth_place":"San Francisco",
+      "deathyear":"Living",
+      "tree_id":1,
+      "partners":[],
+      "children":[],
+      "own_unions":[]
+    },
+    "4":{
+      "id":4,
+      "name":"Child Two",
+      "birthyear":"2012",
+      "birth_place":"San Francisco",
+      "deathyear":"Living",
+      "tree_id":1,
+      "partners":[],
+      "children":[],
+      "own_unions":[]
+    },
+    "5":{
+      "id":5,
+      "name":"Child Three",
+      "birthyear":"2014",
+      "birth_place":"San Francisco",
+      "deathyear":"Living",
+      "tree_id":1,
+      "partners":[],
+      "children":[],
+      "own_unions":[]
+    },
+    "15":{
+      "id":15,
+      "name":"Bibbi",
+      "birthyear":"2025",
+      "birth_place":"",
+      "deathyear":"Living",
+      "tree_id":1,
+      "partners":[],
+      "children":[],
+      "own_unions":[]
     }
   },
   "unions":{
-    "15":{
-      "partner":[
-        7,
-        8
-      ],
-      "children":[
-        9
-      ]
-    },
     "16":{
       "partner":[
-        7,
-        10
+        1,
+        2
       ],
       "children":[
-        13,
-        14
-      ]
-    },
-    "17":{
-      "partner":[
-        7,
-        11
-      ],
-      "children":[
-        12
+        15,
+        5,
+        4,
+        3
       ]
     }
   },
   "links":[
     [
-      "7",
-      "15"
-    ],
-    [
-      "8",
-      "15"
-    ],
-    [
-      "7",
+      "1",
       "16"
     ],
     [
-      "10",
+      "2",
       "16"
     ],
     [
-      "7",
-      "17"
-    ],
-    [
-      "11",
-      "17"
-    ],
-    [
-      "15",
-      "9"
+      "16",
+      "15"
     ],
     [
       "16",
-      "13"
+      "5"
     ],
     [
       "16",
-      "14"
+      "4"
     ],
     [
-      "17",
-      "12"
+      "16",
+      "3"
     ]
   ]
 }

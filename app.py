@@ -32,7 +32,3 @@ bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 
 import routes
-
-# if the script is executed directly, run the app
-if __name__ == '__main__':
-    app.run(debug=True)
