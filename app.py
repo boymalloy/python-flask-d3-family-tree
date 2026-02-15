@@ -19,14 +19,13 @@ pd.set_option("display.max_colwidth", None)
 # Create the Flask app
 app = Flask(__name__, static_url_path='/static')
 
-# Load env files
-load_dotenv(".venv")
-load_dotenv(".flaskenv")
+if os.getenv("FLASK_ENV") != "production":
+    load_dotenv(".flaskenv")
 
 # Database configuration
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///:memory:")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = "dCQXgn0uryXJIaD6MhREV5XOfzQ7Qu"
+app.secret_key = os.getenv("SECRET_KEY", "dev-only-fallback")
 
 # Build extensions
 bootstrap = Bootstrap(app)
