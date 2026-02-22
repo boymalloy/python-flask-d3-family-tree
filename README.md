@@ -2,6 +2,8 @@
 
 This is a simple python app which reads family tree data from a PostgreSQL database and converts it to the correct format for a D3 data visualisation 
 
+[Here is a working demo](http://family-tree-dev.eu-north-1.elasticbeanstalk.com/)
+
 I built this app to learn:
 * Python
 * Flask
@@ -97,7 +99,7 @@ To install and run this project locally, follow these steps:
     CREATE TYPE relationship_type AS ENUM ('parent', 'child', 'union');
 
     --- Create relationships table
-    CREATE TABLE Relationships (
+    CREATE TABLE relationships (
     relationship_id SERIAL PRIMARY KEY,
     person1_id INT NOT NULL, 
     person2_id INT NOT NULL,
