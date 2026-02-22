@@ -35,7 +35,7 @@ def vertical_page():
         return redirect(url_for("trees_page"))
     else:
         # else if there is a tree_id, fetch that tree
-        return render_template('vertical.html', header="Tree from db", payload=display_tree.fetch_tree(tree_id), tree_id=tree_id)
+        return render_template('vertical.html', header="Tree from db", tree_id=tree_id)
 
 # Route: Fetch tree from db
 @app.route('/fetch')
@@ -48,7 +48,7 @@ def fetch():
         return redirect(url_for("trees_page"))
     else:
         # else if there is a tree_id, fetch that tree
-        return render_template('run.html', header="Tree from db", payload=display_tree.fetch_tree(tree_id), tree_id=tree_id)
+        return render_template('run.html', header="Tree from db", tree_id=tree_id)
 
 # Page to create a tree
 @app.route("/make_tree", methods=["GET", "POST"])

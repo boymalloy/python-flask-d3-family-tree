@@ -1,0 +1,346 @@
+Retrieving logs...
+============= i-0746bd6fa4171eece ==============
+----------------------------------------
+/var/log/web.stdout.log
+----------------------------------------
+Feb 22 11:58:39 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 11:58:39 ip-172-31-19-208 web[317992]: TypeError: 'DataError' object is not iterable
+Feb 22 11:58:49 ip-172-31-19-208 web[317992]: [2026-02-22 11:58:49 +0000] [317992] [ERROR] Error handling request /tree_data.js?tree_id=1
+Feb 22 11:58:49 ip-172-31-19-208 web[317992]: Traceback (most recent call last):
+Feb 22 11:58:49 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/gunicorn/workers/sync.py", line 135, in handle
+Feb 22 11:58:49 ip-172-31-19-208 web[317992]:    self.handle_request(listener, req, client, addr)
+Feb 22 11:58:49 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/gunicorn/workers/sync.py", line 183, in handle_request
+Feb 22 11:58:49 ip-172-31-19-208 web[317992]:    for item in respiter:
+Feb 22 11:58:49 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 11:58:49 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/werkzeug/wsgi.py", line 256, in __next__
+Feb 22 11:58:49 ip-172-31-19-208 web[317992]:    return self._next()
+Feb 22 11:58:49 ip-172-31-19-208 web[317992]:           ^^^^^^^^^^^^
+Feb 22 11:58:49 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/werkzeug/wrappers/response.py", line 32, in _iter_encoded
+Feb 22 11:58:49 ip-172-31-19-208 web[317992]:    for item in iterable:
+Feb 22 11:58:49 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 11:58:49 ip-172-31-19-208 web[317992]: TypeError: 'DataError' object is not iterable
+Feb 22 11:59:14 ip-172-31-19-208 web[317992]: [2026-02-22 11:59:14 +0000] [317992] [ERROR] Error handling request /tree_data.js?tree_id=2
+Feb 22 11:59:14 ip-172-31-19-208 web[317992]: Traceback (most recent call last):
+Feb 22 11:59:14 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/gunicorn/workers/sync.py", line 135, in handle
+Feb 22 11:59:14 ip-172-31-19-208 web[317992]:    self.handle_request(listener, req, client, addr)
+Feb 22 11:59:14 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/gunicorn/workers/sync.py", line 183, in handle_request
+Feb 22 11:59:14 ip-172-31-19-208 web[317992]:    for item in respiter:
+Feb 22 11:59:14 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 11:59:14 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/werkzeug/wsgi.py", line 256, in __next__
+Feb 22 11:59:14 ip-172-31-19-208 web[317992]:    return self._next()
+Feb 22 11:59:14 ip-172-31-19-208 web[317992]:           ^^^^^^^^^^^^
+Feb 22 11:59:14 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/werkzeug/wrappers/response.py", line 32, in _iter_encoded
+Feb 22 11:59:14 ip-172-31-19-208 web[317992]:    for item in iterable:
+Feb 22 11:59:14 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 11:59:14 ip-172-31-19-208 web[317992]: TypeError: 'DataError' object is not iterable
+Feb 22 11:59:16 ip-172-31-19-208 web[317992]: [2026-02-22 11:59:16 +0000] [317992] [ERROR] Error handling request /tree_data.js?tree_id=2
+Feb 22 11:59:16 ip-172-31-19-208 web[317992]: Traceback (most recent call last):
+Feb 22 11:59:16 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/gunicorn/workers/sync.py", line 135, in handle
+Feb 22 11:59:16 ip-172-31-19-208 web[317992]:    self.handle_request(listener, req, client, addr)
+Feb 22 11:59:16 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/gunicorn/workers/sync.py", line 183, in handle_request
+Feb 22 11:59:16 ip-172-31-19-208 web[317992]:    for item in respiter:
+Feb 22 11:59:16 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 11:59:16 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/werkzeug/wsgi.py", line 256, in __next__
+Feb 22 11:59:16 ip-172-31-19-208 web[317992]:    return self._next()
+Feb 22 11:59:16 ip-172-31-19-208 web[317992]:           ^^^^^^^^^^^^
+Feb 22 11:59:16 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/werkzeug/wrappers/response.py", line 32, in _iter_encoded
+Feb 22 11:59:16 ip-172-31-19-208 web[317992]:    for item in iterable:
+Feb 22 11:59:16 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 11:59:16 ip-172-31-19-208 web[317992]: TypeError: 'DataError' object is not iterable
+Feb 22 11:59:19 ip-172-31-19-208 web[317992]: [2026-02-22 11:59:19 +0000] [317992] [ERROR] Error handling request /tree_data.js?tree_id=2
+Feb 22 11:59:19 ip-172-31-19-208 web[317992]: Traceback (most recent call last):
+Feb 22 11:59:19 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/gunicorn/workers/sync.py", line 135, in handle
+Feb 22 11:59:19 ip-172-31-19-208 web[317992]:    self.handle_request(listener, req, client, addr)
+Feb 22 11:59:19 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/gunicorn/workers/sync.py", line 183, in handle_request
+Feb 22 11:59:19 ip-172-31-19-208 web[317992]:    for item in respiter:
+Feb 22 11:59:19 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 11:59:19 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/werkzeug/wsgi.py", line 256, in __next__
+Feb 22 11:59:19 ip-172-31-19-208 web[317992]:    return self._next()
+Feb 22 11:59:19 ip-172-31-19-208 web[317992]:           ^^^^^^^^^^^^
+Feb 22 11:59:19 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/werkzeug/wrappers/response.py", line 32, in _iter_encoded
+Feb 22 11:59:19 ip-172-31-19-208 web[317992]:    for item in iterable:
+Feb 22 11:59:19 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 11:59:19 ip-172-31-19-208 web[317992]: TypeError: 'DataError' object is not iterable
+Feb 22 11:59:55 ip-172-31-19-208 web[317992]: [2026-02-22 11:59:55 +0000] [317992] [ERROR] Error handling request /tree_data.js?tree_id=2
+Feb 22 11:59:55 ip-172-31-19-208 web[317992]: Traceback (most recent call last):
+Feb 22 11:59:55 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/gunicorn/workers/sync.py", line 135, in handle
+Feb 22 11:59:55 ip-172-31-19-208 web[317992]:    self.handle_request(listener, req, client, addr)
+Feb 22 11:59:55 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/gunicorn/workers/sync.py", line 183, in handle_request
+Feb 22 11:59:55 ip-172-31-19-208 web[317992]:    for item in respiter:
+Feb 22 11:59:55 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 11:59:55 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/werkzeug/wsgi.py", line 256, in __next__
+Feb 22 11:59:55 ip-172-31-19-208 web[317992]:    return self._next()
+Feb 22 11:59:55 ip-172-31-19-208 web[317992]:           ^^^^^^^^^^^^
+Feb 22 11:59:55 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/werkzeug/wrappers/response.py", line 32, in _iter_encoded
+Feb 22 11:59:55 ip-172-31-19-208 web[317992]:    for item in iterable:
+Feb 22 11:59:55 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 11:59:55 ip-172-31-19-208 web[317992]: TypeError: 'DataError' object is not iterable
+Feb 22 12:00:19 ip-172-31-19-208 web[317992]: [2026-02-22 12:00:19 +0000] [317992] [ERROR] Error handling request /tree_data.js?tree_id=1
+Feb 22 12:00:19 ip-172-31-19-208 web[317992]: Traceback (most recent call last):
+Feb 22 12:00:19 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/gunicorn/workers/sync.py", line 135, in handle
+Feb 22 12:00:19 ip-172-31-19-208 web[317992]:    self.handle_request(listener, req, client, addr)
+Feb 22 12:00:19 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/gunicorn/workers/sync.py", line 183, in handle_request
+Feb 22 12:00:19 ip-172-31-19-208 web[317992]:    for item in respiter:
+Feb 22 12:00:19 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 12:00:19 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/werkzeug/wsgi.py", line 256, in __next__
+Feb 22 12:00:19 ip-172-31-19-208 web[317992]:    return self._next()
+Feb 22 12:00:19 ip-172-31-19-208 web[317992]:           ^^^^^^^^^^^^
+Feb 22 12:00:19 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/werkzeug/wrappers/response.py", line 32, in _iter_encoded
+Feb 22 12:00:19 ip-172-31-19-208 web[317992]:    for item in iterable:
+Feb 22 12:00:19 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 12:00:19 ip-172-31-19-208 web[317992]: TypeError: 'DataError' object is not iterable
+Feb 22 12:00:44 ip-172-31-19-208 web[317992]: [2026-02-22 12:00:44 +0000] [317992] [ERROR] Error handling request /tree_data.js?tree_id=2
+Feb 22 12:00:44 ip-172-31-19-208 web[317992]: Traceback (most recent call last):
+Feb 22 12:00:44 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/gunicorn/workers/sync.py", line 135, in handle
+Feb 22 12:00:44 ip-172-31-19-208 web[317992]:    self.handle_request(listener, req, client, addr)
+Feb 22 12:00:44 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/gunicorn/workers/sync.py", line 183, in handle_request
+Feb 22 12:00:44 ip-172-31-19-208 web[317992]:    for item in respiter:
+Feb 22 12:00:44 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 12:00:44 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/werkzeug/wsgi.py", line 256, in __next__
+Feb 22 12:00:44 ip-172-31-19-208 web[317992]:    return self._next()
+Feb 22 12:00:44 ip-172-31-19-208 web[317992]:           ^^^^^^^^^^^^
+Feb 22 12:00:44 ip-172-31-19-208 web[317992]:  File "/var/app/venv/staging-LQM1lest/lib64/python3.12/site-packages/werkzeug/wrappers/response.py", line 32, in _iter_encoded
+Feb 22 12:00:44 ip-172-31-19-208 web[317992]:    for item in iterable:
+Feb 22 12:00:44 ip-172-31-19-208 web[317992]:                ^^^^^^^^
+Feb 22 12:00:44 ip-172-31-19-208 web[317992]: TypeError: 'DataError' object is not iterable
+
+
+----------------------------------------
+/var/log/eb-engine.log
+----------------------------------------
+2026/02/22 11:56:57.224417 [INFO] Running command: systemctl show -p PartOf xray.service
+2026/02/22 11:56:57.236603 [WARN] stopProcess Warning: process xray is not registered 
+2026/02/22 11:56:57.236634 [INFO] Running command: systemctl stop xray.service
+2026/02/22 11:56:57.248198 [INFO] Executing instruction: stop proxy
+2026/02/22 11:56:57.248224 [INFO] Running command: systemctl show -p PartOf httpd.service
+2026/02/22 11:56:57.260548 [WARN] deregisterProcess Warning: process httpd is not registered, skipping...
+
+2026/02/22 11:56:57.260575 [INFO] Running command: systemctl show -p PartOf nginx.service
+2026/02/22 11:56:57.272238 [INFO] Running command: systemctl is-active nginx.service
+2026/02/22 11:56:57.279179 [INFO] Running command: systemctl show -p PartOf nginx.service
+2026/02/22 11:56:57.287256 [INFO] Running command: systemctl stop nginx.service
+2026/02/22 11:56:57.488375 [INFO] Running command: systemctl disable nginx.service
+2026/02/22 11:56:57.735258 [INFO] Running command: systemctl daemon-reload
+2026/02/22 11:56:57.999671 [INFO] Running command: systemctl reset-failed
+2026/02/22 11:56:58.007746 [INFO] Executing instruction: FlipApplication
+2026/02/22 11:56:58.007766 [INFO] Fetching environment variables...
+2026/02/22 11:56:58.007934 [INFO] Purge old process...
+2026/02/22 11:56:58.007956 [INFO] Running command: systemctl stop eb-app.target
+2026/02/22 11:56:58.017154 [INFO] Running command: systemctl show -p ConsistsOf eb-app.target | cut -d= -f2
+2026/02/22 11:56:58.032934 [INFO] web.service
+
+2026/02/22 11:56:58.032959 [INFO] deregistering process: web
+2026/02/22 11:56:58.032980 [INFO] Running command: systemctl show -p PartOf web.service
+2026/02/22 11:56:58.047220 [INFO] Running command: systemctl is-active web.service
+2026/02/22 11:56:58.058007 [INFO] Running command: systemctl disable web.service
+2026/02/22 11:56:58.388110 [INFO] Removed "/etc/systemd/system/multi-user.target.wants/web.service".
+
+2026/02/22 11:56:58.388182 [INFO] Running command: systemctl daemon-reload
+2026/02/22 11:56:58.663605 [INFO] Running command: systemctl reset-failed
+2026/02/22 11:56:58.670581 [INFO] Running command: systemctl is-active web.service
+2026/02/22 11:56:58.677007 [INFO] Process web has been fully terminated
+2026/02/22 11:56:58.677020 [INFO] All processes have been fully terminated
+2026/02/22 11:56:58.677028 [INFO] Removing /var/app/current/ if it exists
+2026/02/22 11:56:58.679421 [INFO] Renaming /var/app/staging/ to /var/app/current/
+2026/02/22 11:56:58.679440 [INFO] Register application processes...
+2026/02/22 11:56:58.679444 [INFO] Registering the proc: web
+
+2026/02/22 11:56:58.679450 [INFO] Running command: systemctl show -p PartOf web.service
+2026/02/22 11:56:58.691058 [INFO] Running command: systemctl daemon-reload
+2026/02/22 11:56:58.902511 [INFO] Running command: systemctl reset-failed
+2026/02/22 11:56:58.910319 [INFO] Running command: systemctl is-enabled eb-app.target
+2026/02/22 11:56:58.917374 [INFO] Running command: systemctl enable eb-app.target
+2026/02/22 11:56:59.186550 [INFO] Running command: systemctl start eb-app.target
+2026/02/22 11:56:59.194932 [INFO] Running command: systemctl enable web.service
+2026/02/22 11:56:59.426582 [INFO] Created symlink /etc/systemd/system/multi-user.target.wants/web.service → /etc/systemd/system/web.service.
+
+2026/02/22 11:56:59.426624 [INFO] Running command: systemctl show -p PartOf web.service
+2026/02/22 11:56:59.437577 [INFO] Running command: systemctl is-active web.service
+2026/02/22 11:56:59.444452 [INFO] Running command: systemctl start web.service
+2026/02/22 11:56:59.522313 [INFO] Executing instruction: start X-Ray
+2026/02/22 11:56:59.522335 [INFO] X-Ray is not enabled.
+2026/02/22 11:56:59.522339 [INFO] Executing instruction: start proxy with new configuration
+2026/02/22 11:56:59.522361 [INFO] Running command: /usr/sbin/nginx -t -c /var/proxy/staging/nginx/nginx.conf
+2026/02/22 11:56:59.549309 [INFO] nginx: [warn] could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+nginx: the configuration file /var/proxy/staging/nginx/nginx.conf syntax is ok
+nginx: configuration file /var/proxy/staging/nginx/nginx.conf test is successful
+
+2026/02/22 11:56:59.549590 [INFO] Running command: cp -rp /var/proxy/staging/nginx/* /etc/nginx
+2026/02/22 11:56:59.553971 [INFO] Running command: systemctl show -p PartOf nginx.service
+2026/02/22 11:56:59.575529 [INFO] Running command: systemctl daemon-reload
+2026/02/22 11:56:59.999832 [INFO] Running command: systemctl reset-failed
+2026/02/22 11:57:00.013058 [INFO] Running command: systemctl show -p PartOf nginx.service
+2026/02/22 11:57:00.033796 [INFO] Running command: systemctl is-active nginx.service
+2026/02/22 11:57:00.049876 [INFO] Running command: systemctl start nginx.service
+2026/02/22 11:57:00.243367 [INFO] Executing instruction: configureSqsd
+2026/02/22 11:57:00.243387 [INFO] This is a web server environment instance, skip configure sqsd daemon ...
+2026/02/22 11:57:00.243392 [INFO] Executing instruction: startSqsd
+2026/02/22 11:57:00.243395 [INFO] This is a web server environment instance, skip start sqsd daemon ...
+2026/02/22 11:57:00.243399 [INFO] Executing instruction: Track pids in healthd
+2026/02/22 11:57:00.243403 [INFO] This is an enhanced health env...
+2026/02/22 11:57:00.243415 [INFO] Running command: systemctl show -p ConsistsOf aws-eb.target | cut -d= -f2
+2026/02/22 11:57:00.259160 [INFO] nginx.service cfn-hup.service healthd.service
+
+2026/02/22 11:57:00.259207 [INFO] Running command: systemctl show -p ConsistsOf eb-app.target | cut -d= -f2
+2026/02/22 11:57:00.276078 [INFO] web.service
+
+2026/02/22 11:57:00.276416 [INFO] Executing instruction: RunAppDeployPostDeployHooks
+2026/02/22 11:57:00.276485 [INFO] Executing platform hooks in .platform/hooks/postdeploy/
+2026/02/22 11:57:00.276508 [INFO] The dir .platform/hooks/postdeploy/ does not exist
+2026/02/22 11:57:00.276511 [INFO] Finished running scripts in /var/app/current/.platform/hooks/postdeploy
+2026/02/22 11:57:00.276518 [INFO] Executing cleanup logic
+2026/02/22 11:57:00.276609 [INFO] CommandService Response: {"status":"SUCCESS","api_version":"1.0","results":[{"status":"SUCCESS","msg":"Engine execution has succeeded.","returncode":0,"events":[{"msg":"Instance deployment used the commands in your 'Procfile' to initiate startup of your application.","timestamp":1771761414079,"severity":"INFO"},{"msg":"Instance deployment completed successfully.","timestamp":1771761420276,"severity":"INFO"}]}]}
+
+2026/02/22 11:57:00.277681 [INFO] Platform Engine finished execution on command: app-deploy
+
+2026/02/22 12:01:52.391370 [INFO] Starting...
+2026/02/22 12:01:52.391429 [INFO] Starting EBPlatform-PlatformEngine
+2026/02/22 12:01:52.391453 [INFO] reading event message file
+2026/02/22 12:01:52.391751 [INFO] Engine received EB command cfn-hup-exec
+
+2026/02/22 12:01:52.460261 [INFO] Running command: /opt/aws/bin/cfn-get-metadata -s arn:aws:cloudformation:eu-north-1:947095430404:stack/awseb-e-k9mpabxmiv-stack/7ebfa1e0-0a9c-11f1-93ce-0a11b481459b -r AWSEBAutoScalingGroup --region eu-north-1
+2026/02/22 12:01:52.753539 [INFO] Running command: /opt/aws/bin/cfn-get-metadata -s arn:aws:cloudformation:eu-north-1:947095430404:stack/awseb-e-k9mpabxmiv-stack/7ebfa1e0-0a9c-11f1-93ce-0a11b481459b -r AWSEBBeanstalkMetadata --region eu-north-1
+2026/02/22 12:01:53.049663 [INFO] checking whether command tail-log is applicable to this instance...
+2026/02/22 12:01:53.049675 [INFO] this command is applicable to the instance, thus instance should execute command
+2026/02/22 12:01:53.049678 [INFO] Engine command: (tail-log)
+
+2026/02/22 12:01:53.049728 [INFO] Executing instruction: GetTailLogs
+2026/02/22 12:01:53.049731 [INFO] Tail Logs...
+2026/02/22 12:01:53.050107 [INFO] Running command: tail -n 100 /var/log/web.stdout.log
+2026/02/22 12:01:53.052076 [INFO] Running command: tail -n 100 /var/log/eb-engine.log
+
+
+----------------------------------------
+/var/log/eb-hooks.log
+----------------------------------------
+
+
+----------------------------------------
+/var/log/nginx/access.log
+----------------------------------------
+172.31.28.173 - - [22/Feb/2026:11:54:31 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:54:40 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:54:46 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:54:55 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:55:01 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:55:10 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:55:16 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:55:25 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:55:31 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:55:40 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:55:46 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:55:55 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:56:01 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:56:10 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:56:16 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:56:25 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:56:31 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:56:40 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:56:46 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:56:55 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:57:01 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:57:10 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:57:16 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:57:25 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:57:31 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:57:40 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:57:46 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:57:55 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:58:01 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:58:10 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:58:16 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:58:25 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:58:30 +0000] "GET / HTTP/1.1" 200 1948 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:30 +0000] "GET /static/tree/css/main.css HTTP/1.1" 200 598 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.28.173 - - [22/Feb/2026:11:58:31 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:58:37 +0000] "GET /trees HTTP/1.1" 200 1893 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:37 +0000] "GET /static/tree/css/main.css HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/trees" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:39 +0000] "GET /fetch?tree_id=2 HTTP/1.1" 200 2399 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/trees" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:39 +0000] "GET /tree_data.js?tree_id=2 HTTP/1.1" 500 141 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:39 +0000] "GET /static/tree/css/main.css HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:39 +0000] "GET /static/tree/js/d3-dag.js HTTP/1.1" 200 193439 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:39 +0000] "GET /static/tree/js/familytree.js HTTP/1.1" 200 31778 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:40 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:58:46 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:58:47 +0000] "GET /trees HTTP/1.1" 200 1893 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:47 +0000] "GET /static/tree/css/main.css HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/trees" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:49 +0000] "GET /fetch?tree_id=1 HTTP/1.1" 200 2399 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/trees" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:49 +0000] "GET /static/tree/css/main.css HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=1" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:49 +0000] "GET /tree_data.js?tree_id=1 HTTP/1.1" 500 141 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=1" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:49 +0000] "GET /static/tree/js/d3-dag.js HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=1" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:49 +0000] "GET /static/tree/js/familytree.js HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=1" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:58:55 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:59:01 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:59:01 +0000] "GET /add_person HTTP/1.1" 200 1965 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=1" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:01 +0000] "GET /static/tree/css/main.css HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/add_person" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:04 +0000] "GET /add_person?tree_id=2 HTTP/1.1" 200 7171 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/add_person" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:04 +0000] "GET /static/tree/css/main.css HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/add_person?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:07 +0000] "GET /edit_person HTTP/1.1" 200 2560 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/add_person?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:07 +0000] "GET /static/tree/css/main.css HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/edit_person" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:10 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:59:11 +0000] "GET /trees HTTP/1.1" 200 1893 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/edit_person" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:12 +0000] "GET /static/tree/css/main.css HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/trees" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:14 +0000] "GET /fetch?tree_id=2 HTTP/1.1" 200 2399 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/trees" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:14 +0000] "GET /static/tree/js/d3-dag.js HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:14 +0000] "GET /static/tree/js/familytree.js HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:14 +0000] "GET /tree_data.js?tree_id=2 HTTP/1.1" 500 141 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:14 +0000] "GET /static/tree/css/main.css HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.28.173 - - [22/Feb/2026:11:59:16 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:59:16 +0000] "GET /vertical?tree_id=2 HTTP/1.1" 200 2377 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:16 +0000] "GET /tree_data.js?tree_id=2 HTTP/1.1" 500 141 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/vertical?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:16 +0000] "GET /static/tree/css/main.css HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/vertical?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:16 +0000] "GET /static/vertical-tree/dist/js_family_tree.umd.js HTTP/1.1" 200 228943 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/vertical?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:19 +0000] "GET /fetch?tree_id=2 HTTP/1.1" 200 2399 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/vertical?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:19 +0000] "GET /tree_data.js?tree_id=2 HTTP/1.1" 500 141 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:19 +0000] "GET /static/tree/js/familytree.js HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:19 +0000] "GET /static/tree/css/main.css HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:19 +0000] "GET /static/tree/js/d3-dag.js HTTP/1.1" 304 0 "http://family-tree-dev.eu-north-1.elasticbeanstalk.com/fetch?tree_id=2" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:11:59:25 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:59:31 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:59:40 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:11:59:46 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:59:55 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:11:59:55 +0000] "GET /tree_data.js?tree_id=2 HTTP/1.1" 500 141 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.28.173 - - [22/Feb/2026:12:00:01 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:12:00:10 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:12:00:16 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:12:00:19 +0000] "GET /tree_data.js?tree_id=1 HTTP/1.1" 500 141 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.11.120 - - [22/Feb/2026:12:00:25 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:12:00:31 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:12:00:40 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:12:00:44 +0000] "GET /tree_data.js?tree_id=2 HTTP/1.1" 500 141 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" "140.228.56.188"
+172.31.28.173 - - [22/Feb/2026:12:00:46 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:12:00:55 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:12:01:01 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:12:01:10 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:12:01:16 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:12:01:25 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:12:01:31 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.11.120 - - [22/Feb/2026:12:01:40 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+172.31.28.173 - - [22/Feb/2026:12:01:46 +0000] "GET / HTTP/1.1" 200 1948 "-" "ELB-HealthChecker/2.0" "-"
+
+
+----------------------------------------
+/var/log/nginx/error.log
+----------------------------------------
+2026/02/15 18:34:57 [warn] 2149#2149: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/15 18:34:57 [warn] 2183#2183: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/15 18:34:57 [warn] 2184#2184: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/15 18:41:31 [warn] 2842#2842: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/15 18:41:32 [warn] 2876#2876: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/15 18:41:32 [warn] 2877#2877: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/20 18:47:03 [warn] 236558#236558: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/20 18:47:04 [warn] 236592#236592: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/20 18:47:04 [warn] 236593#236593: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/20 18:57:01 [warn] 237318#237318: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/20 18:57:01 [warn] 237352#237352: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/20 18:57:01 [warn] 237353#237353: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/20 19:19:25 [warn] 238570#238570: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/20 19:19:26 [warn] 238604#238604: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/20 19:19:26 [warn] 238605#238605: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/22 11:18:55 [error] 238607#238607: *40257 client intended to send too large body: 10485761 bytes, client: 172.31.11.120, server: , request: "POST / HTTP/1.1", host: "13.60.161.246"
+2026/02/22 11:56:59 [warn] 317988#317988: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/22 11:57:00 [warn] 318022#318022: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2026/02/22 11:57:00 [warn] 318023#318023: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+
+
