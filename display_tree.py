@@ -218,7 +218,7 @@ def fetch_partners_from_db(subject):
         SELECT person2_id 
         FROM relationships 
         WHERE person1_id = :subject 
-            AND (relationship = 'spouse' OR relationship = 'union')
+            AND (relationship = 'union')
     """)
     
     
