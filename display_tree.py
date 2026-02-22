@@ -203,11 +203,7 @@ def fetch_tree(tree):
         import json
         json_string = "data = " + json.dumps(assembled, indent=2, separators=(",", ":"))
 
-        # Write the json string to a file for d3 to read
-        with open("static/tree/data/tree_data.js", "w") as file_Obj:
-            file_Obj.write(json_string)
-
-        return "Tree fetched successfully"
+        return json_string
             
     # Catch and return any exceptions
     except Exception as e:

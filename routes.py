@@ -336,3 +336,15 @@ def process_page():
         result=result,
         tree_id=tree_id
     )
+
+from flask import Response, request
+
+@app.get("/tree_data.js")
+def tree_data_js():
+    tree_id = request.args.get("tree_id", type=int)
+    js = display_tree.fetch_tree(tree_id)
+    return Response(
+        js,
+        mimetype="application/javascript",
+        headers={"Cache-Control": "no-store, max-age=0"},
+    )
