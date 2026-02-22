@@ -349,7 +349,7 @@ def tree_data_js():
         return Response(js, mimetype="application/javascript")
     except Exception as e:
         tb = traceback.format_exc()
-        # This makes the error visible in curl/browser devtools
+
         body = f"// ERROR generating tree_data.js for tree_id={tree_id}: {type(e).__name__}: {e}\n" \
                f"// {tb.replace(chr(10), chr(10)+'// ')}\n"
         return Response(body, status=500, mimetype="application/javascript")

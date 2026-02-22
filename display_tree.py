@@ -207,7 +207,7 @@ def fetch_tree(tree):
             
     # Catch and return any exceptions
     except Exception:
-        app.logger.exception("fetch_tree failed (tree_id=%s)", tree)
+        current_app.logger.exception("fetch_tree failed (tree_id=%s)", tree)
         raise
     
 # get subject's partners from the db
