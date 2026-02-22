@@ -338,13 +338,18 @@ def process_page():
     )
 
 from flask import Response, request
+import traceback
 
 @app.get("/tree_data.js")
 def tree_data_js():
     tree_id = request.args.get("tree_id", type=int)
-    js = display_tree.fetch_tree(tree_id)
-    return Response(
-        js,
-        mimetype="application/javascript",
-        headers={"Cache-Control": "no-store, max-age=0"},
-    )
+
+    try:
+        js = display_tree.fetch_tree(tree_id)  
+        return Response(js, mimetype="application/javascript")
+    except Exception as e:
+        tb = traceback.format_exc()
+        # This makes the error visible in curl/browser devtools
+        body = f"// ERROR generating tree_data.js for tree_id={tree_id}: {type(e).__name__}: {e}\n" \
+               f"// {tb.replace(chr(10), chr(10)+'// ')}\n"
+        return Response(body, status=500, mimetype="application/javascript")
