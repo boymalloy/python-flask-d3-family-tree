@@ -353,3 +353,12 @@ def tree_data_js():
         body = f"// ERROR generating tree_data.js for tree_id={tree_id}: {type(e).__name__}: {e}\n" \
                f"// {tb.replace(chr(10), chr(10)+'// ')}\n"
         return Response(body, status=500, mimetype="application/javascript")
+    
+from flask import Response
+
+@app.route("/robots.txt")
+def robots():
+    return Response(
+        render_template("robots.txt"),
+        mimetype="text/plain"
+    )
