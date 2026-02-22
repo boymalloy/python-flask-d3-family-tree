@@ -207,6 +207,7 @@ def fetch_tree(tree):
             
     # Catch and return any exceptions
     except Exception:
+        from flask import current_app
         current_app.logger.exception("fetch_tree failed (tree_id=%s)", tree)
         raise
     
