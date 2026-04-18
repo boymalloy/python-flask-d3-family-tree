@@ -2,7 +2,6 @@
 
 This is a simple python app which reads family tree data from a PostgreSQL database and converts it to the correct format for a D3 data visualisation 
 
-[Here is a working demo](http://family-tree-dev.eu-north-1.elasticbeanstalk.com/)
 
 I built this app to learn:
 * Python
@@ -10,6 +9,7 @@ I built this app to learn:
 * Jinja templates
 * Git and GitHub
 * PostgreSQL
+* Test driven development (pytest)
 
 I didn't make the D3 JavaScript data visualisation. It is taken (with thanks and gratitude) from [BenPortner's js_family_tree](https://github.com/BenPortner/js_family_tree), which in turn is based on [collapsible d3 tree example](https://gist.github.com/d3noob/43a860bc0024792f8803bba8ca0d5ecd) by d3noob.
 
