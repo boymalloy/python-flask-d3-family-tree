@@ -236,14 +236,6 @@ def add_rel_page():
         new_child_result = writers.set_relationship(person_id,new_child,"parent")
         if isinstance(new_child_result, int):
             return render_template('add_rel.html', header="Processing Result", payload="Child added", return_id=person_id)
-
-@app.route('/sandbox')
-def sandbox():
-
-    df = fetchers.fetch_person_details_df(1)
-    ob = fetchers.fetch_person_details_ob(1)
-
-    return render_template('sandbox.html', header="Sandbox", df=df, ob=ob)
     
 # Route: List of family trees
 @app.route('/trees')

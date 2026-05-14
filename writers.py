@@ -1,12 +1,6 @@
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import text
 from app import db
-import pandas as pd
-# Show all columns and rows of panda dataframes
-pd.set_option("display.max_columns", None)
-pd.set_option("display.max_rows", None)
-pd.set_option("display.width", None)
-pd.set_option("display.max_colwidth", None)
 
 # Create a new family tree by adding it to the tree table and return the id of the new tree
 def write_tree(new_tree_name):
