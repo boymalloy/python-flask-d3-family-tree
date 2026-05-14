@@ -3857,9 +3857,7 @@
                 return [];
             const { name, birthyear, deathyear } = node.data;
             const lines = [
-                name,
-                `${birthyear !== null && birthyear !== void 0 ? birthyear : missingData} - ${deathyear !== null && deathyear !== void 0 ? deathyear : missingData}`,
-            ];
+                name];
             return lines;
         }
         /**
@@ -3876,12 +3874,8 @@
       </span><br>
       <table style="margin-top: 2.5px;">
         <tr>
-          <td>born</td>
-          <td>${birthyear} in ${birthplace}</td>
-        </tr>
-        <tr>
-          <td>died</td>
-          <td>${deathyear} in ${deathplace}</td>
+          <td>Born&nbsp;</td>
+          <td>${birthyear}</td>
         </tr>
       </table>`;
             // replace undefined entries with ?
