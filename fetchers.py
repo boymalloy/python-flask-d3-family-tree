@@ -1,6 +1,7 @@
 from sqlalchemy.sql import text
 from app import app
 from app import db
+import classes
 
 import pandas as pd
 # Show all columns and rows of panda dataframes
@@ -8,6 +9,8 @@ pd.set_option("display.max_columns", None)
 pd.set_option("display.max_rows", None)
 pd.set_option("display.width", None)
 pd.set_option("display.max_colwidth", None)
+
+
 
 def fetch_all_trees():
     with app.app_context():
@@ -63,6 +66,12 @@ def fetch_person(person_id):
     # return an error message if no entry in the db is found
     except IndexError as e:
         return "Person not found"
+
+def fetch_person_details_ob(person_id):
+    person = classes.Person.query.get(person_id)
+    if not person:
+        return "Person not found"
+    return person
 
 def fetch_person_details_df(person_id):
     try:

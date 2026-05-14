@@ -5,7 +5,6 @@
     {% block page_content %}
     <h1>Edit a person</h1>
     
-
     <form name="edit person" action="/edit_person" method="post" enctype="multipart/form-data">
         <div>
             <div>
@@ -17,7 +16,7 @@
                 <select class="form-select" id="parent1" name="parent1">
                     <option value="blank">-- None --</option>
                     {% for p in people %}
-                         <option {% if parents != "No parents set" %}{% if p.id == parents[0].parent_id %}selected {% endif %}{% endif %}value="{{ p.id }}">{{ p.name }}</option>
+                        <option {% if person.parents.0 %}{% if p.id == person.parents.0.id %}selected {% endif %}{% endif %} value="{{ p.id }}">{{ p.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -26,21 +25,21 @@
                 <select class="form-select" id="parent2" name="parent2">
                     <option value="blank">-- None --</option>
                     {% for p in people %}
-                         <option {% if parents != "No parents set" %}{% if parents[1] %}{% if p.id == parents[1].parent_id %}selected {% endif %}{% endif %}{% endif %}value="{{ p.id }}">{{ p.name }}</option>
+                        <option {% if person.parents.1 %}{% if p.id == person.parents.1.id %}selected {% endif %}{% endif %} value="{{ p.id }}">{{ p.name }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div>
                 <label>Birth year:</label>
-                <input type="text" name="birth_year" value="{{birth_date.year}}" required />
+                <input type="text" name="birth_year" value="{{person.birth_date.year}}" required />
             </div>
             <div>
                 <label>Birth month:</label>
-                <input type="text" name="birth_month" value="{{birth_date.month}}" required >
+                <input type="text" name="birth_month" value="{{person.birth_date.month}}" required >
             </div>
             <div>
                 <label>Birth day:</label>
-                <input type="text" name="birth_day"  value="{{birth_date.month}}" required />
+                <input type="text" name="birth_day"  value="{{person.birth_date.month}}" required />
             </div>
             <div>
                 <label>Birth place:</label>
@@ -48,15 +47,15 @@
             </div>
             <div>
                 <label>Death year:</label>
-                <input type="text" name="death_year"  value="{{death_date.year}}" />
+                <input type="text" name="death_year"  value="{{person.death_date.year}}" />
             </div>
             <div>
                 <label>Death month:</label>
-                <input type="text" name="death_month" value="{{death_date.month}}" />
+                <input type="text" name="death_month" value="{{person.death_date.month}}" />
             </div>
             <div>
                 <label>Death day:</label>
-                <input type="text" name="death_day" value="{{death_date.day}}" />
+                <input type="text" name="death_day" value="{{person.death_date.day}}" />
             </div>
             <div>
                 <input type="hidden" name="person_id" value="{{person.id}}" />
@@ -68,8 +67,8 @@
         <p><br /><strong>Partners</strong></p>
 
         <ul>
-            {% for partner in partners %}
-            <li>{{partner.partner_name}} <a href="/remove_relationship?rel_id={{partner.relationship_id}}&return_id={{person.id}}">Remove</a></li>
+            {% for partner in person.partners %}
+            <li>{{partner.name}} <a href="/remove_relationship?subject={{person.id}}&relative={{partner.id}}">Remove</a></li>
             {% else %}
             <li><em>No partners found</em></li>
             {% endfor %}
@@ -94,8 +93,8 @@
         <p><br /><strong>Children</strong></p>
 
         <ul>
-            {% for child in children %}
-            <li>{{child.child_name}} <a href="/remove_relationship?rel_id={{child.relationship_id}}&return_id={{person.id}}">Remove</a></li>
+            {% for child in person.children %}
+            <li>{{child.name}} <a href="/remove_relationship?subject={{person.id}}&relative={{child.id}}">Remove</a></li>
             {% else %}
             <li><em>No children found</em></li>
             {% endfor %}

@@ -174,7 +174,7 @@ def edit_person_page():
         birth_date = utilities.assemble_date(birth_year, birth_month, birth_day)
         death_date = utilities.assemble_date(death_year, death_month, death_day)
 
-        # update the person's entry in the person table using the onfo submitted through the form
+        # update the person's entry in the person table using the info submitted through the form
         result = writers.edit_person(person_id, name, birth_date, birth_place, death_date)
 
         if result == 0:
@@ -207,31 +207,17 @@ def edit_person_page():
         # Redirect to choose a person
         return render_template('edit_person_selector.html', people=fetchers.fetch_all_people())
     
-    person = fetchers.fetch_person(person_id)
-
-    relationships = fetchers.fetch_relationships_df(person_id)
-
-    partners = fetchers.fetch_partners(person_id)
-
-    children = fetchers.fetch_children(person_id)
-
-    parents = fetchers.fetch_parents(person_id)
-
-    birth_date = utilities.disassemble_date(person.birth_date)
-
-    death_date = utilities.disassemble_date(person.death_date)
-
-    return render_template('edit_person_form.html', people=fetchers.fetch_all_people(), person=person, birth_date=birth_date, death_date=death_date, relationships=relationships, partners=partners, children=children, parents=parents)
+    return render_template('edit_person_form.html', person=fetchers.fetch_person_details_ob(person_id),people=fetchers.fetch_all_people())
 
 # Remove relationship page
 @app.route("/remove_relationship")
 def remove_relationship_page():
 
-    # Pick up the person_id from the query string
-    rel_id = request.args.get('rel_id')
-    return_id = request.args.get('return_id')
-
-    return render_template('remove_relationship.html', operation=writers.remove_relationship(rel_id), return_id=return_id)
+    # Pick up the variables from the query string
+    subject = request.args.get('subject')
+    relative = request.args.get('relative')
+    
+    return render_template('remove_relationship.html', operation=writers.remove_relationship(subject,relative), subject=subject)
 
 @app.route("/add_rel", methods=["POST"])
 def add_rel_page():
@@ -254,11 +240,10 @@ def add_rel_page():
 @app.route('/sandbox')
 def sandbox():
 
-    people = fetchers.fetch_all_people_in_tree(1)
+    df = fetchers.fetch_person_details_df(1)
+    ob = fetchers.fetch_person_details_ob(1)
 
-    max_person_id = max(row.id for row in people)
-
-    return render_template('sandbox.html', header="Sandbox", people=people, max_person_id=max_person_id)
+    return render_template('sandbox.html', header="Sandbox", df=df, ob=ob)
     
 # Route: List of family trees
 @app.route('/trees')

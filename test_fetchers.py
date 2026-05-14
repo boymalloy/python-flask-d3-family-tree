@@ -1,6 +1,7 @@
 from app import app
 from app import db
 import fetchers
+import pandas as pd
 
 # Tests for fetching the name of a tree - working and not found
 def test_fetch_tree_name():
@@ -18,9 +19,26 @@ def test_fetch_person_notfound():
     person = fetchers.fetch_person(10000000000000000000)
     assert person == "Person not found"
 
+
+def test_fetch_person_details_df():
+    gooddata = fetchers.fetch_person_details_df(1)
+    assert isinstance(gooddata, pd.DataFrame)
+    nodata = fetchers.fetch_person_details_df(1000000000000000000)
+    assert nodata.empty
+
+def test_fetch_person_details_ob():
+    with app.app_context():
+        from classes import Person
+        row1 = fetchers.fetch_person_details_ob(1)
+        assert isinstance(row1, Person)
+        assert row1 is not None
+        fakerow = fetchers.fetch_person_details_ob(1000000000000000000000)
+        assert fakerow == "Person not found" 
+
+
 def test_fetch_relationships_df_successful():
     rels = fetchers.fetch_relationships_df(1)
-    assert rels.loc[0,"person2_id"] == 2
+    assert rels.loc[0,"person2_id"] == 3
 
 def test_fetch_relationships_df_none():
     rels = fetchers.fetch_relationships_df(100000000000000000)
@@ -58,3 +76,11 @@ def test_fetch_parents_successful():
     parents = fetchers.fetch_parents(3)
     parent1 = parents[0]
     assert parent1["parent_id"] == 1 or 2
+
+def test_fetch_all_people_in_tree():
+    tree1 = fetchers.fetch_all_people_in_tree(1)
+    notree = fetchers.fetch_all_people_in_tree(100000000000000000000)
+    assert isinstance(tree1, list)
+    assert isinstance(notree, list)
+    assert len(tree1) > 0
+    assert len(notree) == 0

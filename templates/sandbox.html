@@ -5,11 +5,9 @@
     {% block page_content %}
 
     <h1>{{ header}}</h1>
-    <pre>{{ people }}</pre>
-    <p>Max row ID: {{max_person_id}}</p>
-    {% for p in people %}
-        <p>{{ p.id }}</p>
-    {% endfor %}
+    <pre>{{df}}</pre>
+    <pre>{{ob.id}}, {{ob.name}}, {{ob.birth_date}}</pre>
+    
     
    
 

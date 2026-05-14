@@ -107,12 +107,17 @@ def set_relationship(subject,other_person,type):
         db.session.rollback()
         raise
 
-def remove_relationship(rel_id):
+def remove_relationship(subject,relative):
     try:
         sql = text("""
-            DELETE FROM relationships WHERE relationship_id = :rel_id RETURNING *;
+            DELETE FROM relationships
+            WHERE
+                (person1_id = :subject AND person2_id = :relative)
+                OR
+                (person1_id = :relative AND person2_id = :subject)
+            RETURNING *
         """)
-        result = db.session.execute(sql, {"rel_id": rel_id})
+        result = db.session.execute(sql, {"subject": subject, "relative": relative})
         deleted_row = result.fetchone()
         db.session.commit()
 
