@@ -14,8 +14,6 @@ pd.set_option("display.max_rows", None)
 pd.set_option("display.width", None)
 pd.set_option("display.max_colwidth", None)
 
-# from sqlalchemy.types import Date, Integer, String
-
 # Create the Flask app
 app = Flask(__name__, static_url_path='/static')
 
@@ -26,6 +24,9 @@ if os.getenv("FLASK_ENV") != "production":
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///:memory:")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.getenv("SECRET_KEY", "dev-only-fallback")
+
+# Bootstrap configuration
+app.config["BOOTSTRAP_SERVE_LOCAL"] = True
 
 # Build extensions
 bootstrap = Bootstrap(app)
