@@ -1,150 +1,201 @@
-# Family tree visualisation
+# Family Tree Visualisation
 
-This is a simple python app which reads family tree data from a PostgreSQL database and converts it to the correct format for a D3 data visualisation 
+A Python and Flask application for creating, managing and visualising family trees.
 
+The application stores family tree data in PostgreSQL, models relationships between people, and generates the graph structure required by an interactive D3.js family tree visualisation.
 
-I built this app to learn:
-* Python
-* Flask
-* Jinja templates
-* Git and GitHub
-* PostgreSQL
-* Test driven development (pytest)
+## Why I Built This
 
-I didn't make the D3 JavaScript data visualisation. It is taken (with thanks and gratitude) from [BenPortner's js_family_tree](https://github.com/BenPortner/js_family_tree), which in turn is based on [collapsible d3 tree example](https://gist.github.com/d3noob/43a860bc0024792f8803bba8ca0d5ecd) by d3noob.
+I originally created this project to learn modern Python web development. Over time it evolved into a larger application and became a way to learn:
 
-## To install and run
-To install and run this project locally, follow these steps:
-    
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/boymalloy/python-flask-d3-family-tree.git
-    ```
+- Python
+- Flask
+- PostgreSQL
+- SQLAlchemy
+- Pytest
+- Git and GitHub
+- AWS deployment
+- Test-driven development
+- Data modelling and transformation
 
-2. Create and activate a virtual environment:
-    ```bash
-    python3 -m venv .venv
-    source .venv/bin/activate
-    ```
+The project started as a CSV-based prototype and evolved into a database-backed web application with automated tests, data import tools and an interactive user interface.
 
-3. Install the required dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
+## Features
 
-4. Configure flask:
-    ```bash
-    cd python-flask-d3-family-tree
-    export FLASK_APP=app
-    export FLASK_DEBUG=1
-    ```
+- Create and manage multiple family trees
+- Create, edit and delete people
+- Create parent-child relationships
+- Create partner relationships
+- Import family tree data from CSV files
+- Store all data in PostgreSQL
+- Generate D3.js-compatible graph structures
+- Interactive Flask web interface
+- Automated test suite using Pytest
 
-5. Install PostgreSQL
-    ```bash
-    sudo apt update
-    sudo apt install postgresql
-    sudo systemctl start postgresql
-    sudo systemctl enable postgresql 
-    ```
+## Technology Stack
 
-6. Create the database
-   ```bash
-    sudo -i -u postgres psql
-    CREATE DATABASE family_tree;
-    \c family_tree
-    ```
+### Backend
 
-7. Create the database tables and populate them with test data
-    ```bash
-    
-    -- create tree table
-    CREATE TABLE tree (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL
-    );
+- Python
+- Flask
+- PostgreSQL
+- SQLAlchemy
 
-     -- Add a constraint to the tree table unique names only
-    ALTER TABLE tree
-    ADD CONSTRAINT unique_name
-    UNIQUE (name);
+### Frontend
 
-    -- Insert a tree 
-    INSERT INTO tree (name) VALUES ('Doe');
-    
-    -- Create person table 
-    CREATE TABLE person (
-    id SERIAL PRIMARY KEY, 
-    name VARCHAR(100) NOT NULL, 
-    birth_date DATE NOT NULL, 
-    birth_place VARCHAR(255),
-    death_date DATE,
-    tree_id INT,
-    FOREIGN KEY (tree_id) REFERENCES tree(id) ON DELETE CASCADE);
+- HTML
+- Jinja Templates
+- Bootstrap
+- D3.js
 
-    -- Insert people
-    INSERT INTO person (name, birth_date, birth_place, death_date, tree_id)
-    VALUES 
-    ('John Doe', '1980-05-15', 'New York', NULL, 1),
-    ('Jane Smith', '1982-08-20', 'Los Angeles', NULL, 1),
-    ('Child One', '2010-01-10', 'San Francisco', NULL, 1), 
-    ('Child Two', '2012-03-15', 'San Francisco', NULL, 1), 
-    ('Child Three', '2014-06-25', 'San Francisco', NULL, 1);
-        
-    -- Add a constraint to the person table - only unique combos of name and birth_date allowed
-    ALTER TABLE person
-    ADD CONSTRAINT unique_person_per_tree
-    UNIQUE (name, birth_date, tree_id);
+### Testing
 
-    -- Create a relationship type with several possible answers
-    CREATE TYPE relationship_type AS ENUM ('parent', 'child', 'union');
+- Pytest
+- Monkeypatching and mocking
+- Database interaction testing
 
-    --- Create relationships table
-    CREATE TABLE relationships (
-    relationship_id SERIAL PRIMARY KEY,
-    person1_id INT NOT NULL, 
-    person2_id INT NOT NULL,
-    relationship relationship_type NOT NULL,
-    FOREIGN KEY (person1_id) REFERENCES Person(id) ON DELETE CASCADE,
-    FOREIGN KEY (person2_id) REFERENCES Person(id) ON DELETE CASCADE);
+### Deployment
 
-    -- Make relationships unique
-    CREATE UNIQUE INDEX unique_pair_relationship
-    ON relationships (
-    LEAST(person1_id, person2_id),
-    GREATEST(person1_id, person2_id),
-    relationship
-    );
+- WSGI
+- AWS Elastic Beanstalk (previously deployed)
 
-    -- Insert the relationships
-    INSERT INTO relationships (person1_id, person2_id, relationship)
-    VALUES 
-    (1, 2, 'union'),
-    (1, 3, 'parent'),
-    (1, 4, 'parent'),
-    (1, 5, 'parent'),
-    (2, 3, 'parent'),
-    (2, 4, 'parent'),
-    (2, 5, 'parent');
+## Architecture
 
-    ```
+The application is organised into separate modules with distinct responsibilities:
 
-8. Put your app setup and database url into a flaskenv file so that you don't have to type it every time you go into the virtual env and run flask:
-Create a file called .flaskenv in your project directory and add these lines
-    ```bash
-    export FLASK_APP=app
-    export FLASK_DEBUG=1
-    export DATABASE_URL="postgresql://postgres:change_to_a_password@localhost:5432/family_tree"
-    ```
-9. Exclude your venv files from GitHub (so that you don't commit your password to the repo)
-Create a file called .gitignore in your project directory and add these lines
-    ```bash
-    .flaskenv
-    .venv/
-    ```
+| Module | Responsibility |
+|----------|----------|
+| `routes.py` | Flask routes and request handling |
+| `writers.py` | Database write operations |
+| `fetchers.py` | Database read operations |
+| `classes.py` | SQLAlchemy model definitions |
+| `csv_import.py` | CSV import and transformation |
+| `display_tree.py` | Family tree graph generation |
+| `utilities.py` | Shared helper functions |
 
-10. Start the web server:
-    ```bash
-    flask run
-    ```
+As the project grew, functionality was progressively separated into modules to improve maintainability, readability and testability.
 
-11. Go to [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+## Data Model
+
+The application stores three core entities:
+
+### Trees
+
+A container for a family tree.
+
+### People
+
+Each person record contains:
+
+- Name
+- Date of birth
+- Place of birth
+- Date of death (optional)
+
+### Relationships
+
+Relationships between people, including:
+
+- Parent relationships
+- Partner unions
+
+These relationships are transformed into the graph structure required by the D3 visualisation.
+
+## Testing
+
+The project includes automated tests covering:
+
+- Utility functions
+- CSV import processing
+- Database reads and writes
+- Tree rendering logic
+- Relationship handling
+
+Pytest fixtures, monkeypatching and mocked database interactions are used to validate behaviour without requiring changes to a live database.
+
+## Installation
+
+### Clone the repository
+
+```bash
+git clone https://github.com/boymalloy/python-flask-d3-family-tree.git
+cd python-flask-d3-family-tree
+```
+
+### Create and activate a virtual environment
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Configure Flask
+
+```bash
+export FLASK_APP=app
+export FLASK_DEBUG=1
+```
+
+### Configure PostgreSQL
+
+Install PostgreSQL and create a database called `family_tree`.
+
+Create a `.flaskenv` file containing:
+
+```bash
+FLASK_APP=app
+FLASK_DEBUG=1
+DATABASE_URL="postgresql://postgres:<password>@localhost:5432/family_tree"
+SECRET_KEY="<your-secret-key>"
+```
+
+### Run the application
+
+```bash
+flask run
+```
+
+Then browse to:
+
+```text
+http://127.0.0.1:5000/
+```
+
+## Lessons Learned
+
+This project helped me learn:
+
+- Flask application structure
+- Relational database design
+- Test-driven development using Pytest
+- SQLAlchemy modelling
+- File upload handling and validation
+- Environment-specific configuration
+- Data transformation and graph generation
+- Deploying Python applications to AWS
+
+## Future Improvements
+
+Potential future enhancements include:
+
+- REST API endpoints
+- Docker support
+- CI/CD with GitHub Actions
+- Authentication and authorisation
+- Additional test coverage
+- Cloud-native deployment options
+- Enhanced visualisation features
+
+## Acknowledgements
+
+I did not create the D3 visualisation itself.
+
+The visualisation is based on [BenPortner's js_family_tree](https://github.com/BenPortner/js_family_tree), which in turn is based on the [collapsible d3 tree example](https://gist.github.com/d3noob/43a860bc0024792f8803bba8ca0d5ecd) by d3noob.
+
+The Python application, database design, import tooling, testing and integration work were developed as part of this project.
