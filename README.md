@@ -17,44 +17,6 @@ I originally created this project to learn modern Python web development. Over t
 - Git and GitHub
 - AWS deployment
 
-## Features
-
-- Create and manage multiple family trees
-- Create, edit and delete people
-- Create parent-child relationships
-- Create partner relationships
-- Import family tree data from CSV files
-- Store all data in PostgreSQL
-- Generate D3.js-compatible graph structures
-- Interactive Flask web interface
-- Automated test suite using Pytest
-
-## Technology Stack
-
-### Backend
-
-- Python
-- Flask
-- PostgreSQL
-- SQLAlchemy
-
-### Frontend
-
-- HTML
-- Jinja Templates
-- Bootstrap
-- D3.js
-
-### Testing
-
-- Pytest
-- Monkeypatching and mocking
-- Database interaction testing
-
-### Deployment
-
-- AWS Elastic Beanstalk
-
 ## Architecture
 
 The application is organised into separate modules with distinct responsibilities:
