@@ -12,13 +12,10 @@ I originally created this project to learn modern Python web development. Over t
 - Flask
 - PostgreSQL
 - SQLAlchemy
-- Pytest
+- Test-driven development using Pytest
+- File upload handling and validation
 - Git and GitHub
 - AWS deployment
-- Test-driven development
-- Data modelling and transformation
-
-The project started as a CSV-based prototype and evolved into a database-backed web application with automated tests, data import tools and an interactive user interface.
 
 ## Features
 
@@ -56,8 +53,7 @@ The project started as a CSV-based prototype and evolved into a database-backed 
 
 ### Deployment
 
-- WSGI
-- AWS Elastic Beanstalk (previously deployed)
+- AWS Elastic Beanstalk
 
 ## Architecture
 
@@ -72,8 +68,6 @@ The application is organised into separate modules with distinct responsibilitie
 | `csv_import.py` | CSV import and transformation |
 | `display_tree.py` | Family tree graph generation |
 | `utilities.py` | Shared helper functions |
-
-As the project grew, functionality was progressively separated into modules to improve maintainability, readability and testability.
 
 ## Data Model
 
@@ -111,21 +105,6 @@ The project includes automated tests covering:
 - Tree rendering logic
 - Relationship handling
 
-Pytest fixtures, monkeypatching and mocked database interactions are used to validate behaviour without requiring changes to a live database.
-
-## Lessons Learned
-
-This project helped me learn:
-
-- Flask application structure
-- Relational database design
-- Test-driven development using Pytest
-- SQLAlchemy modelling
-- File upload handling and validation
-- Environment-specific configuration
-- Data transformation and graph generation
-- Deploying Python applications to AWS
-
 ## Future Improvements
 
 Potential future enhancements include:
@@ -140,11 +119,7 @@ Potential future enhancements include:
 
 ## Acknowledgements
 
-I did not create the D3 visualisation itself.
-
-The visualisation is based on [BenPortner's js_family_tree](https://github.com/BenPortner/js_family_tree), which in turn is based on the [collapsible d3 tree example](https://gist.github.com/d3noob/43a860bc0024792f8803bba8ca0d5ecd) by d3noob.
-
-The Python application, database design, import tooling, testing and integration work were developed as part of this project.
+I did not create the JavaScript D3 visualisation itself. The visualisation is  [BenPortner's js_family_tree](https://github.com/BenPortner/js_family_tree), which is based on the [collapsible d3 tree example](https://gist.github.com/d3noob/43a860bc0024792f8803bba8ca0d5ecd) by d3noob.
 
 ## To install and run
 To install and run this project locally, follow these steps:
